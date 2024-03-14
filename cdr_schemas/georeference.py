@@ -103,6 +103,15 @@ class ProjectionResult(BaseModel):
             Name of file uploaded for this projection.
         """,
     )
+    map_area_id: Optional[str] = Field(
+        ...,
+        description="""
+            The id of the map area for the cog image. 
+            This id can connect a projection to a specific map on a cog image
+            where there are multiple maps on one cog.
+        """
+    )
+
 
 
 class GeoreferenceResult(BaseModel):
@@ -124,7 +133,6 @@ class GeoreferenceResult(BaseModel):
             and gcp ids used in the transform
         """,
     )
-
 
 
 class GeoreferenceResults(BaseModel):

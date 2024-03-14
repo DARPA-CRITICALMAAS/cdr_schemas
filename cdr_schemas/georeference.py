@@ -103,19 +103,21 @@ class ProjectionResult(BaseModel):
             Name of file uploaded for this projection
         """,
     )
-
-
-class GeoreferenceResults(BaseModel):
-    """
-    Georeference Results.
-    """
-
-    map_id: str = Field(
+    map_area_id: Optional[str] = Field(
         ...,
         description="""
-            Internal gcp id. This can be any unique string. 
-        """,
+            The id of the map area for the cog image. 
+            This id can connect a projection to a specific map on a cog image
+            where there are multiple maps on one cog.
+        """
     )
+
+
+class GeoreferenceResult(BaseModel):
+    """
+    Georeference Result.
+    """
+
     likely_CRSs: Optional[List[str]] = Field(
         ...,
         description="""
@@ -123,17 +125,37 @@ class GeoreferenceResults(BaseModel):
             Projection Coordinate System for the map. ie ["EPSG:32612", "EPSG:32613
         """,
     )
-    gcps: Optional[List[GroundControlPoint]] = Field(
-        ...,
-        description="""
-            List of all gcps extracted 
-        """,
-    )
     projections: Optional[List[ProjectionResult]] = Field(
         ...,
         description="""
             For each projection raster produced return crs 
             and gcp ids used in the transform
+        """,
+    )
+    
+
+
+class GeoreferenceResults(BaseModel):
+    """
+    Georeference Results.
+    """
+
+    cog_id: str = Field(
+        ...,
+        description="""
+            Cog id
+        """,
+    )
+    georeference_results: Optional[List[GeoreferenceResult]] = Field(
+        ...,
+        description = """
+            A list of georeferencing results, which include projection, gcp and crs info. 
+        """
+    ) 
+    gcps: Optional[List[GroundControlPoint]] = Field(
+        ...,
+        description="""
+            List of all gcps extracted 
         """,
     )
     system: str = Field(

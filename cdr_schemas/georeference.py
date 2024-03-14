@@ -125,15 +125,7 @@ class GeoreferenceResult(BaseModel):
             and gcp ids used in the transform
         """,
     )
-    map_area_id: Optional[str] = Field(
-        ...,
-        description="""
-            The id of the map area for the cog image. 
-            This id can connect projection attemps to a specific map on a cog image
-            where there are multiple maps on one cog.
-        """
-    )
-    
+
 
 
 class GeoreferenceResults(BaseModel):

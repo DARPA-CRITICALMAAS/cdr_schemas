@@ -103,18 +103,6 @@ class ProjectionResult(BaseModel):
             Name of file uploaded for this projection.
         """,
     )
-<<<<<<< HEAD
-    
-=======
-    map_area_id: Optional[str] = Field(
-        ...,
-        description="""
-            The id of the map area for the cog image. 
-            This id can connect a projection to a specific map on a cog image
-            where there are multiple maps on one cog.
-        """
-    )
->>>>>>> 79b2b9c (update Georef resutls)
 
 
 class GeoreferenceResult(BaseModel):
@@ -126,11 +114,7 @@ class GeoreferenceResult(BaseModel):
         ...,
         description="""
             List of potential Coordinate Reference System specifically 
-<<<<<<< HEAD
             Projection Coordinate System for the map. ie ["EPSG:32612", "EPSG:32613"]
-=======
-            Projection Coordinate System for the map. ie ["EPSG:32612", "EPSG:32613
->>>>>>> 79b2b9c (update Georef resutls)
         """,
     )
     projections: Optional[List[ProjectionResult]] = Field(
@@ -140,11 +124,7 @@ class GeoreferenceResult(BaseModel):
             and gcp ids used in the transform
         """,
     )
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 79b2b9c (update Georef resutls)
 
 
 class GeoreferenceResults(BaseModel):
@@ -155,31 +135,19 @@ class GeoreferenceResults(BaseModel):
     cog_id: str = Field(
         ...,
         description="""
-<<<<<<< HEAD
             Cog id.
-=======
-            Cog id
->>>>>>> 79b2b9c (update Georef resutls)
         """,
     )
     georeference_results: Optional[List[GeoreferenceResult]] = Field(
         ...,
         description = """
-<<<<<<< HEAD
             A list of georeferencing results, which include projections, gcps, and crs info. 
-=======
-            A list of georeferencing results, which include projection, gcp and crs info. 
->>>>>>> 79b2b9c (update Georef resutls)
         """
     ) 
     gcps: Optional[List[GroundControlPoint]] = Field(
         ...,
         description="""
-<<<<<<< HEAD
             List of all gcps extracted for the cog image.
-=======
-            List of all gcps extracted 
->>>>>>> 79b2b9c (update Georef resutls)
         """,
     )
     system: str = Field(

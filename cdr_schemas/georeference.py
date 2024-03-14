@@ -103,14 +103,7 @@ class ProjectionResult(BaseModel):
             Name of file uploaded for this projection
         """,
     )
-    map_area_id: Optional[str] = Field(
-        ...,
-        description="""
-            The id of the map area for the cog image. 
-            This id can connect a projection to a specific map on a cog image
-            where there are multiple maps on one cog.
-        """
-    )
+    
 
 
 class GeoreferenceResult(BaseModel):
@@ -131,6 +124,14 @@ class GeoreferenceResult(BaseModel):
             For each projection raster produced return crs 
             and gcp ids used in the transform
         """,
+    )
+    map_area_id: Optional[str] = Field(
+        ...,
+        description="""
+            The id of the map area for the cog image. 
+            This id can connect projection attemps to a specific map on a cog image
+            where there are multiple maps on one cog.
+        """
     )
     
 
@@ -155,7 +156,7 @@ class GeoreferenceResults(BaseModel):
     gcps: Optional[List[GroundControlPoint]] = Field(
         ...,
         description="""
-            List of all gcps extracted 
+            List of all gcps extracted for the cog image
         """,
     )
     system: str = Field(

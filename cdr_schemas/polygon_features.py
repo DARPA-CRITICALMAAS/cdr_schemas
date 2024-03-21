@@ -1,7 +1,6 @@
 from typing import List, Optional, Union
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from cdr_schemas.common import GeomType, add_class_name_property
-from enum import Enum
 
 class Polygon(BaseModel):
     """
@@ -10,16 +9,6 @@ class Polygon(BaseModel):
     pix_coordinates: List[List[List[Union[float, int]]]]
     geom_coordinates: Optional[List[List[List[Union[float, int]]]]]
     type: str = Field(default=GeomType.Polygon)
-
-
-@add_class_name_property
-class PolygonType(BaseModel):
-    name: Optional[str] = Field(description="the polygon feature's name. must align with legend extraction")
-    color: Optional[str] = Field(description= "color is Hex_color_code") 
-    pattern: Optional[str]
-    abbreviation: Optional[str]
-    description: Optional[str]
-    category: Optional[str]    
 
 
 @add_class_name_property
@@ -36,16 +25,19 @@ class GeologicUnit(BaseModel):
 
 
 @add_class_name_property
-class PolygonProperty(BaseModel):
-    PolygonType: PolygonType
-    GeologicUnit: Optional[GeologicUnit]
-    
-
-@add_class_name_property
 class PolygonFeature(BaseModel):
     id: str = Field(description="Your internal id")
     geometry: Polygon
-    properties: PolygonProperty 
+    model: Optional[str] = Field(description="model name used for extraction")
+    model_version: Optional[str] = Field(description="model version used for extraction")
+    name: Optional[str] = Field(description="the polygon feature's name. must align with legend extraction")
+    color: Optional[str] = Field(description= "color is Hex_color_code") 
+    pattern: Optional[str]
+    abbreviation: Optional[str]
+    description: Optional[str]
+    category: Optional[str]    
+    geologic_unit: Optional[GeologicUnit]
+
     
 
 @add_class_name_property

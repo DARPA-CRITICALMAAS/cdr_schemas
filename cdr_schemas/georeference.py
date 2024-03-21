@@ -1,13 +1,7 @@
 from typing import List, Union, Optional
 
 from pydantic import BaseModel, Field, ConfigDict
-from enum import Enum
-
-
-class GeomType(str, Enum):
-    Point = "Point"
-    Polygon = "Polygon"
-
+from common import GeomType
 
 class Geom_Point(BaseModel):
     """

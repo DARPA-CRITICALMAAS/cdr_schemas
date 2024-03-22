@@ -38,7 +38,14 @@ class PointFeatureCollection(BaseModel):
 
 
 class PointFeatureResult(BaseModel):
+    """
+    Point legend item along with associated point features found.
+    """
+
     id: int
     name: Optional[str]
     description: Optional[str]
+    legend_bbox: Optional[List[Union[float, int]]] = Field(
+        description="The extacted bounding box of the legend item"
+    )
     point_features: Optional[List[PointFeatureCollection]]

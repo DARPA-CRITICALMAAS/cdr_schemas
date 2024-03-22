@@ -5,7 +5,7 @@ from cdr_schemas.common import GeomType, GeoJsonType
 
 class Polygon(BaseModel):
     """
-    coordinates in polygon are (col, row).
+    coordinates in line are  (column from left, row from bottom).
     """
 
     coordinates: List[List[List[Union[float, int]]]]
@@ -13,7 +13,7 @@ class Polygon(BaseModel):
 
 
 class PolygonProperty(BaseModel):
-    id: str = Field(description="Your internal id")
+    id: str = Field(description="your internal id")
     model: Optional[str] = Field(description="model name used for extraction")
     model_version: Optional[str] = Field(
         description="model version used for extraction"
@@ -34,7 +34,7 @@ class PolygonFeatureCollection(BaseModel):
 
 
 class MapUnit(BaseModel):
-    id: int
+    id: str = Field(description="your internal id for map_unit")
     age_text: Optional[str]
     b_age: Optional[float]
     b_interval: Optional[str]
@@ -48,12 +48,15 @@ class MapUnit(BaseModel):
 
 class PolygonFeautureResult(BaseModel):
     """
-    Legend item along with associated polygon features found.
+    Polygon legend item along with associated polygon features found.
     """
 
     id: int
     map_unit: Optional[MapUnit]
     abbreviation: Optional[str]
+    legend_bbox: Optional[List[Union[float, int]]] = Field(
+        description="The extacted bounding box of the legend item"
+    )
     category: Optional[str]
     color: Optional[str]
     description: Optional[str]

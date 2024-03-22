@@ -43,6 +43,10 @@ class LineFeatureCollection(BaseModel):
 
 
 class LineFeatureResult(BaseModel):
+    """
+    Line legend item along with associated line features found.
+    """
+
     id: int
     name: Optional[str]
     dash_pattern: Optional[DashType] = Field(
@@ -50,5 +54,7 @@ class LineFeatureResult(BaseModel):
     )
     description: Optional[str]
     symbol: Optional[str]
-
+    legend_bbox: Optional[List[Union[float, int]]] = Field(
+        description="The extacted bounding box of the legend item"
+    )
     line_features: Optional[LineFeatureCollection]

@@ -34,7 +34,6 @@ class PolygonFeatureCollection(BaseModel):
 
 
 class MapUnit(BaseModel):
-    id: str = Field(description="your internal id for map_unit")
     age_text: Optional[str]
     b_age: Optional[float]
     b_interval: Optional[str]

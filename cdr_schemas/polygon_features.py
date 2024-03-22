@@ -13,27 +13,46 @@ class Polygon(BaseModel):
 
 
 class PolygonProperty(BaseModel):
+    """
+    Properties of the polygon.
+    """
+
     id: str = Field(description="your internal id")
     model: Optional[str] = Field(description="model name used for extraction")
     model_version: Optional[str] = Field(
         description="model version used for extraction"
+    )
+    confidence: Optional[float] = Field(
+        description="The prediction probability from the ML model"
     )
 
     model_config = ConfigDict(protected_namespaces=())
 
 
 class PolygonFeature(BaseModel):
+    """
+    Polygon feature.
+    """
+
     type: str = GeoJsonType.Feature
     geometry: Polygon
     properties: PolygonProperty
 
 
 class PolygonFeatureCollection(BaseModel):
+    """
+    All polygon features for legend item.
+    """
+
     type: GeomType.FeatureCollection
     features: Optional[List[PolygonFeature]]
 
 
 class MapUnit(BaseModel):
+    """
+    Map unit information for legend item.
+    """
+
     age_text: Optional[str]
     b_age: Optional[float]
     b_interval: Optional[str]
@@ -47,14 +66,15 @@ class MapUnit(BaseModel):
 
 class PolygonFeautureResult(BaseModel):
     """
-    Polygon legend item along with associated polygon features found.
+    Polygon legend item metadata along with associated polygon features found.
     """
 
     id: str = Field(description="your internal id")
     map_unit: Optional[MapUnit]
     abbreviation: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(
-        description="The extacted bounding box of the legend item"
+        description="""The extacted bounding box of the legend item. 
+        Column value from left, row value from bottom."""
     )
     category: Optional[str]
     color: Optional[str]

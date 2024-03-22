@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 from pydantic import BaseModel, Field, ConfigDict
-from cdr_schemas.common import GeomType, add_class_name_property, GeoJsonType
+from cdr_schemas.common import GeomType, GeoJsonType
 from enum import Enum
 
 
@@ -20,31 +20,42 @@ class Line(BaseModel):
 
 
 class LineProperty(BaseModel):
+    """
+    Properties of the line.
+    """
+
     id: str = Field(description="your internal id")
     model: str = Field(description="model name used for extraction")
     model_version: str = Field(description="model version used for extraction")
-    description: Optional[str]
-    symbol: Optional[str] = None
+    confidence: Optional[float] = Field(
+        description="The prediction probability from the ML model"
+    )
 
     model_config = ConfigDict(protected_namespaces=())
 
 
-@add_class_name_property
 class LineFeature(BaseModel):
-    type: str = GeomType.Feature
+    """
+    Line Feature.
+    """
+
+    type: str = GeoJsonType.Feature
     geometry: Line
     properties: LineProperty
 
 
-@add_class_name_property
 class LineFeatureCollection(BaseModel):
-    type: GeomType.FeatureCollection
+    """
+    All line features for legend item.
+    """
+
+    type: GeoJsonType.FeatureCollection
     features: Optional[List[LineFeature]]
 
 
 class LineFeatureResult(BaseModel):
     """
-    Line legend item along with associated line features found.
+    Line legend item with metadata and associated line features found.
     """
 
     id: str = Field(description="your internal id")
@@ -55,6 +66,7 @@ class LineFeatureResult(BaseModel):
     description: Optional[str]
     symbol: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(
-        description="The extacted bounding box of the legend item"
+        description="""The extacted bounding box of the legend item. 
+        Column value from left, row value from bottom."""
     )
     line_features: Optional[LineFeatureCollection]

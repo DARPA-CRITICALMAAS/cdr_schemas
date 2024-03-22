@@ -2,7 +2,7 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel, Field, ConfigDict
 from common import GeomType
-from cdr_schemas.map_area_extraction import MapArea
+from cdr_schemas.map_area_extraction import Map_Area_Extraction
 
 
 class Geom_Point(BaseModel):
@@ -114,7 +114,7 @@ class GeoreferenceResult(BaseModel):
             Projection Coordinate System for the map. ie ["EPSG:32612", "EPSG:32613"]
         """,
     )
-    map_area: Optional[MapArea] = Field(
+    map_area: Optional[Map_Area_Extraction] = Field(
         ...,
         description="""
             Polygon bordering the map area for this georeference result. There can 

@@ -50,7 +50,7 @@ class PolygonFeautureResult(BaseModel):
     Polygon legend item along with associated polygon features found.
     """
 
-    id: int
+    id: str = Field(description="your internal id")
     map_unit: Optional[MapUnit]
     abbreviation: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(

@@ -47,7 +47,7 @@ class LineFeatureResult(BaseModel):
     Line legend item along with associated line features found.
     """
 
-    id: int
+    id: str = Field(description="your internal id")
     name: Optional[str]
     dash_pattern: Optional[DashType] = Field(
         default=None, description="values = {solid, dash, dotted}"

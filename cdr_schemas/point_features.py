@@ -13,7 +13,7 @@ class Point(BaseModel):
 
 
 class PointProperties(BaseModel):
-    id: str
+    id: str = Field(description="your internal id")
     model: str = Field(description="model name used for extraction")
     model_version: str = Field(description="model version used for extraction")
     confidence: Optional[float] = Field(
@@ -42,7 +42,7 @@ class PointFeatureResult(BaseModel):
     Point legend item along with associated point features found.
     """
 
-    id: int
+    id: str = Field(description="your internal id")
     name: Optional[str]
     description: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(

@@ -18,8 +18,10 @@ class PointProperties(BaseModel):
     """
 
     id: str = Field(description="your internal id")
-    model: str = Field(description="model name used for extraction")
-    model_version: str = Field(description="model version used for extraction")
+    model: Optional[str] = Field(description="model name used for extraction")
+    model_version: Optional[str] = Field(
+        description="model version used for extraction"
+    )
     confidence: Optional[float] = Field(
         description="The prediction probability from the ML model"
     )

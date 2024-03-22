@@ -1,7 +1,7 @@
 from typing import List, Union, Optional
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from common import GeomType
 
 
@@ -10,6 +10,8 @@ class AreaType(str, Enum):
     Legend_Area = "legend_area"
     CrossSection = "cross_section"
     OCR = "ocr"
+    Polygon_Legend_Area = "polygon_legend_area"
+    line_point_Legend_Area = "line_point_legend_area"
 
 
 class Area_Extraction(BaseModel):
@@ -29,3 +31,8 @@ class Area_Extraction(BaseModel):
     confidence: Optional[float] = Field(
         description="The prediction probability from the ML model"
     )
+    model: Optional[str] = Field(description="model name used for extraction")
+    model_version: Optional[str] = Field(
+        description="model version used for extraction"
+    )
+    model_config = ConfigDict(protected_namespaces=())

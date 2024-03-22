@@ -8,7 +8,7 @@ from cdr_schemas.line_features import LineFeatureResult
 
 class FeatureResults(BaseModel):
     """
-    Georeference Results.
+    Feature Extraction Results.
     """
 
     cog_id: str = Field(

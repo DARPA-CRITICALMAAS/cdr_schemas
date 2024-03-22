@@ -64,7 +64,7 @@ class MapUnit(BaseModel):
     comments: Optional[str]
 
 
-class PolygonFeautureResult(BaseModel):
+class PolygonLegendAndFeauturesResult(BaseModel):
     """
     Polygon legend item metadata along with associated polygon features found.
     """

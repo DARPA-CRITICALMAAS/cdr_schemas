@@ -53,7 +53,7 @@ class LineFeatureCollection(BaseModel):
     features: Optional[List[LineFeature]]
 
 
-class LineFeatureResult(BaseModel):
+class LineLegendAndFeaturesResult(BaseModel):
     """
     Line legend item with metadata and associated line features found.
     """

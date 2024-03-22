@@ -50,7 +50,7 @@ class PointFeatureCollection(BaseModel):
     features: List[PointFeature]
 
 
-class PointFeatureResult(BaseModel):
+class PointLegendAndFeaturesResult(BaseModel):
     """
     Point legend item metadata along with associated point features found.
     """

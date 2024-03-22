@@ -15,7 +15,7 @@ class AreaType(str, Enum):
 class Area_Extraction(BaseModel):
     type: GeomType = GeomType.Polygon
     coordinates: List[List[List[Union[float, int]]]]
-    bounds: Optional[List[Union[float, int]]] = Field(
+    bbox: Optional[List[Union[float, int]]] = Field(
         description="""The extacted bounding box of the area. 
         Column value from left, row value from bottom."""
     )

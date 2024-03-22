@@ -1,51 +1,61 @@
 from typing import List, Optional, Union
 from pydantic import BaseModel, Field, ConfigDict
-from cdr_schemas.common import GeomType, add_class_name_property
+from cdr_schemas.common import GeomType, GeoJsonType
+
 
 class Polygon(BaseModel):
     """
     coordinates in polygon are (col, row).
     """
-    pix_coordinates: List[List[List[Union[float, int]]]]
-    geom_coordinates: Optional[List[List[List[Union[float, int]]]]]
+
+    coordinates: List[List[List[Union[float, int]]]]
     type: str = Field(default=GeomType.Polygon)
 
 
-@add_class_name_property
-class GeologicUnit(BaseModel):
-    name: str
-    description: Optional[str]=None
-    comments: Optional[str]=None
-    age_text: Optional[str]=None
-    t_interval: Optional[str]=None
-    b_interval: Optional[str]=None
-    t_age: Optional[int]=None
-    b_age: Optional[int]=None
-    lithology: Optional[List[str]]=None
-
-
-@add_class_name_property
-class PolygonFeature(BaseModel):
+class PolygonProperty(BaseModel):
     id: str = Field(description="Your internal id")
-    geometry: Polygon
     model: Optional[str] = Field(description="model name used for extraction")
-    model_version: Optional[str] = Field(description="model version used for extraction")
-    name: Optional[str] = Field(description="the polygon feature's name. must align with legend extraction")
-    color: Optional[str] = Field(description= "color is Hex_color_code") 
-    pattern: Optional[str]
-    abbreviation: Optional[str]
-    description: Optional[str]
-    category: Optional[str]    
-    geologic_unit: Optional[GeologicUnit]
+    model_version: Optional[str] = Field(
+        description="model version used for extraction"
+    )
 
-    
+    model_config = ConfigDict(protected_namespaces=())
 
-@add_class_name_property
+
+class PolygonFeature(BaseModel):
+    type: str = GeoJsonType.Feature
+    geometry: Polygon
+    properties: PolygonProperty
+
+
 class PolygonFeatureCollection(BaseModel):
-    crs: Optional[str] = Field(
-        description="""
-            If a feature has been georeference and geom_coordinates are filled in this crs should be filled in
-            An example: "EPSG:3857"
-        """
-    )    
+    type: GeomType.FeatureCollection
     features: Optional[List[PolygonFeature]]
+
+
+class MapUnit(BaseModel):
+    id: int
+    age_text: Optional[str]
+    b_age: Optional[float]
+    b_interval: Optional[str]
+    description: Optional[str]
+    lithology: Optional[str]
+    name: Optional[str]
+    t_age: Optional[float]
+    t_interval: Optional[str]
+    comments: Optional[str]
+
+
+class PolygonFeautureResult(BaseModel):
+    """
+    Legend item along with associated polygon features found.
+    """
+
+    id: int
+    map_unit: Optional[MapUnit]
+    abbreviation: Optional[str]
+    category: Optional[str]
+    color: Optional[str]
+    description: Optional[str]
+    pattern: Optional[str]
+    polygon_features: Optional[PolygonFeatureCollection]

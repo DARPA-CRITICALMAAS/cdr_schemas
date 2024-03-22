@@ -3,6 +3,7 @@ from typing import List, Union, Optional
 from pydantic import BaseModel, Field, ConfigDict
 from common import GeomType
 
+
 class Geom_Point(BaseModel):
     """
     Geometry Point:
@@ -103,8 +104,6 @@ class ProjectionResult(BaseModel):
             Name of file uploaded for this projection.
         """,
     )
-    
-
 
 
 class GeoreferenceResult(BaseModel):
@@ -126,7 +125,7 @@ class GeoreferenceResult(BaseModel):
             be many map areas on a cog so this would be the pixel polygon of one of those
             areas that has been found. 
             The optional projections attached to this GeoreferenceResult should be referring to this area.
-        """
+        """,
     )
     projections: Optional[List[ProjectionResult]] = Field(
         ...,
@@ -150,10 +149,10 @@ class GeoreferenceResults(BaseModel):
     )
     georeference_results: Optional[List[GeoreferenceResult]] = Field(
         ...,
-        description = """
+        description="""
             A list of georeferencing results, which include projections, gcps, and crs info. 
-        """
-    ) 
+        """,
+    )
     gcps: Optional[List[GroundControlPoint]] = Field(
         ...,
         description="""

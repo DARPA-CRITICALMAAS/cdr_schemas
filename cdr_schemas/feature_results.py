@@ -1,10 +1,9 @@
-
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-from cdr_schemas.point_features import PointFeatureCollection
-from cdr_schemas.polygon_features import PolygonFeatureCollection
-from cdr_schemas.line_features import LineFeatureCollection
+from cdr_schemas.point_features import PointFeatureResult
+from cdr_schemas.polygon_features import PolygonFeautureResult
+from cdr_schemas.line_features import LineFeatureResult
 
 
 class FeatureResults(BaseModel):
@@ -18,24 +17,24 @@ class FeatureResults(BaseModel):
             Cog id.
         """,
     )
-    line_feature_results: Optional[List[LineFeatureCollection]] = Field(
+    line_feature_results: Optional[List[LineFeatureResult]] = Field(
         ...,
-        description = """
-            A list of line feature extraction results. 
-        """
-    ) 
-    point_feature_results: Optional[List[PointFeatureCollection]] = Field(
+        description="""
+            A list of legend extractions with associated line feature results.
+        """,
+    )
+    point_feature_results: Optional[List[PointFeatureResult]] = Field(
         ...,
-        description = """
-            A list of point feature extraction results. 
-        """
-    ) 
-    polygon_feature_results: Optional[List[PolygonFeatureCollection]] = Field(
+        description="""
+            A list of legend extractions with associated point feature results.
+        """,
+    )
+    polygon_feature_results: Optional[List[PolygonFeautureResult]] = Field(
         ...,
-        description = """
-            A list of polygon feature extraction results. 
-        """
-    ) 
+        description="""
+            A list of legend extractions with associated polygon feature results. 
+        """,
+    )
     system: str = Field(
         ...,
         description="""

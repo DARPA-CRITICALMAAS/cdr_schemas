@@ -3,21 +3,22 @@ from typing import List, Optional, Union
 from enum import Enum
 from rasterio.CRS import CRS
 from rasterio.transform import Affine
+from rasterio.control import GroundControlPoint
+from common import Provenance
 
-class GroundControlPoint(BaseModel):
-    """Sub-field of GeoreferenceSchema"""
-    pixel_x : Union[float, int]
-    pixel_y : Union[float, int]
-    latitude : Union[float, int]
-    longitude : Union[float, int]
-    confidence : Optional[float]
+# Could use this if Rasterio GroundControlPoint doesn't work
+# class GroundControlPoint(BaseModel):
+#     """Sub-field of GeoreferenceSchema"""
+#     pixel_x : Union[float, int]
+#     pixel_y : Union[float, int]
+#     latitude : Union[float, int]
+#     longitude : Union[float, int]
+#     confidence : Optional[float]
 
 class GeoreferenceSchema(BaseModel):
     """Schema for results of georeference extraction from a map"""
     # Provenance
-    map_name : str = Field(description="The identifier of the map that this data was extracted from.")
-    model : str = Field(description="Name of the model that was used to generate this data.")
-    model_version : str = Field(description="Version number of the model used to generate this data.")
+    provenance : Provenance
     
     # Data
     crs : Optional[CRS] = Field(description="The EPSG number for the crs. Should be in the format \"EPSG:####\" or an equivelent that can be read by rasterio.CRS.from_string()")

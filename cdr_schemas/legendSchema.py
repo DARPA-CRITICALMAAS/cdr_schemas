@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union
 from enum import Enum
+from common import Contour, Provenance
 
 class MapUnitType(str, Enum):
     """Enum for the possible values of  type field of MapUnit"""
@@ -22,14 +23,12 @@ class MapUnit(BaseModel):
     color : Optional[str] = Field(description="The hex code of the median color of a map units label. If a map unit is patterned this will not mean anything.")
     pattern : Optional[bool] = Field(description="boolean value which indicates weather a polygon label is a patterned label E.g. Not a solid color label")
     overlay : Optional[bool] = Field(description="Boolean value that indicates wheather a polygon label is an overlay E.g. a map unit that can appear on top of other polygon map units.")
-    bbox : Optional[List[List[float]]] = Field(description="The list of xy coordinates that define the bounding box for a map unit.")
+    bbox : Optional[Contour] = Field(description="The list of xy coordinates that define the bounding box for a map unit.")
 
 class LegendSchema(BaseModel):
     """Schema for results of legend extraction from a map"""
     # Provenance
-    map_name : str = Field(description="The identifier of the map that this data was extracted from.")
-    model : str = Field(description="Name of the model that was used to generate this data.")
-    model_version : str = Field(description="Version number of the model used to generate this data.")
+    provenance : Provenance
     
     # Data
     features : List[MapUnit] = Field(description="The list of map units for this legend")

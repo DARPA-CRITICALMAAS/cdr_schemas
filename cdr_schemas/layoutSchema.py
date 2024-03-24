@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union
 from enum import Enum
-from common import Contour
+from common import Contour, Provenance
 
 # Option1 explictly defines the fields as part of the base schema object and is a little bit simpler in structure.
 # Option2 is a little bit more modular. Albert slightly favors Option1 but doesn't have a strong opinion if others perfer option 2
@@ -9,9 +9,7 @@ from common import Contour
 class LayoutSchema(BaseModel):
     """Schema for results of layout extraction from a map"""
     # Provenance
-    map_name : str = Field(description="The identifier of the map that this data was extracted from.")
-    model : str = Field(description="Name of the model that was used to generate this data.")
-    model_version : str = Field(description="Version number of the model used to generate this data.")
+    provenance : Provenance
     
     # Data
     map_region : Optional[List[Contour]] = Field(description="The bounding contour for the area of the image the map is in.")
@@ -40,8 +38,7 @@ class region_segmentation(BaseModel):
 class LayoutSchema2(BaseModel):
     """Schema for results of layout extraction from a map"""
     # Provenance
-    model : str = Field(description="Name of the model that was used to generate this data.")
-    model_version : str = Field(description="Version number of the model used to generate this data.")
+    provenance : Provenance
     
     # Data
     regions : List[region_segmentation] = Field(description="List containing all of the individual region segmentations for the map.")

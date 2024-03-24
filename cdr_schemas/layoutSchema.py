@@ -8,7 +8,6 @@ from common import Contour, Provenance
 # region Option1
 class LayoutSchema(BaseModel):
     """Schema for results of layout extraction from a map"""
-    # Provenance
     provenance : Provenance
     
     # Data
@@ -21,7 +20,8 @@ class LayoutSchema(BaseModel):
 # region Option1
 
 # region Option2
-class region_segmentation_type(str, Enum):
+class RegionSegmentationType(str, Enum):
+    """Enum for the possible values of type field of RegionSegmentation"""
     map = 'map'
     point_legend = 'point_legend'
     line_legend = 'line_legend'
@@ -29,17 +29,16 @@ class region_segmentation_type(str, Enum):
     cross_section = 'cross_section'
     correlation_diagram = 'correlation_diagram'
 
-class region_segmentation(BaseModel):
-    """"""
-    type : region_segmentation_type = Field(description="The type of region that is being defined.")
+class RegionSegmentation(BaseModel):
+    """Sub-field of LayoutSchema, describes a specific area from the map"""
+    type : RegionSegmentationType = Field(description="The type of region that is being defined.")
     geometry : List[List[float]] = Field(description="The bounding contour of the region being defined.")
     confidence : Optional[float] = Field(description="The model's confidence level in this prediction.")
 
 class LayoutSchema2(BaseModel):
     """Schema for results of layout extraction from a map"""
-    # Provenance
     provenance : Provenance
     
     # Data
-    regions : List[region_segmentation] = Field(description="List containing all of the individual region segmentations for the map.")
+    regions : List[RegionSegmentation] = Field(description="List containing all of the individual region segmentations for the map.")
 # endregion Option2

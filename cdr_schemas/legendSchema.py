@@ -4,7 +4,7 @@ from enum import Enum
 from common import Contour, Provenance
 
 class MapUnitType(str, Enum):
-    """Enum for the possible values of  type field of MapUnit"""
+    """Enum for the possible values of type field of MapUnit"""
     POINT = 'point'
     LINE = 'line'
     POLYGON = 'polygon'
@@ -15,7 +15,7 @@ class MapUnitType(str, Enum):
         return [MapUnitType.POINT, MapUnitType.LINE, MapUnitType.POLYGON]
 
 class MapUnit(BaseModel):
-    """Sub-field of Legend"""
+    """Sub-field of LegendSchema, describes an individual map unit of the legend"""
     type : MapUnitType = Field(description="The type of feature the map unit is. Possible values are 'Point', 'Line', 'Polygon' or 'Unknown'.")
     label : Optional[str] = Field(description="The full name of a map unit.")
     abbreviation : Optional[str] = Field(description="The short abbreviation of a map units label, for polygons this is often a 3-4 letter code.")
@@ -27,7 +27,6 @@ class MapUnit(BaseModel):
 
 class LegendSchema(BaseModel):
     """Schema for results of legend extraction from a map"""
-    # Provenance
     provenance : Provenance
     
     # Data

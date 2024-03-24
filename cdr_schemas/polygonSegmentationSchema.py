@@ -2,17 +2,21 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from common import Contour, Provenance
 
-class Polygon(BaseModel):
-    """Sub-Field of PolygonSegmentationSchema. Represents a segmented polygon map unit"""
+class PolygonOccurance(BaseModel):
+    """Sub-field of PolygonMapUnit, describes an individual segmentation of a polygon map unit"""
+    geometry : Contour
+    confidence : Optional[float]
+
+class PolygonMapUnit(BaseModel):
+    """Sub-field of PolygonSegmentationSchema, describes a polygon map unit in the map"""
     label : str
-    geometry : List[Contour]
+    occurances : List[PolygonOccurance]
     confidence : Optional[float]
 
 class PolygonSegmentationSchema(BaseModel):
-    """Schema for results of layout extraction from a map"""
-    # Provenance
+    """Schema for results of polygon segmentation from a map"""
     provenance : Provenance
-    
+
     # Data
-    features : List[Polygon]
+    features : List[PolygonMapUnit]
     

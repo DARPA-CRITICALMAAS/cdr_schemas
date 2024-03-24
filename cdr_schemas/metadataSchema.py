@@ -16,7 +16,6 @@ class map_shape_types(str, Enum):
 
 class MetadataSchema(BaseModel):
     """Schema for results of metadata extraction from a map"""
-    # Provenance
     provenance : Provenance
     
     # Data Fields

@@ -17,7 +17,6 @@ from common import Provenance
 
 class GeoreferenceSchema(BaseModel):
     """Schema for results of georeference extraction from a map"""
-    # Provenance
     provenance : Provenance
     
     # Data

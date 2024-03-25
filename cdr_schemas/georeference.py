@@ -11,7 +11,8 @@ class Geom_Point(BaseModel):
     Point geometry in world coordinates (longitude, latitude).
     """
 
-    coordinates: List[Optional[Union[float, int]]]
+    latitude: Optional[Union[float, int]]
+    longitude: Optional[Union[float, int]]
     type: GeomType = GeomType.Point
 
 
@@ -21,7 +22,8 @@ class Pixel_Point(BaseModel):
     Point geometry in pixel coordinates (columns from left, row from bottom).
     """
 
-    coordinates: List[Union[float, int]]
+    rows_from_left: Union[float, int]
+    columns_from_top: Union[float, int]
     type: GeomType = GeomType.Point
 
 

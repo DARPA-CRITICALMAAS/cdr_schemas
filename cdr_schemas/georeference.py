@@ -22,8 +22,8 @@ class Pixel_Point(BaseModel):
     Point geometry in pixel coordinates (columns from left, row from bottom).
     """
 
-    rows_from_left: Union[float, int]
-    columns_from_top: Union[float, int]
+    rows_from_top: Union[float, int]
+    columns_from_left: Union[float, int]
     type: GeomType = GeomType.Point
 
 

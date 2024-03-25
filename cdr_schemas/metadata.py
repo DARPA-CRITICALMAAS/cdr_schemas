@@ -68,7 +68,6 @@ class MapMetaData(BaseModel):
         """,
     )
     map_color_scheme: Optional[MapColorSchemeTypes]
-    source_url: Optional[str]
     publisher: Optional[str]
     state: Optional[str]
 

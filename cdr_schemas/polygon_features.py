@@ -35,6 +35,10 @@ class PolygonFeature(BaseModel):
     """
 
     type: str = GeoJsonType.Feature
+    id: str = Field(
+                description="""Each polygon geometry has a unique id.
+                The ids are used to link the polygon geometries is px-coord and geo-coord."""
+           )
     geometry: Polygon
     properties: PolygonProperty
 
@@ -56,7 +60,6 @@ class MapUnit(BaseModel):
     age_text: Optional[str]
     b_age: Optional[float]
     b_interval: Optional[str]
-    description: Optional[str]
     lithology: Optional[str]
     name: Optional[str]
     t_age: Optional[float]
@@ -70,6 +73,10 @@ class PolygonLegendAndFeauturesResult(BaseModel):
     """
 
     id: str = Field(description="your internal id")
+    map_cog_id: str = Field(
+                    description="""map_cog_id is used to link the extracted lines and thecorresponding geologic map"""
+    )
+    crs: str = Field(description="values={CRITICALMAAS:pixel, EPSG:*}")
     map_unit: Optional[MapUnit]
     abbreviation: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(

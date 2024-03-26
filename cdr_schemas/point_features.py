@@ -25,6 +25,7 @@ class PointProperties(BaseModel):
     confidence: Optional[float] = Field(
         description="The prediction probability from the ML model"
     )
+    model_config = ConfigDict(protected_namespaces=())
     bbox: Optional[List[Union[float, int]]] = Field(
         description="""The extacted bounding box of the point item. 
         Column value from left, row value from bottom."""
@@ -39,6 +40,10 @@ class PointFeature(BaseModel):
     """
 
     type: GeoJsonType.Feature
+    id: str = Field(
+                    description="""Each point geometry has a unique id.
+                    The ids are used to link the point geometries is px-coord and geo-coord."""
+               )
     geometry: Point
     properties: PointProperties
 
@@ -58,6 +63,10 @@ class PointLegendAndFeaturesResult(BaseModel):
     """
 
     id: str = Field(description="your internal id")
+    map_cog_id: str = Field(
+                    description="""map_cog_id is used to link the extracted lines and thecorresponding geologic map"""
+    )
+    crs: str = Field(description="values={CRITICALMAAS:pixel, EPSG:*}")
     name: Optional[str] = Field(description="name of legend item")
     description: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(

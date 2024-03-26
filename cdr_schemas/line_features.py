@@ -7,9 +7,9 @@ from cdr_schemas.common import GeoJsonType, GeomType
 
 
 class DashType(str, Enum):
-    Point = "solid"
-    LineString = "dash"
-    Polygon = "dotted"
+    solid = "solid"
+    dash = "dash"
+    dotted = "dotted"
 
 
 class Line(BaseModel):
@@ -36,6 +36,10 @@ class LineProperty(BaseModel):
     )
 
     model_config = ConfigDict(protected_namespaces=())
+    dash_pattern: Optional[DashType] = Field(
+        default=None, description="values = {solid, dash, dotted}"
+    )
+    symbol: Optional[str]
 
 
 class LineFeature(BaseModel):
@@ -44,6 +48,10 @@ class LineFeature(BaseModel):
     """
 
     type: str = GeoJsonType.Feature
+    id: str = Field(
+                    description="""Each line geometry has a unique id.
+                    The ids are used to link the line geometries is px-coord and geo-coord."""
+               )
     geometry: Line
     properties: LineProperty
 
@@ -63,12 +71,12 @@ class LineLegendAndFeaturesResult(BaseModel):
     """
 
     id: str = Field(description="your internal id")
-    name: Optional[str]
-    dash_pattern: Optional[DashType] = Field(
-        default=None, description="values = {solid, dash, dotted}"
+    map_cog_id: str = Field(
+                    description="""map_cog_id is used to link the extracted lines and thecorresponding geologic map"""
     )
+    crs: str = Field(description="values={CRITICALMAAS:pixel, EPSG:*}")
+    name: Optional[str]
     description: Optional[str]
-    symbol: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(
         description="""The extacted bounding box of the legend item.
         Column value from left, row value from bottom."""

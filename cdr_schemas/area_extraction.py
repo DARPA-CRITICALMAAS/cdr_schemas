@@ -12,6 +12,8 @@ class AreaType(str, Enum):
     OCR = "ocr"
     Polygon_Legend_Area = "polygon_legend_area"
     Line_Point_Legend_Area = "line_point_legend_area"
+    Line_Legend_Area = "line_legend_area"
+    Point_Legend_Area = "point_legend_area"
     Correlation_Diagram = "correlation_diagram"
 
 

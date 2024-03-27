@@ -30,6 +30,8 @@ poetry build -f sdist
 
 Update Schema Diagrams
 
+To generate schemas you will need to run `poetry install --with docs` to install the proper dependencies
+
 ```
 poetry run docs
 ```

@@ -103,6 +103,12 @@ class ProjectionResult(BaseModel):
     Projection Result
     """
 
+    id: str = Field(
+        ...,
+        description="""
+            Your internal projection id which can be mapped to feature extractions if uploaded at the same time.
+        """,
+    )
     crs: str = Field(
         ...,
         description="""

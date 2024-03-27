@@ -72,6 +72,16 @@ class LineLegendAndFeaturesResult(BaseModel):
 
     id: str = Field(description="your internal id")
     crs: str = Field(description="values={CRITICALMAAS:pixel, EPSG:*}")
+    cdr_projection_id: Optional[str] = Field(
+        description="""
+                        A cdr projection id used to georeference the features
+                    """
+    )
+    local_projection_id: Optional[str] = Field(
+        description="""
+                        A local projection id used to georeference the features
+                    """
+    )
     name: Optional[str]
     description: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(

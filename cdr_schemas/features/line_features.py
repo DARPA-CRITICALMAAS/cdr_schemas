@@ -77,11 +77,6 @@ class LineLegendAndFeaturesResult(BaseModel):
                         A cdr projection id used to georeference the features
                     """
     )
-    local_projection_id: Optional[str] = Field(
-        description="""
-                        A local projection id used to georeference the features
-                    """
-    )
     name: Optional[str]
     description: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(

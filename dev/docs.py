@@ -56,9 +56,7 @@ def run():
     ]
 
     for m in modules:
-        print(m.ref)
         generator = MermaidGenerator(m.ref)
-        print(generator)
         diagrams.append(Diagram(title=m.title, body=generator.generate_chart()))
 
     md = template.render(diagrams=diagrams)

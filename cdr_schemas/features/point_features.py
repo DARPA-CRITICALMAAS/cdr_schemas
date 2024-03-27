@@ -19,7 +19,6 @@ class PointProperties(BaseModel):
     Properties of the Point.
     """
 
-    # id: str = Field(description="your internal id")
     model: Optional[str] = Field(description="model name used for extraction")
     model_version: Optional[str] = Field(
         description="model version used for extraction"

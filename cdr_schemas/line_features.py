@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Literal, Optional, Union
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -18,7 +18,7 @@ class Line(BaseModel):
     """
 
     coordinates: List[List[Union[float, int]]]
-    type: str = Field(default=GeomType.LineString)
+    type: GeomType = GeomType.LineString
 
 
 class LineProperty(BaseModel):
@@ -47,7 +47,7 @@ class LineFeature(BaseModel):
     Line Feature.
     """
 
-    type: str = GeoJsonType.Feature
+    type: GeoJsonType = GeoJsonType.Feature
     id: str = Field(
         description="""Each line geometry has a unique id.
                     The ids are used to link the line geometries is px-coord and geo-coord."""
@@ -61,7 +61,7 @@ class LineFeatureCollection(BaseModel):
     All line features for legend item.
     """
 
-    type: Literal[GeoJsonType.FeatureCollection] = GeoJsonType.FeatureCollection
+    type: GeoJsonType = GeoJsonType.FeatureCollection
     features: Optional[List[LineFeature]]
 
 

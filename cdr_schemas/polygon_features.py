@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional, Union
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -11,7 +11,7 @@ class Polygon(BaseModel):
     """
 
     coordinates: List[List[List[Union[float, int]]]]
-    type: Literal[GeomType.Polygon] = GeomType.Polygon
+    type: GeomType = GeomType.Polygon
 
 
 class PolygonProperty(BaseModel):
@@ -36,7 +36,7 @@ class PolygonFeature(BaseModel):
     Polygon feature.
     """
 
-    type: Literal[GeoJsonType.Feature] = GeoJsonType.Feature
+    type: GeoJsonType = GeoJsonType.Feature
     id: str = Field(
         description="""Each polygon geometry has a unique id.
                 The ids are used to link the polygon geometries is px-coord and geo-coord."""
@@ -50,7 +50,7 @@ class PolygonFeatureCollection(BaseModel):
     All polygon features for legend item.
     """
 
-    type: Literal[GeoJsonType.FeatureCollection] = GeoJsonType.FeatureCollection
+    type: GeoJsonType = GeoJsonType.FeatureCollection
     features: Optional[List[PolygonFeature]]
 
 

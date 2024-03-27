@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional, Union
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -11,7 +11,7 @@ class Point(BaseModel):
     """
 
     coordinates: List[Union[float, int]]
-    type: Literal[GeomType.Point] = GeomType.Point
+    type: GeomType = GeomType.Point
 
 
 class PointProperties(BaseModel):
@@ -42,7 +42,7 @@ class PointFeature(BaseModel):
     Point feature.
     """
 
-    type: Literal[GeoJsonType.Feature] = GeoJsonType.Feature
+    type: GeoJsonType = GeoJsonType.Feature
     id: str = Field(
         description="""Each point geometry has a unique id.
                     The ids are used to link the point geometries is px-coord and geo-coord."""
@@ -56,7 +56,7 @@ class PointFeatureCollection(BaseModel):
     All point features for legend item.
     """
 
-    type: Literal[GeoJsonType.FeatureCollection] = GeoJsonType.FeatureCollection
+    type: GeoJsonType = GeoJsonType.FeatureCollection
     features: List[PointFeature]
 
 

@@ -17,6 +17,9 @@ jobs:
       - name: Install Poetry
         run: curl -sSL https://install.python-poetry.org | python -
 
+      - name: Install
+      - run: poetry install
+
       - name: Run Type Checks
         run: poetry run types
 

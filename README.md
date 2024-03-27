@@ -50,6 +50,19 @@ poetry run docs
 ```mermaid
 classDiagram
 
+    class GeomType {
+        <<Enumeration>>
+        Point: str = 'Point'
+        LineString: str = 'LineString'
+        Polygon: str = 'Polygon'
+    }
+
+    class Geom_Point {
+        latitude: Union[float, int, NoneType]
+        longitude: Union[float, int, NoneType]
+        type: GeomType = GeomType.Point
+    }
+
     class GroundControlPoint {
         gcp_id: str
         map_geom: Geom_Point
@@ -60,10 +73,12 @@ classDiagram
         crs: Optional[str]
     }
 
-    class ProjectionResult {
-        crs: str
-        gcp_ids: list[str]
-        file_name: str
+    class GeoreferenceResults {
+        cog_id: str
+        georeference_results: Optional[list[GeoreferenceResult]]
+        gcps: Optional[list[GroundControlPoint]]
+        system: str
+        system_version: str
     }
 
     class GeoreferenceResult {
@@ -72,10 +87,16 @@ classDiagram
         projections: Optional[list[ProjectionResult]]
     }
 
-    class Geom_Point {
-        latitude: Union[float, int, NoneType]
-        longitude: Union[float, int, NoneType]
+    class Pixel_Point {
+        rows_from_top: Union[float, int]
+        columns_from_left: Union[float, int]
         type: GeomType = GeomType.Point
+    }
+
+    class ProjectionResult {
+        crs: str
+        gcp_ids: list[str]
+        file_name: str
     }
 
     class Area_Extraction {
@@ -89,37 +110,16 @@ classDiagram
         model_version: Optional[str]
     }
 
-    class GeomType {
-        <<Enumeration>>
-        Point: str = 'Point'
-        LineString: str = 'LineString'
-        Polygon: str = 'Polygon'
-    }
-
-    class Pixel_Point {
-        rows_from_top: Union[float, int]
-        columns_from_left: Union[float, int]
-        type: GeomType = GeomType.Point
-    }
-
-    class GeoreferenceResults {
-        cog_id: str
-        georeference_results: Optional[list[GeoreferenceResult]]
-        gcps: Optional[list[GroundControlPoint]]
-        system: str
-        system_version: str
-    }
-
-    Area_Extraction ..> GeomType
     Area_Extraction ..> AreaType
+    Area_Extraction ..> GeomType
     Geom_Point ..> GeomType
     Pixel_Point ..> GeomType
-    GroundControlPoint ..> Geom_Point
     GroundControlPoint ..> Pixel_Point
-    GeoreferenceResult ..> Area_Extraction
+    GroundControlPoint ..> Geom_Point
     GeoreferenceResult ..> ProjectionResult
-    GeoreferenceResults ..> GroundControlPoint
+    GeoreferenceResult ..> Area_Extraction
     GeoreferenceResults ..> GeoreferenceResult
+    GeoreferenceResults ..> GroundControlPoint
 
 
 ```
@@ -133,6 +133,13 @@ classDiagram
 
 ```mermaid
 classDiagram
+
+    class MapColorSchemeTypes {
+        <<Enumeration>>
+        full_color: str = 'full_color'
+        monochrome: str = 'monochrome'
+        grayscale: str = 'grayscale'
+    }
 
     class MapMetaData {
         title: Optional[str]
@@ -156,13 +163,6 @@ classDiagram
         non_rectangular: str = 'non_rectangular'
     }
 
-    class MapColorSchemeTypes {
-        <<Enumeration>>
-        full_color: str = 'full_color'
-        monochrome: str = 'monochrome'
-        grayscale: str = 'grayscale'
-    }
-
     class CogMetaData {
         cog_id: str
         system: str
@@ -171,8 +171,8 @@ classDiagram
         map_metadata: Optional[list[MapMetaData]]
     }
 
-    MapMetaData ..> MapShapeTypes
     MapMetaData ..> MapColorSchemeTypes
+    MapMetaData ..> MapShapeTypes
     CogMetaData ..> MapMetaData
 
 
@@ -188,17 +188,6 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class Area_Extraction {
-        type: GeomType = GeomType.Polygon
-        coordinates: list[list[list[Union[float, int]]]]
-        bbox: Optional[list[Union[float, int]]]
-        category: AreaType
-        text: Optional[str]
-        confidence: Optional[float]
-        model: Optional[str]
-        model_version: Optional[str]
-    }
-
     class PointLegendAndFeaturesResult {
         id: str
         crs: str
@@ -208,23 +197,15 @@ classDiagram
         point_features: Optional[list[PointFeatureCollection]]
     }
 
-    class LineLegendAndFeaturesResult {
-        id: str
-        crs: str
-        name: Optional[str]
-        description: Optional[str]
-        legend_bbox: Optional[list[Union[float, int]]]
-        line_features: Optional[LineFeatureCollection]
-    }
-
-    class FeatureResults {
-        cog_id: str
-        line_feature_results: Optional[list[LineLegendAndFeaturesResult]]
-        point_feature_results: Optional[list[PointLegendAndFeaturesResult]]
-        polygon_feature_results: Optional[list[PolygonLegendAndFeauturesResult]]
-        map_area_extractions: Optional[list[Area_Extraction]]
-        system: str
-        system_version: str
+    class Area_Extraction {
+        type: GeomType = GeomType.Polygon
+        coordinates: list[list[list[Union[float, int]]]]
+        bbox: Optional[list[Union[float, int]]]
+        category: AreaType
+        text: Optional[str]
+        confidence: Optional[float]
+        model: Optional[str]
+        model_version: Optional[str]
     }
 
     class PolygonLegendAndFeauturesResult {
@@ -240,30 +221,35 @@ classDiagram
         polygon_features: Optional[PolygonFeatureCollection]
     }
 
-    Area_Extraction ..> GeomType
+    class FeatureResults {
+        cog_id: str
+        line_feature_results: Optional[list[LineLegendAndFeaturesResult]]
+        point_feature_results: Optional[list[PointLegendAndFeaturesResult]]
+        polygon_feature_results: Optional[list[PolygonLegendAndFeauturesResult]]
+        map_area_extractions: Optional[list[Area_Extraction]]
+        system: str
+        system_version: str
+    }
+
+    class LineLegendAndFeaturesResult {
+        id: str
+        crs: str
+        name: Optional[str]
+        description: Optional[str]
+        legend_bbox: Optional[list[Union[float, int]]]
+        line_features: Optional[LineFeatureCollection]
+    }
+
     Area_Extraction ..> AreaType
+    Area_Extraction ..> GeomType
     LineLegendAndFeaturesResult ..> LineFeatureCollection
     PointLegendAndFeaturesResult ..> PointFeatureCollection
-    PolygonLegendAndFeauturesResult ..> MapUnit
     PolygonLegendAndFeauturesResult ..> PolygonFeatureCollection
+    PolygonLegendAndFeauturesResult ..> MapUnit
+    FeatureResults ..> PointLegendAndFeaturesResult
     FeatureResults ..> LineLegendAndFeaturesResult
     FeatureResults ..> Area_Extraction
-    FeatureResults ..> PointLegendAndFeaturesResult
     FeatureResults ..> PolygonLegendAndFeauturesResult
-
-
-```
-
-</details>
-
-### Point Feature
-
-<details open>
-    <summary>point feature</summary>
-
-```mermaid
-classDiagram
-
 
 
 ```

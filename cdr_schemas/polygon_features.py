@@ -11,7 +11,7 @@ class Polygon(BaseModel):
     """
 
     coordinates: List[List[List[Union[float, int]]]]
-    type: str = Field(default=GeomType.Polygon)
+    type: Literal[GeomType.Polygon] = GeomType.Polygon
 
 
 class PolygonProperty(BaseModel):
@@ -19,7 +19,7 @@ class PolygonProperty(BaseModel):
     Properties of the polygon.
     """
 
-    id: str = Field(description="your internal id")
+    # id: str = Field(description="your internal id")
     model: Optional[str] = Field(description="model name used for extraction")
     model_version: Optional[str] = Field(
         description="model version used for extraction"
@@ -36,11 +36,11 @@ class PolygonFeature(BaseModel):
     Polygon feature.
     """
 
-    type: str = GeoJsonType.Feature
+    type: Literal[GeoJsonType.Feature] = GeoJsonType.Feature
     id: str = Field(
-                description="""Each polygon geometry has a unique id.
+        description="""Each polygon geometry has a unique id.
                 The ids are used to link the polygon geometries is px-coord and geo-coord."""
-           )
+    )
     geometry: Polygon
     properties: PolygonProperty
 
@@ -75,9 +75,6 @@ class PolygonLegendAndFeauturesResult(BaseModel):
     """
 
     id: str = Field(description="your internal id")
-    map_cog_id: str = Field(
-                    description="""map_cog_id is used to link the extracted lines and thecorresponding geologic map"""
-    )
     crs: str = Field(description="values={CRITICALMAAS:pixel, EPSG:*}")
     map_unit: Optional[MapUnit]
     abbreviation: Optional[str]

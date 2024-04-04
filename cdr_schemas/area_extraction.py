@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from cdr_schemas.common import GeomType
 
 
-class AreaType(str, Enum):
+class AreaType(Enum):
     Map_Area = "map_area"
     Legend_Area = "legend_area"
     CrossSection = "cross_section"

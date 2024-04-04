@@ -2,8 +2,6 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from uuid import UUID
-
 from cdr_schemas.area_extraction import Area_Extraction
 from cdr_schemas.common import GeomType
 
@@ -12,14 +10,14 @@ class MapProvenance(BaseModel):
     """JSON model for Document Provenance"""
     system_name: str = Field(...,
                              description="Name of system storing map")
-    id: UUID = Field(None, description="The system ID of the map")
+    id: str = Field(None, description="The system ID of the map")
     url: str = Field(None, description="URL of map at system storing map")
 
 
 class Map(BaseModel):
     """JSON model for 'Map''"""
 
-    id: UUID = Field(..., description="The CDR ID of the Map")
+    id: str = Field(..., description="The CDR ID of the Map")
     provenance: Optional[list[MapProvenance]] = Field(
         None, description="provenance list")
     is_open: bool = Field(

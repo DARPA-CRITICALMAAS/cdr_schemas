@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Optional
-from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -9,14 +8,14 @@ class DocumentProvenance(BaseModel):
     """JSON model for Document Provenance"""
     system_name: str = Field(...,
                              description="Name of system storing document")
-    id: UUID = Field(None, description="The system ID of the document")
+    id: str = Field(None, description="The system ID of the document")
     url: str = Field(None, description="Name of system storing document")
 
 
 class Document(BaseModel):
     """JSON model for user-facing document metadata"""
 
-    id: UUID = Field(..., description="The internal ID of the document")
+    id: str = Field(..., description="The internal ID of the document")
     title: str = Field(..., description="Title of the document")
     is_open: bool = Field(
         ...,
@@ -45,9 +44,9 @@ class Document(BaseModel):
 class DocumentExtraction(BaseModel):
     """JSON model for user-facing document metadata"""
 
-    id: UUID | None = Field(
+    id: str | None = Field(
         None, description="The internal ID of the xtraction")
-    document_id: UUID = Field(
+    document_id: str = Field(
         None, description="The internal ID of the source document")
     extraction_type: str = Field(
         ..., description="The type of model that produced the extraction"

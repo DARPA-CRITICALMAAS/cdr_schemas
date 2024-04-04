@@ -5,18 +5,18 @@ from types import ModuleType
 from jinja2 import Template
 from pydantic_mermaid import MermaidGenerator
 
+import cdr_schemas.area_extraction
+import cdr_schemas.document
 import cdr_schemas.events
 import cdr_schemas.feature_results
 import cdr_schemas.features.line_features
 import cdr_schemas.features.point_features
 import cdr_schemas.features.polygon_features
 import cdr_schemas.georeference
-import cdr_schemas.metadata
-import cdr_schemas.document
-import cdr_schemas.mineral
 import cdr_schemas.map
 import cdr_schemas.map_results
-import cdr_schemas.area_extraction
+import cdr_schemas.metadata
+import cdr_schemas.mineral
 
 
 @dataclass
@@ -42,7 +42,7 @@ def replaces_block(text: str, block: str):
     assert end_idx > begin_idx
 
     prefix = text[:begin_idx]
-    suffix = text[end_idx + len(end_mark):]
+    suffix = text[end_idx + len(end_mark) :]
 
     return f"{prefix}{begin_mark}\n{comment}\n{block}\n{end_mark}{suffix}"
 
@@ -58,8 +58,7 @@ def run():
         Module(title="feature results", ref=cdr_schemas.feature_results),
         Module(title="point feature", ref=cdr_schemas.features.point_features),
         Module(title="line feature", ref=cdr_schemas.features.line_features),
-        Module(title="polygon feature",
-               ref=cdr_schemas.features.polygon_features),
+        Module(title="polygon feature", ref=cdr_schemas.features.polygon_features),
         Module(title="cog metadata", ref=cdr_schemas.metadata),
         Module(title="document", ref=cdr_schemas.document),
         Module(title="mineral", ref=cdr_schemas.mineral),
@@ -69,8 +68,7 @@ def run():
 
     for m in modules:
         generator = MermaidGenerator(m.ref)
-        diagrams.append(
-            Diagram(title=m.title, body=generator.generate_chart()))
+        diagrams.append(Diagram(title=m.title, body=generator.generate_chart()))
 
     md = template.render(diagrams=diagrams)
     readme = Path("README.md").read_text()

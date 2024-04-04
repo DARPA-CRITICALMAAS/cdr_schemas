@@ -16,6 +16,7 @@ import cdr_schemas.document
 import cdr_schemas.mineral
 import cdr_schemas.map
 import cdr_schemas.map_results
+import cdr_schemas.area_extraction
 
 
 @dataclass
@@ -51,6 +52,7 @@ def run():
     template = Template(Path("docs/schemas.md.j2").read_text())
 
     modules = [
+        Module(title="area extraction", ref=cdr_schemas.area_extraction),
         Module(title="georeference", ref=cdr_schemas.georeference),
         Module(title="metadata", ref=cdr_schemas.metadata),
         Module(title="feature results", ref=cdr_schemas.feature_results),

@@ -3,7 +3,19 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from cdr_schemas.common import GeomType, AreaType
+from cdr_schemas.common import GeomType
+
+
+class AreaType(str, Enum):
+    Map_Area = "Map_Area"
+    Legend_Area = "Legend_Area"
+    CrossSection = "CrossSection"
+    OCR = "OCR"
+    Polygon_Legend_Area = "Polygon_Legend_Area"
+    Line_Point_Legend_Area = "Line_Point_Legend_Area"
+    Line_Legend_Area = "Line_Legend_Area"
+    Point_Legend_Area = "Point_Legend_Area"
+    Correlation_Diagram = "Correlation_Diagram"
 
 
 class Area_Extraction(BaseModel):

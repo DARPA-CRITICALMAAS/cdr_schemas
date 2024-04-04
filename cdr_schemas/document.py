@@ -6,10 +6,12 @@ from pydantic import BaseModel, Field
 
 class DocumentProvenance(BaseModel):
     """JSON model for Document Provenance"""
-    system_name: str = Field(...,
-                             description="Name of system storing document")
-    id: str = Field(None, description="The system ID of the document")
-    url: str = Field(None, description="Name of system storing document")
+    external_system_name: str = Field(...,
+                                      description="Name of system storing document")
+    external_system_id: str = Field(
+        None, description="The system ID of the document")
+    external_system_url: str = Field(
+        None, description="Name of system storing document")
 
 
 class Document(BaseModel):

@@ -6,16 +6,16 @@ from pydantic import BaseModel, ConfigDict, Field
 from cdr_schemas.common import GeomType
 
 
-class AreaType(Enum):
-    Map_Area = "map_area"
-    Legend_Area = "legend_area"
-    CrossSection = "cross_section"
-    OCR = "ocr"
-    Polygon_Legend_Area = "polygon_legend_area"
-    Line_Point_Legend_Area = "line_point_legend_area"
-    Line_Legend_Area = "line_legend_area"
-    Point_Legend_Area = "point_legend_area"
-    Correlation_Diagram = "correlation_diagram"
+class AreaType(str, Enum):
+    Map_Area = "Map_Area"
+    Legend_Area = "Legend_Area"
+    CrossSection = "CrossSection"
+    OCR = "OCR"
+    Polygon_Legend_Area = "Polygon_Legend_Area"
+    Line_Point_Legend_Area = "Line_Point_Legend_Area"
+    Line_Legend_Area = "Line_Legend_Area"
+    Point_Legend_Area = "Point_Legend_Area"
+    Correlation_Diagram = "Correlation_Diagram"
 
 
 class Area_Extraction(BaseModel):

@@ -6,10 +6,17 @@ from cdr_schemas.feature_results import FeatureResults
 from cdr_schemas.georeference import GeoreferenceResults
 
 
-class Results(BaseModel):
+class MapResults(BaseModel):
     """
     All results for map.
     """
+
+    cog_id: str = Field(
+        ...,
+        description="""
+            Cog id.
+        """,
+    )
 
     georef_results: Optional[List[GeoreferenceResults]] = Field(
         ...,

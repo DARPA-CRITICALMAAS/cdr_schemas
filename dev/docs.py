@@ -5,13 +5,18 @@ from types import ModuleType
 from jinja2 import Template
 from pydantic_mermaid import MermaidGenerator
 
+import cdr_schemas.area_extraction
+import cdr_schemas.document
 import cdr_schemas.events
 import cdr_schemas.feature_results
 import cdr_schemas.features.line_features
 import cdr_schemas.features.point_features
 import cdr_schemas.features.polygon_features
 import cdr_schemas.georeference
+import cdr_schemas.map
+import cdr_schemas.map_results
 import cdr_schemas.metadata
+import cdr_schemas.mineral
 
 
 @dataclass
@@ -47,6 +52,7 @@ def run():
     template = Template(Path("docs/schemas.md.j2").read_text())
 
     modules = [
+        Module(title="area extraction", ref=cdr_schemas.area_extraction),
         Module(title="georeference", ref=cdr_schemas.georeference),
         Module(title="metadata", ref=cdr_schemas.metadata),
         Module(title="feature results", ref=cdr_schemas.feature_results),
@@ -54,6 +60,10 @@ def run():
         Module(title="line feature", ref=cdr_schemas.features.line_features),
         Module(title="polygon feature", ref=cdr_schemas.features.polygon_features),
         Module(title="cog metadata", ref=cdr_schemas.metadata),
+        Module(title="document", ref=cdr_schemas.document),
+        Module(title="mineral", ref=cdr_schemas.mineral),
+        Module(title="map results", ref=cdr_schemas.map_results),
+        Module(title="map", ref=cdr_schemas.map),
     ]
 
     for m in modules:

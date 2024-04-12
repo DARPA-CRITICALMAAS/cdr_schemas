@@ -2,7 +2,7 @@
 
 
 ## Schemas
-{% for diag in diagrams %}
+{% for diag in diagrams|sort(attribute="title") %}
    [{{ diag.title|title }}](#{{ diag.title|title|mk_quote }})<br/>
 {%- endfor %}
 

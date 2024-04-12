@@ -2,9 +2,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
 
-from jinja2 import Template
-from pydantic_mermaid import MermaidGenerator
-
 import cdr_schemas.area_extraction
 import cdr_schemas.document
 import cdr_schemas.events
@@ -17,6 +14,8 @@ import cdr_schemas.map
 import cdr_schemas.map_results
 import cdr_schemas.metadata
 import cdr_schemas.mineral
+from jinja2 import Template
+from pydantic_mermaid import MermaidGenerator
 
 
 @dataclass
@@ -50,7 +49,6 @@ def replaces_block(text: str, block: str):
 def run():
     diagrams = []
     template = Template(Path("docs/schemas.md.j2").read_text())
-
     modules = [
         Module(title="area extraction", ref=cdr_schemas.area_extraction),
         Module(title="georeference", ref=cdr_schemas.georeference),

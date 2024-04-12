@@ -1,7 +1,5 @@
 from typing import List, Optional, Union
-
 from pydantic import BaseModel, ConfigDict, Field
-
 from cdr_schemas.common import GeoJsonType, GeomType
 
 
@@ -19,12 +17,16 @@ class PolygonProperty(BaseModel):
     Properties of the polygon.
     """
 
-    model: Optional[str] = Field(description="model name used for extraction")
+    model: Optional[str] = Field(
+        default=None,
+        description="Name of the model used for extraction")
     model_version: Optional[str] = Field(
-        description="model version used for extraction"
+        default=None,
+        description="Version of the model used for extraction"
     )
     confidence: Optional[float] = Field(
-        description="The prediction probability from the ML model"
+        default=None,
+        description="The prediction confidence of the model"
     )
 
     model_config = ConfigDict(protected_namespaces=())
@@ -50,7 +52,7 @@ class PolygonFeatureCollection(BaseModel):
     """
 
     type: GeoJsonType = GeoJsonType.FeatureCollection
-    features: Optional[List[PolygonFeature]]
+    features: Optional[List[PolygonFeature]] = None
 
 
 class MapUnit(BaseModel):
@@ -58,36 +60,57 @@ class MapUnit(BaseModel):
     Map unit information for legend item.
     """
 
-    age_text: Optional[str]
-    b_age: Optional[float]
-    b_interval: Optional[str]
-    lithology: Optional[str]
-    name: Optional[str]
-    t_age: Optional[float]
-    t_interval: Optional[str]
-    comments: Optional[str]
+    # TODO Add details on what these fields are / are we keeping them
+    age_text: Optional[str] = None
+    b_age: Optional[float] = None
+    b_interval: Optional[str] = None
+    lithology: Optional[str] = None
+    name: Optional[str] = None
+    t_age: Optional[float] = None
+    t_interval: Optional[str] = None
+    comments: Optional[str] = None
 
 
-class PolygonLegendAndFeauturesResult(BaseModel):
+class PolygonLegendAndFeatureResult(BaseModel):
     """
-    Polygon legend item metadata along with associated polygon features found.
+    Polygon map unit metadata along with associated polygon segmentation found.
     """
 
     id: str = Field(description="your internal id")
-    crs: str = Field(description="values={CRITICALMAAS:pixel, EPSG:*}")
+
+    # Legend Fields
+    label: Optional[str] = Field(
+        default=None,
+        description="Label of the map unit")
+    abbreviation: Optional[str] = Field(
+        default=None,
+        description="Abbreviation of the map unit label.")
+    description: Optional[str] = Field(
+        default=None,
+        description="Description of the map unit")
+    legend_bbox: Optional[List[List[Union[float, int]]]] = Field(
+        default=None,
+        description="The bounding box of the map units label.")
+    color: Optional[str] = Field(
+        default=None,
+        description="The color of the map unit")
+    pattern: Optional[str] = Field(
+        default=None,
+        description="The pattern of the map unit")
+    category: Optional[str] = Field(
+        default=None,
+        description="TODO - what is this?") ### TODO
+    map_unit: Optional[MapUnit] = Field(
+        default=None,
+        description="Human annotated information on the mab unit")
+    
+    # Segmentation Fields
+    crs: Optional[str] = Field(
+        default=None, 
+        description="values={CRITICALMAAS:pixel, EPSG:*}")
     cdr_projection_id: Optional[str] = Field(
-        description="""
-                        A cdr projection id used to georeference the features
-                    """
-    )
-    map_unit: Optional[MapUnit]
-    abbreviation: Optional[str]
-    legend_bbox: Optional[List[Union[float, int]]] = Field(
-        description="""The extacted bounding box of the legend item.
-        Column value from left, row value from bottom."""
-    )
-    category: Optional[str]
-    color: Optional[str]
-    description: Optional[str]
-    pattern: Optional[str]
-    polygon_features: Optional[PolygonFeatureCollection]
+        default=None,
+        description="A cdr projection id used to georeference the features") ### TODO Could use some more explanation
+    polygon_features: Optional[PolygonFeatureCollection] = Field(
+        default=None,
+        description="All polygon features for legend item.")

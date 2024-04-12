@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -107,7 +107,7 @@ class DocumentExtraction(BaseModel):
     )
     page_num: int | None = Field(None, description="The page number of the extraction")
     external_link: str | None = Field(None, description="A link to the extraction")
-    data: dict | None = Field(
+    data: Dict | None = Field(
         None, description="Extra information about the extraction"
     )
 

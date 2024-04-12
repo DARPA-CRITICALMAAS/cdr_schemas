@@ -3,7 +3,7 @@
 
 ## Schemas
 {% for diag in diagrams %}
-   [{{ diag.title|title }}](#{{ diag.title|title }})<br/>
+   [{{ diag.title|title }}](#{{ diag.title|title|quote }})<br/>
 {%- endfor %}
 
 {% for diag in diagrams %}

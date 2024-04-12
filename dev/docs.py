@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
+from urllib.parse import quote
 
 import cdr_schemas.area_extraction
 import cdr_schemas.document
@@ -15,6 +16,7 @@ import cdr_schemas.map_results
 import cdr_schemas.metadata
 import cdr_schemas.mineral
 from jinja2 import Template
+from jinja2.filters import FILTERS
 from pydantic_mermaid import MermaidGenerator
 
 
@@ -48,6 +50,7 @@ def replaces_block(text: str, block: str):
 
 def run():
     diagrams = []
+    FILTERS["quote"] = quote
     template = Template(Path("docs/schemas.md.j2").read_text())
     modules = [
         Module(title="area extraction", ref=cdr_schemas.area_extraction),

@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
-from pydantic import BaseModel, ConfigDict, Field
-from cdr_schemas.common import ModelProvenance, GeomType
+from pydantic import BaseModel, Field
+from cdr_schemas.common import ModelProvenance
 
 class PolygonSegmentation(BaseModel):
     """
@@ -13,10 +13,12 @@ class PolygonSegmentation(BaseModel):
 
     # Data
     geometry: List[List[List[Union[float, int]]]]
-    geom_type: GeomType = GeomType.Polygon
-    id: str = Field(
-        description="""Each polygon geometry has a unique id. The ids are used 
-                    to link the polygon geometries is px-coord and geo-coord.""")   
+
+    # Why are we returning internal ids for polygons? also when would this ever not be GeomType.Polygon, this is a polygon segmentation
+    # geom_type: GeomType = GeomType.Polygon
+    # id: str = Field(
+    #     description="""Each polygon geometry has a unique id. The ids are used 
+    #                 to link the polygon geometries is px-coord and geo-coord.""")   
 
 class PolygonLegend(BaseModel):
     """

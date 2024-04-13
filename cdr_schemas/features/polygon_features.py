@@ -4,7 +4,7 @@ from cdr_schemas.common import ModelProvenance
 
 class PolygonSegmentation(BaseModel):
     """
-    Polygon feature.
+    Segmentation of a polygon map unit.
     """
 
     # Provenance
@@ -73,10 +73,13 @@ class PolygonMapUnit(BaseModel):
     Polygon map unit metadata along with associated polygon segmentation found.
     """
 
-    legend = PolygonLegend
+    legend = Optional[PolygonLegend] = Field(
+        default=None,
+        description="Legend information for polygon map unit."
+    )
     segmentation = Optional[List[PolygonSegmentation]] = Field(
         default=None,
-        description="All polygon features for legend item.")
+        description="Polygon Segmentations for polygon map unit item.")
     
     # What is this 
     # id: str = Field(description="your internal id")

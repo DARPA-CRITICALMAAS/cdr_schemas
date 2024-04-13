@@ -7,9 +7,9 @@ class GeomType(str, Enum):
     LineString = "LineString"
     Polygon = "Polygon"
 
-# class GeoJsonType(str, Enum):
-#     Feature = "Feature"
-#     FeatureCollection = "FeatureCollection"
+class GeoJsonType(str, Enum):
+    Feature = "Feature"
+    FeatureCollection = "FeatureCollection"
 
 class ModelProvenance(BaseModel):
     model: Optional[str] = Field(

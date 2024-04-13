@@ -1,6 +1,9 @@
 from typing import List, Optional, Union
+
 from pydantic import BaseModel, Field
+
 from cdr_schemas.common import ModelProvenance
+
 
 class PolygonSegmentation(BaseModel):
     """
@@ -8,8 +11,7 @@ class PolygonSegmentation(BaseModel):
     """
 
     # Provenance
-    provenance: ModelProvenance = Field(
-        description="Where the data orginated from.")
+    provenance: ModelProvenance = Field(description="Where the data orginated from.")
 
     # Data
     geometry: List[List[List[Union[float, int]]]]
@@ -17,46 +19,46 @@ class PolygonSegmentation(BaseModel):
     # Why are we returning internal ids for polygons? also when would this ever not be GeomType.Polygon, this is a polygon segmentation
     # geom_type: GeomType = GeomType.Polygon
     # id: str = Field(
-    #     description="""Each polygon geometry has a unique id. The ids are used 
-    #                 to link the polygon geometries is px-coord and geo-coord.""")   
+    #     description="""Each polygon geometry has a unique id. The ids are used
+    #                 to link the polygon geometries is px-coord and geo-coord.""")
+
 
 class PolygonLegend(BaseModel):
     """
     Legend information for a polygon map unit.
     """
+
     # Provenance
-    provenance: ModelProvenance = Field(
-        description="Where the data orginated from.")
+    provenance: ModelProvenance = Field(description="Where the data orginated from.")
 
     # Data
-    label: Optional[str] = Field(
-        default=None,
-        description="Label of the map unit")
+    label: Optional[str] = Field(default=None, description="Label of the map unit")
     abbreviation: Optional[str] = Field(
-        default=None,
-        description="Abbreviation of the map unit label.")
+        default=None, description="Abbreviation of the map unit label."
+    )
     description: Optional[str] = Field(
-        default=None,
-        description="Description of the map unit")
+        default=None, description="Description of the map unit"
+    )
     legend_bbox: Optional[List[List[Union[float, int]]]] = Field(
-        default=None,
-        description="The bounding box of the map units label.")
+        default=None, description="The bounding box of the map units label."
+    )
     color: Optional[str] = Field(
-        default=None,
-        description="The color of the map unit's legend")
+        default=None, description="The color of the map unit's legend"
+    )
     pattern: Optional[str] = Field(
-        default=None,
-        description="The pattern of the map unit's legend")
+        default=None, description="The pattern of the map unit's legend"
+    )
     overlay: Optional[bool] = Field(
         default=None,
-        description="Wheather or not the map unit can be overlayed on other map units")
-    
+        description="Wheather or not the map unit can be overlayed on other map units",
+    )
+
     # What is this?
     # category: Optional[str] = Field(
     #     default=None,
     #     description="TODO - what is this?")
 
-    # I would remove these as i don't think we have any system that fills them in 
+    # I would remove these as i don't think we have any system that fills them in
     # age_text: Optional[str] = None
     # b_age: Optional[float] = None
     # b_interval: Optional[str] = None
@@ -74,20 +76,19 @@ class PolygonMapUnit(BaseModel):
     """
 
     legend: Optional[PolygonLegend] = Field(
-        default=None,
-        description="Legend information for polygon map unit."
+        default=None, description="Legend information for polygon map unit."
     )
     segmentation: Optional[List[PolygonSegmentation]] = Field(
-        default=None,
-        description="Polygon Segmentations for polygon map unit item.")
-    
-    # What is this 
+        default=None, description="Polygon Segmentations for polygon map unit item."
+    )
+
+    # What is this
     # id: str = Field(description="your internal id")
 
     # Why do we have any link to georeferencing in the segmentation result. One of the big reasons to change to this format
     # was to decouple georeferecing from segmentation. All results should be in image coords space.
     # crs: Optional[str] = Field(
-    #     default=None, 
+    #     default=None,
     #     description="values={CRITICALMAAS:pixel, EPSG:*}")
     # cdr_projection_id: Optional[str] = Field(
     #     default=None,

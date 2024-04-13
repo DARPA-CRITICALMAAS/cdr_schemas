@@ -73,11 +73,11 @@ class PolygonMapUnit(BaseModel):
     Polygon map unit metadata along with associated polygon segmentation found.
     """
 
-    legend = Optional[PolygonLegend] = Field(
+    legend: Optional[PolygonLegend] = Field(
         default=None,
         description="Legend information for polygon map unit."
     )
-    segmentation = Optional[List[PolygonSegmentation]] = Field(
+    segmentation: Optional[List[PolygonSegmentation]] = Field(
         default=None,
         description="Polygon Segmentations for polygon map unit item.")
     

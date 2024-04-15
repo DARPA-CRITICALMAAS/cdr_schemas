@@ -79,13 +79,6 @@ classDiagram
         Correlation_Diagram: str = 'Correlation_Diagram'
     }
 
-    class GeomType {
-        <<Enumeration>>
-        Point: str = 'Point'
-        LineString: str = 'LineString'
-        Polygon: str = 'Polygon'
-    }
-
     class Area_Extraction {
         type: GeomType = GeomType.Polygon
         coordinates: list[list[list[Union[float, int]]]]
@@ -95,6 +88,13 @@ classDiagram
         model: Optional[str] = None
         model_version: Optional[str] = None
         confidence: Optional[float] = None
+    }
+
+    class GeomType {
+        <<Enumeration>>
+        Point: str = 'Point'
+        LineString: str = 'LineString'
+        Polygon: str = 'Polygon'
     }
 
     Area_Extraction ..> AreaType
@@ -113,10 +113,18 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class ProjectionResult {
-        crs: str
-        gcp_ids: list[str]
-        file_name: str
+    class GeoreferenceResults {
+        cog_id: str
+        georeference_results: Optional[list[GeoreferenceResult]]
+        gcps: Optional[list[GroundControlPoint]]
+        system: str
+        system_version: str
+    }
+
+    class Geom_Point {
+        latitude: Union[float, int, NoneType]
+        longitude: Union[float, int, NoneType]
+        type: GeomType = GeomType.Point
     }
 
     class GeoreferenceResults {
@@ -181,8 +189,9 @@ classDiagram
     GroundControlPoint ..> Geom_Point
     GeoreferenceResult ..> ProjectionResult
     GeoreferenceResult ..> Area_Extraction
-    GeoreferenceResults ..> GroundControlPoint
+    GeoreferenceResult ..> ProjectionResult
     GeoreferenceResults ..> GeoreferenceResult
+    GeoreferenceResults ..> GroundControlPoint
 
 
 ```
@@ -196,13 +205,6 @@ classDiagram
 
 ```mermaid
 classDiagram
-
-    class MapColorSchemeTypes {
-        <<Enumeration>>
-        full_color: str = 'full_color'
-        monochrome: str = 'monochrome'
-        grayscale: str = 'grayscale'
-    }
 
     class CogMetaData {
         cog_id: str
@@ -236,6 +238,7 @@ classDiagram
 
     MapMetaData ..> MapColorSchemeTypes
     MapMetaData ..> MapShapeTypes
+    MapMetaData ..> MapColorSchemeTypes
     CogMetaData ..> MapMetaData
 
 
@@ -411,6 +414,28 @@ classDiagram
         dip_direction: Optional[int] = None
     }
 
+    class PointFeature {
+        type: GeoJsonType = GeoJsonType.Feature
+        id: str
+        geometry: Point
+        properties: PointProperties
+    }
+
+    class Point {
+        coordinates: list[Union[float, int]]
+        type: GeomType = GeomType.Point
+    }
+
+    class PointLegendAndFeaturesResult {
+        id: str
+        crs: str
+        cdr_projection_id: Optional[str]
+        name: Optional[str]
+        description: Optional[str]
+        legend_bbox: Optional[list[Union[float, int]]]
+        point_features: Optional[list[PointFeatureCollection]]
+    }
+
     Point ..> GeomType
     PointFeature ..> PointProperties
     PointFeature ..> GeoJsonType
@@ -450,6 +475,11 @@ classDiagram
         confidence: Optional[float] = None
     }
 
+    class LineFeatureCollection {
+        type: GeoJsonType = GeoJsonType.FeatureCollection
+        features: Optional[list[LineFeature]]
+    }
+
     class DashType {
         <<Enumeration>>
         solid: str = 'solid'
@@ -460,6 +490,13 @@ classDiagram
     class Line {
         coordinates: list[list[Union[float, int]]]
         type: GeomType = GeomType.LineString
+    }
+
+    class LineFeature {
+        type: GeoJsonType = GeoJsonType.Feature
+        id: str
+        geometry: Line
+        properties: LineProperty
     }
 
     class GeomType {
@@ -590,6 +627,13 @@ classDiagram
         confidence: Optional[float] = None
     }
 
+    class PolygonFeature {
+        type: GeoJsonType = GeoJsonType.Feature
+        id: str
+        geometry: Polygon
+        properties: PolygonProperty
+    }
+
     Polygon ..> GeomType
     PolygonFeature ..> GeoJsonType
     PolygonFeature ..> PolygonProperty
@@ -612,13 +656,6 @@ classDiagram
 
 ```mermaid
 classDiagram
-
-    class MapColorSchemeTypes {
-        <<Enumeration>>
-        full_color: str = 'full_color'
-        monochrome: str = 'monochrome'
-        grayscale: str = 'grayscale'
-    }
 
     class CogMetaData {
         cog_id: str
@@ -652,6 +689,7 @@ classDiagram
 
     MapMetaData ..> MapColorSchemeTypes
     MapMetaData ..> MapShapeTypes
+    MapMetaData ..> MapColorSchemeTypes
     CogMetaData ..> MapMetaData
 
 
@@ -878,7 +916,6 @@ classDiagram
     Reference ..> Document
     MappableCriteria ..> EvidenceLayer
     MappableCriteria ..> Reference
-    MineralSystem ..> DepositType
     MineralSystem ..> MappableCriteria
     MineralInventory ..> ResourceReserveCategory
     MineralInventory ..> Grade

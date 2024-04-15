@@ -80,7 +80,7 @@ class MapUnit(BaseModel):
     comments: Optional[str] = None
 
 
-class PolygonLegendAndFeatureResult(BaseModel):
+class PolygonLegendAndFeaturesResult(BaseModel):
     """
     Polygon map unit metadata along with associated polygon segmentation found.
     """

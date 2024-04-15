@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from cdr_schemas.area_extraction import Area_Extraction
 from cdr_schemas.features.line_features import LineLegendAndFeaturesResult
 from cdr_schemas.features.point_features import PointLegendAndFeaturesResult
-from cdr_schemas.features.polygon_features import PolygonLegendAndFeatureResult
+from cdr_schemas.features.polygon_features import PolygonLegendAndFeaturesResult
 from cdr_schemas.metadata import CogMetaData
 
 
@@ -29,7 +29,7 @@ class FeatureResults(BaseModel):
         description="""A list of legend extractions with associated point
                     feature results.""",
     )
-    polygon_feature_results: Optional[List[PolygonLegendAndFeatureResult]] = Field(
+    polygon_feature_results: Optional[List[PolygonLegendAndFeaturesResult]] = Field(
         default=None,
         description="""A list of legend extractions with associated polygon
                     feature results.""",

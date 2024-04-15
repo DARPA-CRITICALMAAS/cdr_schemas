@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from cdr_schemas.common import ModelProvenance
+from cdr_schemas.common import CRITICALMAAS_PIXEL, ModelProvenance
 
 
 class Polygon(BaseModel):
@@ -11,14 +11,13 @@ class Polygon(BaseModel):
     """
 
     # Provenance
-    provenance: ModelProvenance = Field(description="Where the data orginated from.")
+    provenance: ModelProvenance = Field(description="Where the data originated from.")
 
     # Data
     crs: Optional[str] = Field(
-        default=None,
-        # default=CRITICALMASS:pixel, # TODO Define CRITICALMASS:pixel somewhere before it can be the default
+        default=CRITICALMAAS_PIXEL,
         description="""What projection the geometry of the segmentation are in,
-                    Default is CRITICALMASS:pixel which specifies pixel coordinates.
+                    Default is CRITICALMAAS_PIXEL which specifies pixel coordinates.
                     Possible values are {CRITICALMAAS:pixel, EPSG:*}""",
     )
     cdr_projection_id: Optional[str] = Field(
@@ -43,7 +42,7 @@ class PolygonLegend(BaseModel):
     """
 
     # Provenance
-    provenance: ModelProvenance = Field(description="Where the data orginated from.")
+    provenance: ModelProvenance = Field(description="Where the data originated from.")
 
     # Data
     label: Optional[str] = Field(default=None, description="Label of the map unit")
@@ -53,8 +52,13 @@ class PolygonLegend(BaseModel):
     description: Optional[str] = Field(
         default=None, description="Description of the map unit"
     )
-    legend_bbox: Optional[List[List[Union[float, int]]]] = Field(
-        default=None, description="The bounding box of the map units label."
+    legend_bbox: Optional[List[Union[float, int]]] = Field(
+        default=None,
+        description="The rough 2 point bounding box of the map units label.",
+    )
+    legend_contour: Optional[List[List[Union[float, int]]]] = Field(
+        default=None,
+        description="The more precise polygon bounding box of the map units label.",
     )
     color: Optional[str] = Field(
         default=None, description="The color of the map unit's legend"
@@ -67,7 +71,7 @@ class PolygonLegend(BaseModel):
         description="Wheather or not the map unit can be overlayed on other map units",
     )
 
-    # TODO Someone else will need to add descriptions to these fields as I don't know what they are
+    # TODO Someone else will need to add full descriptions to these fields
     age_text: Optional[str] = None
     b_age: Optional[float] = None
     b_interval: Optional[str] = None

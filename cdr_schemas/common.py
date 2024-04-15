@@ -3,6 +3,9 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
+# Constant for defining that a projection is in pixel coordinates
+CRITICALMAAS_PIXEL = "pixel"
+
 
 class GeomType(str, Enum):
     Point = "Point"

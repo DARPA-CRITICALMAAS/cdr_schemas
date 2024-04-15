@@ -14,10 +14,14 @@ class DashType(str, Enum):
 
 class Line(BaseModel):
     """
-    coordinates in line are  (column from left, row from bottom).
+    Individual line segmentation of a line feature.
     """
 
-    coordinates: List[List[Union[float, int]]]
+    coordinates: List[List[Union[float, int]]] = Field(
+        description="""The coordinates of the line. Format is expected to
+                    be [x,y] coordinate pairs where the top left is the origin
+                    (0,0)."""
+    )
     type: GeomType = GeomType.LineString
 
 
@@ -79,7 +83,15 @@ class LineLegendAndFeaturesResult(BaseModel):
     name: Optional[str]
     description: Optional[str]
     legend_bbox: Optional[List[Union[float, int]]] = Field(
-        description="""The extacted bounding box of the legend item.
-        Column value from left, row value from bottom."""
+        default=None,
+        description="""The rough 2 point bounding box of the map units label.
+                    Format is expected to be [x1,y1,x2,y2] where the top left
+                    is the origin (0,0).""",
+    )
+    legend_contour: Optional[List[List[Union[float, int]]]] = Field(
+        default=None,
+        description="""The more precise polygon bounding box of the map units
+                    label. Format is expected to be [x,y] coordinate pairs
+                    where the top left is the origin (0,0).""",
     )
     line_features: Optional[LineFeatureCollection]

@@ -7,10 +7,14 @@ from cdr_schemas.common import GeoJsonType, GeomType
 
 class Polygon(BaseModel):
     """
-    coordinates in line are  (column from left, row from bottom).
+    Individual polygon segmentation of a polygon feature.
     """
 
-    coordinates: List[List[List[Union[float, int]]]]
+    coordinates: List[List[List[Union[float, int]]]] = Field(
+        description="""The coordinates of the polygon. Format is expected to
+                    be [x,y] coordinate pairs where the top left is the origin
+                    (0,0)."""
+    )
     type: GeomType = GeomType.Polygon
 
 
@@ -88,11 +92,15 @@ class PolygonLegendAndFeatureResult(BaseModel):
     )
     legend_bbox: Optional[List[Union[float, int]]] = Field(
         default=None,
-        description="The rough 2 point bounding box of the map units label.",
+        description="""The rough 2 point bounding box of the map units label.
+                    Format is expected to be [x1,y1,x2,y2] where the top left
+                    is the origin (0,0).""",
     )
     legend_contour: Optional[List[List[Union[float, int]]]] = Field(
         default=None,
-        description="The more precise polygon bounding box of the map units label.",
+        description="""The more precise polygon bounding box of the map units
+                    label. Format is expected to be [x,y] coordinate pairs
+                    where the top left is the origin (0,0).""",
     )
     color: Optional[str] = Field(default=None, description="The color of the map unit")
     pattern: Optional[str] = Field(

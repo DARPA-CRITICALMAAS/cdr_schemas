@@ -24,10 +24,15 @@ class Area_Extraction(BaseModel):
     """
 
     type: GeomType = GeomType.Polygon
-    coordinates: List[List[List[Union[float, int]]]]
+    coordinates: List[List[List[Union[float, int]]]] = Field(
+        description="""The coordinates of the areas boundry. Format is expected
+                    to be [x,y] coordinate pairs where the top left is the
+                    origin (0,0)."""
+    )
     bbox: Optional[List[Union[float, int]]] = Field(
-        description="""The extacted bounding box of the area.
-        Column value from left, row value from bottom."""
+        description="""The extracted bounding box of the area.
+                    Format is expected to be [x1,y1,x2,y2] where the top left
+                    is the origin (0,0).""",
     )
     category: AreaType = Field(
         ...,
@@ -41,12 +46,15 @@ class Area_Extraction(BaseModel):
             The text within the extraction area.
         """,
     )
-    confidence: Optional[float] = Field(
-        description="The prediction probability from the ML model"
-    )
-    model: Optional[str] = Field(description="model name used for extraction")
-    model_version: Optional[str] = Field(
-        description="model version used for extraction"
-    )
 
+    # Model Provenance
+    model: Optional[str] = Field(
+        default=None, description="Name of the model used to generate this data"
+    )
+    model_version: Optional[str] = Field(
+        default=None, description="Version of the model used to generate this data"
+    )
     model_config = ConfigDict(protected_namespaces=())
+    confidence: Optional[float] = Field(
+        default=None, description="The prediction confidence of the model"
+    )

@@ -2,7 +2,12 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from cdr_schemas.common import GeoJsonType, GeomType
+from cdr_schemas.common import (
+    CRITICALMAAS_PIXEL,
+    GeoJsonType,
+    GeomType,
+    ModelProvenance,
+)
 
 
 class Polygon(BaseModel):
@@ -64,7 +69,7 @@ class MapUnit(BaseModel):
     Map unit information for legend item.
     """
 
-    # TODO Add details on what these fields are / are we keeping them
+    # TODO Someone needs to add full descriptions to these fields
     age_text: Optional[str] = None
     b_age: Optional[float] = None
     b_interval: Optional[str] = None
@@ -83,6 +88,10 @@ class PolygonLegendAndFeatureResult(BaseModel):
     id: str = Field(description="your internal id")
 
     # Legend Fields
+    # TODO move to a more sensible location
+    legend_provenance: Optional[ModelProvenance] = Field(
+        default=None, description="Where the data originated from."
+    )
     label: Optional[str] = Field(default=None, description="Label of the map unit")
     abbreviation: Optional[str] = Field(
         default=None, description="Abbreviation of the map unit label."
@@ -106,21 +115,24 @@ class PolygonLegendAndFeatureResult(BaseModel):
     pattern: Optional[str] = Field(
         default=None, description="The pattern of the map unit"
     )
-    category: Optional[str] = Field(
-        default=None, description="TODO - what is this?"
-    )  ### TODO
+    ### TODO Agreed on Apr 15th call that category can be removed
+    category: Optional[str] = Field(default=None, description="TODO - what is this?")
     map_unit: Optional[MapUnit] = Field(
-        default=None, description="Human annotated information on the mab unit"
+        default=None, description="Human annotated information on the map unit"
     )
 
     # Segmentation Fields
     crs: Optional[str] = Field(
-        default=None, description="values={CRITICALMAAS:pixel, EPSG:*}"
+        default=CRITICALMAAS_PIXEL,
+        description="""What projection the geometry of the segmentation are in,
+                    Default is CRITICALMAAS_PIXEL which specifies pixel coordinates.
+                    Possible values are {CRITICALMAAS_PIXEL, EPSG:*}""",
     )
     cdr_projection_id: Optional[str] = Field(
         default=None,
-        description="A cdr projection id used to georeference the features",
-    )  ### TODO Could use some more explanation
+        description="""If non-pixel coordinates are used the cdr projection id of the
+                    georeference that was used to create them is required.""",
+    )
     polygon_features: Optional[PolygonFeatureCollection] = Field(
         default=None, description="All polygon features for legend item."
     )

@@ -86,8 +86,11 @@ class PolygonLegendAndFeatureResult(BaseModel):
     description: Optional[str] = Field(
         default=None, description="Description of the map unit"
     )
-    legend_bbox: Optional[List[List[Union[float, int]]]] = Field(
-        default=None, description="The bounding box of the map units label."
+    legend_bbox: Optional[List[Union[float, int]]] = Field(
+        default=None, description="The rough 2 point bounding box of the map units label."
+    )
+    legend_contour: Optional[List[List[Union[float, int]]]] = Field(
+        default=None, description="The more precise polygon bounding box of the map units label."
     )
     color: Optional[str] = Field(default=None, description="The color of the map unit")
     pattern: Optional[str] = Field(

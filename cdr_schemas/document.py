@@ -68,7 +68,7 @@ class Document(BaseModel):
     provenance: list[DocumentProvenance] = Field(
         ..., description="provenance list", default_factory=list
     )
-    metadata: Optional[DocumentMetaData] | None = Field(
+    metadata: Optional[DocumentMetaData] = Field(
         None, description="document metadata"
     )
 

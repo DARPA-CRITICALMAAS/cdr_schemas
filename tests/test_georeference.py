@@ -19,7 +19,7 @@ test_1 = {
             ],
             "map_area": {
                 "model_version": "0.0.1",
-                "bbox": None,
+                "bbox": [],
                 "confidence": None,
                 "coordinates": [
                     [[443, 852], [5648, 852], [5648, 7869], [443, 7869], [443, 852]]

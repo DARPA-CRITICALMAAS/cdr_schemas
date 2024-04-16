@@ -29,8 +29,8 @@ class Area_Extraction(BaseModel):
                     to be [x,y] coordinate pairs where the top left is the
                     origin (0,0)."""
     )
-    bbox: Optional[List[Union[float, int]]] = Field(
-        default=None,
+    bbox: List[Union[float, int]] = Field(
+        default_factory=list,
         description="""The extracted bounding box of the area.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",

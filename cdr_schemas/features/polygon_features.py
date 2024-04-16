@@ -104,14 +104,14 @@ class PolygonLegendAndFeaturesResult(BaseModel):
     description: Optional[str] = Field(
         default=None, description="Description of the map unit"
     )
-    legend_bbox: Optional[List[Union[float, int]]] = Field(
-        default=None,
+    legend_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
         description="""The rough 2 point bounding box of the map units label.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",
     )
-    legend_contour: Optional[List[List[Union[float, int]]]] = Field(
-        default=None,
+    legend_contour: List[List[Union[float, int]]] = Field(
+        default_factory=list,
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",

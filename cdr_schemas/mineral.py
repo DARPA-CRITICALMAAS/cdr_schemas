@@ -24,9 +24,9 @@ class GeologyInfo(BaseModel):
     age: Optional[str] = Field(description="Age of the geologic unit or event")
     unit_name: Optional[str] = Field(description="Name of the geologic unit")
     description: Optional[str]
-    lithology: Optional[list[str]]
-    process: Optional[list[str]]
-    environment: Optional[list[str]]
+    lithology: List[str] = Field(default_factory=list, description="Lithology")
+    process: List[str] = Field(default_factory=list, description="Process")
+    environment: List[str] = Field(default_factory=list, description="environment")
     comments: Optional[str]
 
 
@@ -75,7 +75,8 @@ class PageInfo(BaseModel):
 class Reference(BaseModel):
     document: Document
     page_info: List[PageInfo] = Field(
-        description="List of pages and their respective bounding boxes where the reference is found"
+        default_factory=list,
+        description="List of pages and their respective bounding boxes where the reference is found",
     )
 
 
@@ -87,18 +88,30 @@ class EvidenceLayer(BaseModel):
 class MappableCriteria(BaseModel):
     criteria: str
     theoretical: Optional[str]
-    potential_dataset: Optional[list[EvidenceLayer]]
-    supporting_references: list[Reference]
+    potential_dataset: list[EvidenceLayer] = Field(
+        default_factory=list, description="List of evidence layers"
+    )
+    supporting_references: list[Reference] = Field(
+        default_factory=list, description="List of references"
+    )
 
 
 class MineralSystem(BaseModel):
     deposit_type: list[DepositType]
     source: list[MappableCriteria]
     pathway: list[MappableCriteria]
-    trap: Optional[list[MappableCriteria]]
-    preservation: Optional[list[MappableCriteria]]
-    energy: Optional[list[MappableCriteria]]
-    outflow: Optional[list[MappableCriteria]]
+    trap: list[MappableCriteria] = Field(
+        default_factory=list, description="Mappable Criteria: trap"
+    )
+    preservation: list[MappableCriteria] = Field(
+        default_factory=list, description="Mappable Criteria: Preservation"
+    )
+    energy: list[MappableCriteria] = Field(
+        default_factory=list, description="Mappable Criteria: Energy"
+    )
+    outflow: list[MappableCriteria] = Field(
+        default_factory=list, description="Mappable Criteria: outflow"
+    )
 
 
 class Commodity(BaseModel):

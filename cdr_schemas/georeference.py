@@ -88,7 +88,7 @@ class GroundControlPoint(BaseModel):
             The version of the model.
         """,
     )
-    crs: Optional[str] = Field(
+    crs: str = Field(
         ...,
         description="""
             Coordinate reference system. i.e. "EPSG:4267"

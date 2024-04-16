@@ -20,8 +20,8 @@ class MapColorSchemeTypes(str, Enum):
 
 
 class MapMetaData(BaseModel):
-    title: Optional[str] = Field(
-        default=None,
+    title: str = Field(
+        default="",
         description="""
             Title of the map/cog.
         """,
@@ -32,8 +32,8 @@ class MapMetaData(BaseModel):
             Year the map was made. i.e. 2012
         """,
     )
-    crs: Optional[str] = Field(
-        default=None,
+    crs: str = Field(
+        default="",
         description="""
             CRS of the map. i.e. "EPSG:4267"
         """,
@@ -44,8 +44,8 @@ class MapMetaData(BaseModel):
             Authors of the map
         """,
     )
-    organization: Optional[str] = Field(
-        default=None,
+    organization: str = Field(
+        default="",
         description="""
             Organization that created the map
         """,
@@ -56,8 +56,8 @@ class MapMetaData(BaseModel):
             Scale of the map. 24000 would be equivalent to 1:24000
         """,
     )
-    quadrangle_name: Optional[str] = Field(
-        default=None,
+    quadrangle_name: str = Field(
+        default="",
         description="""
             If map is based on a quadrangle location we can save the name here.
         """,
@@ -74,8 +74,8 @@ class MapMetaData(BaseModel):
             Color scheme of the map.
         """,
     )
-    publisher: Optional[str] = None
-    state: Optional[str] = None
+    publisher: str = ""
+    state: str = ""
 
     model: str
     model_version: str

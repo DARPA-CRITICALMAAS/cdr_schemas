@@ -20,6 +20,7 @@ def test_poly_extraction_1():
 test_2 = {
     "id": "1",
     "cdr_projection_id": "1234alksdfjslakfjd",
+    "label": "nickel",
     "polygon_features": {
         "features": [
             {

@@ -25,7 +25,7 @@ test_1 = {
                     [[443, 852], [5648, 852], [5648, 7869], [443, 7869], [443, 852]]
                 ],
                 "model": "jataware_extraction",
-                "text": None,
+                "text": "",
                 "type": "Polygon",
                 "category": "map_area",
             },
@@ -144,7 +144,7 @@ def test_gcp_1():
 
 test_4 = {
     "model_version": "0.0.1",
-    "crs": None,
+    "crs": "",
     "map_geom": {"latitude": 43.25, "longitude": None},
     "px_geom": {"rows_from_top": 7210, "columns_from_left": 542},
     "model": "jataware_extraction",

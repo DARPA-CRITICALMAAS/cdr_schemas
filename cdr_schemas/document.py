@@ -20,12 +20,8 @@ class DocumentProvenance(BaseModel):
     external_system_name: str = Field(
         ..., description="Name of system storing document"
     )
-    external_system_id: Optional[str] = Field(
-        "", description="The system ID of the document"
-    )
-    external_system_url: Optional[str] = Field(
-        "", description="Name of system storing document"
-    )
+    external_system_id: str = Field("", description="The system ID of the document")
+    external_system_url: str = Field("", description="Name of system storing document")
 
 
 class UploadDocument(BaseModel):

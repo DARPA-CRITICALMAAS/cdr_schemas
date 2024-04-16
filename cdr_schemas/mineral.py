@@ -21,13 +21,13 @@ class ResourceReserveCategory(Enum):
 
 
 class GeologyInfo(BaseModel):
-    age: Optional[str] = Field(description="Age of the geologic unit or event")
-    unit_name: Optional[str] = Field(description="Name of the geologic unit")
-    description: Optional[str]
+    age: str = Field(default="", description="Age of the geologic unit or event")
+    unit_name: str = Field(default="", description="Name of the geologic unit")
+    description: str = ""
     lithology: List[str] = Field(default_factory=list, description="Lithology")
     process: List[str] = Field(default_factory=list, description="Process")
     environment: List[str] = Field(default_factory=list, description="environment")
-    comments: Optional[str]
+    comments: str = ""
 
 
 class Ore(BaseModel):
@@ -87,7 +87,7 @@ class EvidenceLayer(BaseModel):
 
 class MappableCriteria(BaseModel):
     criteria: str
-    theoretical: Optional[str]
+    theoretical: str = ""
     potential_dataset: list[EvidenceLayer] = Field(
         default_factory=list, description="List of evidence layers"
     )
@@ -125,8 +125,9 @@ class Grade(BaseModel):
 
 class MineralInventory(BaseModel):
     commodity: Commodity = Field(description="The commodity of an inventory item")
-    observed_commodity: Optional[str] = Field(
-        description="The observed commodity in the source data (textual format)"
+    observed_commodity: str = Field(
+        default="",
+        description="The observed commodity in the source data (textual format)",
     )
     category: Optional[ResourceReserveCategory] = Field(
         description="The category of an inventory item"
@@ -143,8 +144,9 @@ class MineralInventory(BaseModel):
     date: Optional[datetime] = Field(
         description="When in the point of time mineral inventory valid"
     )
-    zone: Optional[str] = Field(
-        description="zone of mineral site where inventory item was discovered"
+    zone: str = Field(
+        default="",
+        description="zone of mineral site where inventory item was discovered",
     )
 
 
@@ -155,7 +157,9 @@ class LocationInfo(BaseModel):
     crs: str = Field(
         description="The Coordinate Reference System (CRS) of the location"
     )
-    country: Optional[str] = Field(description="Country that the mine site resides in")
+    country: str = Field(
+        default="", description="Country that the mine site resides in"
+    )
     state_or_province: Optional[str] = Field(
         description="State or province that the mine site resides in"
     )
@@ -168,7 +172,7 @@ class MineralSite(BaseModel):
     record_id: str = Field(
         description="Unique ID of the record that the info is retrieved from e.g., 10022920"
     )
-    name: Optional[str] = Field(description="Name of the mine, e.g., Tungsten Jim")
+    name: str = Field(default="", description="Name of the mine, e.g., Tungsten Jim")
     mineral_inventory: list[MineralInventory]
     location_info: LocationInfo
     geology_info: Optional[GeologyInfo]

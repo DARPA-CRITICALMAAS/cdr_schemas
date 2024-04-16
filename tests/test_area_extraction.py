@@ -14,6 +14,8 @@ def test_area_extraction_1():
 
 
 test_2 = {
+    "model_version": "0.0.1",
+    "model": "jataware_extraction",
     "coordinates": [[[2, 3, 5, 6]]],
     "category": "point_legend_area",
     "text": "hi",

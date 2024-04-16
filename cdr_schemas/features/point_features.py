@@ -28,11 +28,9 @@ class PointProperties(BaseModel):
     """
 
     # Model Provenance
-    model: Optional[str] = Field(
-        default=None, description="Name of the model used to generate this data"
-    )
-    model_version: Optional[str] = Field(
-        default=None, description="Version of the model used to generate this data"
+    model: str = Field(description="Name of the model used to generate this data")
+    model_version: str = Field(
+        description="Version of the model used to generate this data"
     )
     model_config = ConfigDict(protected_namespaces=())
     confidence: Optional[Union[float | int]] = Field(
@@ -94,14 +92,12 @@ class PointLegendAndFeaturesResult(BaseModel):
     legend_provenance: Optional[ModelProvenance] = Field(
         default=None, description="Where the data originated from."
     )
-    name: Optional[str] = Field(
-        default=None, description="Label of the map unit in the legend"
+    name: str = Field(description="Label of the map unit in the legend")
+    abbreviation: str = Field(
+        default="", description="Abbreviation of the map unit label."
     )
-    abbreviation: Optional[str] = Field(
-        default=None, description="Abbreviation of the map unit label."
-    )
-    description: Optional[str] = Field(
-        default=None, description="Description of the map unit in the legend"
+    description: str = Field(
+        default="", description="Description of the map unit in the legend"
     )
     legend_bbox: List[Union[float, int]] = Field(
         default_factory=list,
@@ -117,14 +113,14 @@ class PointLegendAndFeaturesResult(BaseModel):
     )
 
     # Segmentation Fields
-    crs: Optional[str] = Field(
+    crs: str = Field(
         default=CRITICALMAAS_PIXEL,
         description="""What projection the geometry of the segmentation are in,
                     Default is CRITICALMAAS_PIXEL which specifies pixel coordinates.
                     Possible values are {CRITICALMAAS_PIXEL, EPSG:*}""",
     )
-    cdr_projection_id: Optional[str] = Field(
-        default=None,
+    cdr_projection_id: str = Field(
+        default="",
         description="""If non-pixel coordinates are used the cdr projection id of the
                     georeference that was used to create them is required.""",
     )

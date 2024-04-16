@@ -71,7 +71,7 @@ class GroundControlPoint(BaseModel):
         """,
     )
     confidence: Optional[float] = Field(
-        ...,
+        default=None,
         description="""
             Confidence associated with this extraction.
         """,
@@ -129,14 +129,14 @@ class GeoreferenceResult(BaseModel):
     """
 
     likely_CRSs: Optional[List[str]] = Field(
-        ...,
+        default=[],
         description="""
             List of potential Coordinate Reference System specifically
             Projection Coordinate System for the map. ie ["EPSG:32612", "EPSG:32613"]
         """,
     )
     map_area: Optional[Area_Extraction] = Field(
-        ...,
+        default=None,
         description="""
             Polygon bordering the map area for this georeference result. There can
             be many map areas on a cog so this would be the pixel polygon of one of those
@@ -145,7 +145,7 @@ class GeoreferenceResult(BaseModel):
         """,
     )
     projections: Optional[List[ProjectionResult]] = Field(
-        ...,
+        default=[],
         description="""
             For each projection raster produced return crs
             and gcp ids used in the transform
@@ -165,13 +165,13 @@ class GeoreferenceResults(BaseModel):
         """,
     )
     georeference_results: Optional[List[GeoreferenceResult]] = Field(
-        ...,
+        default=[],
         description="""
             A list of georeferencing results, which include projections, gcps, and crs info.
         """,
     )
     gcps: Optional[List[GroundControlPoint]] = Field(
-        ...,
+        default=[],
         description="""
             List of all gcps extracted for the cog image.
         """,

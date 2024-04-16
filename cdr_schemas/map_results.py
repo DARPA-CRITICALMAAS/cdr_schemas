@@ -19,13 +19,13 @@ class MapResults(BaseModel):
     )
 
     georef_results: Optional[List[GeoreferenceResults]] = Field(
-        ...,
+        default=[],
         description="""
             A list of georef results from systems.
         """,
     )
     extraction_results: Optional[List[FeatureResults]] = Field(
-        ...,
+        default=[],
         description="""
             A list of feature extraction results from systems.
         """,

@@ -125,4 +125,4 @@ class LineLegendAndFeaturesResult(BaseModel):
         description="""If non-pixel coordinates are used the cdr projection id of the
                     georeference that was used to create them is required.""",
     )
-    line_features: Optional[LineFeatureCollection]
+    line_features: Optional[LineFeatureCollection] = None

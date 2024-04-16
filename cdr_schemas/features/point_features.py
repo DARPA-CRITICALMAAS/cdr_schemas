@@ -123,6 +123,6 @@ class PointLegendAndFeaturesResult(BaseModel):
         description="""If non-pixel coordinates are used the cdr projection id of the
                     georeference that was used to create them is required.""",
     )
-    point_features: Optional[List[PointFeatureCollection]] = Field(
+    point_features: Optional[PointFeatureCollection] = Field(
         default=None, description="All point features for legend item."
     )

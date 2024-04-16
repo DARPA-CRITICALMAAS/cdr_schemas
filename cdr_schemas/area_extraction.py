@@ -30,6 +30,7 @@ class Area_Extraction(BaseModel):
                     origin (0,0)."""
     )
     bbox: Optional[List[Union[float, int]]] = Field(
+        default=None,
         description="""The extracted bounding box of the area.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",
@@ -41,7 +42,7 @@ class Area_Extraction(BaseModel):
         """,
     )
     text: Optional[str] = Field(
-        ...,
+        default=None,
         description="""
             The text within the extraction area.
         """,
@@ -55,6 +56,6 @@ class Area_Extraction(BaseModel):
         default=None, description="Version of the model used to generate this data"
     )
     model_config = ConfigDict(protected_namespaces=())
-    confidence: Optional[float] = Field(
+    confidence: Optional[Union[float | int]] = Field(
         default=None, description="The prediction confidence of the model"
     )

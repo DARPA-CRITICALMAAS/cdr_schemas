@@ -38,8 +38,8 @@ class MapMetaData(BaseModel):
             CRS of the map. i.e. "EPSG:4267"
         """,
     )
-    authors: Optional[List[str]] = Field(
-        default=[],
+    authors: List[str] = Field(
+        default_factory=list,
         description="""
             Authors of the map
         """,
@@ -88,4 +88,9 @@ class CogMetaData(BaseModel):
     system: str
     system_version: str
     multiple_maps: Optional[bool] = None
-    map_metadata: Optional[List[MapMetaData]] = []
+    map_metadata: List[MapMetaData] = Field(
+        default_factory=list,
+        description="""
+            Maps metadata
+        """,
+    )

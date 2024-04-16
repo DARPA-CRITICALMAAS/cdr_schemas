@@ -61,7 +61,12 @@ class PolygonFeatureCollection(BaseModel):
     """
 
     type: GeoJsonType = GeoJsonType.FeatureCollection
-    features: Optional[List[PolygonFeature]] = None
+    features: List[PolygonFeature] = Field(
+        default_factory=list,
+        description="""
+            List of polygon features
+        """,
+    )
 
 
 class MapUnit(BaseModel):

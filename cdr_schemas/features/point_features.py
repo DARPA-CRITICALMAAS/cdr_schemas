@@ -74,7 +74,12 @@ class PointFeatureCollection(BaseModel):
     """
 
     type: GeoJsonType = GeoJsonType.FeatureCollection
-    features: List[PointFeature]
+    features: List[PointFeature] = Field(
+        default_factory=list,
+        description="""
+            List of point features
+        """,
+    )
 
 
 class PointLegendAndFeaturesResult(BaseModel):

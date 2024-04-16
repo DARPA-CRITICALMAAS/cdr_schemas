@@ -10,8 +10,9 @@ class DocumentMetaData(BaseModel):
     year: Optional[int] = Field(None, description="year")
     month: Optional[int] = Field(None, description="month")
     volume: Optional[int] = Field(None, description="volume")
-    issue: Optional[int] = Field(None, description="issue")
+    issue: str = Field("", description="issue")
     description: str = Field("", description="description")
+    publisher: str = Field("", description="publisher")
 
 
 class DocumentProvenance(BaseModel):
@@ -33,8 +34,8 @@ class UploadDocument(BaseModel):
         description="Whether document is open or not.",
     )
 
-    provenance: Optional[DocumentProvenance] = Field(
-        None, description="provenance list"
+    provenance: list[DocumentProvenance] = Field(
+        description="provenance list", default_factory=list
     )
     metadata: Optional[DocumentMetaData] = Field(None, description="document metadata")
 

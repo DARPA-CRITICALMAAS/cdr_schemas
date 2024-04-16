@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cdr_schemas"
-version = "0.2.4+draft"
+version = "0.2.5+draft"
 description = "CDR Schemas"
 authors = []
 readme = "README.md"
@@ -17,6 +17,7 @@ pydantic = "^2.6.3"
 ruff = "^0.3.4"
 mypy = "^1.9.0"
 isort = "^5.13.2"
+pytest = "^8.1.1"
 
 
 [tool.poetry.group.ide]
@@ -62,4 +63,9 @@ ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "W191",  # indentation contains tabs
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
 ]

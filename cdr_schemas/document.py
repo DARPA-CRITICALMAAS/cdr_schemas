@@ -10,8 +10,9 @@ class DocumentMetaData(BaseModel):
     year: Optional[int] = Field(None, description="year")
     month: Optional[int] = Field(None, description="month")
     volume: Optional[int] = Field(None, description="volume")
-    issue: Optional[int] = Field(None, description="issue")
+    issue: str = Field("", description="issue")
     description: str = Field("", description="description")
+    publisher: str = Field("", description="publisher")
 
 
 class DocumentProvenance(BaseModel):
@@ -20,12 +21,8 @@ class DocumentProvenance(BaseModel):
     external_system_name: str = Field(
         ..., description="Name of system storing document"
     )
-    external_system_id: Optional[str] = Field(
-        "", description="The system ID of the document"
-    )
-    external_system_url: Optional[str] = Field(
-        "", description="Name of system storing document"
-    )
+    external_system_id: str = Field("", description="The system ID of the document")
+    external_system_url: str = Field("", description="Name of system storing document")
 
 
 class UploadDocument(BaseModel):
@@ -37,8 +34,8 @@ class UploadDocument(BaseModel):
         description="Whether document is open or not.",
     )
 
-    provenance: Optional[DocumentProvenance] = Field(
-        None, description="provenance list"
+    provenance: list[DocumentProvenance] = Field(
+        description="provenance list", default_factory=list
     )
     metadata: Optional[DocumentMetaData] = Field(None, description="document metadata")
 
@@ -72,9 +69,7 @@ class Document(BaseModel):
     provenance: list[DocumentProvenance] = Field(
         ..., description="provenance list", default_factory=list
     )
-    metadata: Optional[DocumentMetaData] | None = Field(
-        None, description="document metadata"
-    )
+    metadata: Optional[DocumentMetaData] = Field(None, description="document metadata")
 
     system: str = Field(
         ...,

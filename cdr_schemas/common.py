@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -19,13 +19,11 @@ class GeoJsonType(str, Enum):
 
 
 class ModelProvenance(BaseModel):
-    model: Optional[str] = Field(
-        default=None, description="Name of the model used to generate this data"
-    )
-    model_version: Optional[str] = Field(
-        default=None, description="Version of the model used to generate this data"
+    model: str = Field(description="Name of the model used to generate this data")
+    model_version: str = Field(
+        description="Version of the model used to generate this data"
     )
     model_config = ConfigDict(protected_namespaces=())
-    confidence: Optional[float] = Field(
+    confidence: Optional[Union[float | int]] = Field(
         default=None, description="The prediction confidence of the model"
     )

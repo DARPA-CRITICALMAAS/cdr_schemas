@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, Field
 
@@ -17,15 +17,14 @@ class MapResults(BaseModel):
             Cog id.
         """,
     )
-
-    georef_results: Optional[List[GeoreferenceResults]] = Field(
-        ...,
+    georef_results: List[GeoreferenceResults] = Field(
+        default_factory=list,
         description="""
             A list of georef results from systems.
         """,
     )
-    extraction_results: Optional[List[FeatureResults]] = Field(
-        ...,
+    extraction_results: List[FeatureResults] = Field(
+        default_factory=list,
         description="""
             A list of feature extraction results from systems.
         """,

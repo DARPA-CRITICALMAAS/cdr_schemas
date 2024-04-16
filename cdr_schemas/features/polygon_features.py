@@ -28,13 +28,9 @@ class PolygonProperty(BaseModel):
     Properties of the polygon.
     """
 
-    model: Optional[str] = Field(
-        default=None, description="Name of the model used for extraction"
-    )
-    model_version: Optional[str] = Field(
-        default=None, description="Version of the model used for extraction"
-    )
-    confidence: Optional[float] = Field(
+    model: str = Field(description="Name of the model used for extraction")
+    model_version: str = Field(description="Version of the model used for extraction")
+    confidence: Optional[Union[float | int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
 
@@ -61,7 +57,12 @@ class PolygonFeatureCollection(BaseModel):
     """
 
     type: GeoJsonType = GeoJsonType.FeatureCollection
-    features: Optional[List[PolygonFeature]] = None
+    features: List[PolygonFeature] = Field(
+        default_factory=list,
+        description="""
+            List of polygon features
+        """,
+    )
 
 
 class MapUnit(BaseModel):
@@ -70,14 +71,14 @@ class MapUnit(BaseModel):
     """
 
     # TODO Someone needs to add full descriptions to these fields
-    age_text: Optional[str] = None
+    age_text: str = ""
     b_age: Optional[float] = None
-    b_interval: Optional[str] = None
-    lithology: Optional[str] = None
-    name: Optional[str] = None
+    b_interval: str = ""
+    lithology: str = ""
+    name: str = ""
     t_age: Optional[float] = None
-    t_interval: Optional[str] = None
-    comments: Optional[str] = None
+    t_interval: str = ""
+    comments: str = ""
 
 
 class PolygonLegendAndFeaturesResult(BaseModel):
@@ -92,44 +93,40 @@ class PolygonLegendAndFeaturesResult(BaseModel):
     legend_provenance: Optional[ModelProvenance] = Field(
         default=None, description="Where the data originated from."
     )
-    label: Optional[str] = Field(default=None, description="Label of the map unit")
-    abbreviation: Optional[str] = Field(
-        default=None, description="Abbreviation of the map unit label."
+    label: str = Field(description="Label of the map unit")
+    abbreviation: str = Field(
+        default="", description="Abbreviation of the map unit label."
     )
-    description: Optional[str] = Field(
-        default=None, description="Description of the map unit"
-    )
-    legend_bbox: Optional[List[Union[float, int]]] = Field(
-        default=None,
+    description: str = Field(default="", description="Description of the map unit")
+    legend_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
         description="""The rough 2 point bounding box of the map units label.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",
     )
-    legend_contour: Optional[List[List[Union[float, int]]]] = Field(
-        default=None,
+    legend_contour: List[List[Union[float, int]]] = Field(
+        default_factory=list,
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
     )
-    color: Optional[str] = Field(default=None, description="The color of the map unit")
-    pattern: Optional[str] = Field(
-        default=None, description="The pattern of the map unit"
-    )
+    color: str = Field(default="", description="The color of the map unit")
+    pattern: str = Field(default="", description="The pattern of the map unit")
     ### TODO Agreed on Apr 15th call that category can be removed
-    category: Optional[str] = Field(default=None, description="TODO - what is this?")
+    category: str = Field(default="", description="TODO - what is this?")
     map_unit: Optional[MapUnit] = Field(
         default=None, description="Human annotated information on the map unit"
     )
 
     # Segmentation Fields
-    crs: Optional[str] = Field(
+    crs: str = Field(
         default=CRITICALMAAS_PIXEL,
         description="""What projection the geometry of the segmentation are in,
                     Default is CRITICALMAAS_PIXEL which specifies pixel coordinates.
                     Possible values are {CRITICALMAAS_PIXEL, EPSG:*}""",
     )
-    cdr_projection_id: Optional[str] = Field(
-        default=None,
+    cdr_projection_id: str = Field(
+        default="",
         description="""If non-pixel coordinates are used the cdr projection id of the
                     georeference that was used to create them is required.""",
     )

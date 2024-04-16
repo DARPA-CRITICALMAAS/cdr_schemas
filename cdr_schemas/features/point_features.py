@@ -28,14 +28,12 @@ class PointProperties(BaseModel):
     """
 
     # Model Provenance
-    model: Optional[str] = Field(
-        default=None, description="Name of the model used to generate this data"
-    )
-    model_version: Optional[str] = Field(
-        default=None, description="Version of the model used to generate this data"
+    model: str = Field(description="Name of the model used to generate this data")
+    model_version: str = Field(
+        description="Version of the model used to generate this data"
     )
     model_config = ConfigDict(protected_namespaces=())
-    confidence: Optional[float] = Field(
+    confidence: Optional[Union[float | int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
 
@@ -74,7 +72,12 @@ class PointFeatureCollection(BaseModel):
     """
 
     type: GeoJsonType = GeoJsonType.FeatureCollection
-    features: List[PointFeature]
+    features: List[PointFeature] = Field(
+        default_factory=list,
+        description="""
+            List of point features
+        """,
+    )
 
 
 class PointLegendAndFeaturesResult(BaseModel):
@@ -89,40 +92,38 @@ class PointLegendAndFeaturesResult(BaseModel):
     legend_provenance: Optional[ModelProvenance] = Field(
         default=None, description="Where the data originated from."
     )
-    name: Optional[str] = Field(
-        default=None, description="Label of the map unit in the legend"
+    name: str = Field(description="Label of the map unit in the legend")
+    abbreviation: str = Field(
+        default="", description="Abbreviation of the map unit label."
     )
-    abbreviation: Optional[str] = Field(
-        default=None, description="Abbreviation of the map unit label."
+    description: str = Field(
+        default="", description="Description of the map unit in the legend"
     )
-    description: Optional[str] = Field(
-        default=None, description="Description of the map unit in the legend"
-    )
-    legend_bbox: Optional[List[Union[float, int]]] = Field(
-        default=None,
+    legend_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
         description="""The rough 2 point bounding box of the map units label.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",
     )
-    legend_contour: Optional[List[List[Union[float, int]]]] = Field(
-        default=None,
+    legend_contour: List[List[Union[float, int]]] = Field(
+        default_factory=list,
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
     )
 
     # Segmentation Fields
-    crs: Optional[str] = Field(
+    crs: str = Field(
         default=CRITICALMAAS_PIXEL,
         description="""What projection the geometry of the segmentation are in,
                     Default is CRITICALMAAS_PIXEL which specifies pixel coordinates.
                     Possible values are {CRITICALMAAS_PIXEL, EPSG:*}""",
     )
-    cdr_projection_id: Optional[str] = Field(
-        default=None,
+    cdr_projection_id: str = Field(
+        default="",
         description="""If non-pixel coordinates are used the cdr projection id of the
                     georeference that was used to create them is required.""",
     )
-    point_features: Optional[List[PointFeatureCollection]] = Field(
+    point_features: Optional[PointFeatureCollection] = Field(
         default=None, description="All point features for legend item."
     )

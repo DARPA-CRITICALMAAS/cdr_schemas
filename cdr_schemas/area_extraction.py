@@ -29,7 +29,8 @@ class Area_Extraction(BaseModel):
                     to be [x,y] coordinate pairs where the top left is the
                     origin (0,0)."""
     )
-    bbox: Optional[List[Union[float, int]]] = Field(
+    bbox: List[Union[float, int]] = Field(
+        default_factory=list,
         description="""The extracted bounding box of the area.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",
@@ -40,21 +41,19 @@ class Area_Extraction(BaseModel):
             The type of area extraction.
         """,
     )
-    text: Optional[str] = Field(
-        ...,
+    text: str = Field(
+        default="",
         description="""
             The text within the extraction area.
         """,
     )
 
     # Model Provenance
-    model: Optional[str] = Field(
-        default=None, description="Name of the model used to generate this data"
-    )
-    model_version: Optional[str] = Field(
-        default=None, description="Version of the model used to generate this data"
+    model: str = Field(description="Name of the model used to generate this data")
+    model_version: str = Field(
+        description="Version of the model used to generate this data"
     )
     model_config = ConfigDict(protected_namespaces=())
-    confidence: Optional[float] = Field(
+    confidence: Optional[Union[float | int]] = Field(
         default=None, description="The prediction confidence of the model"
     )

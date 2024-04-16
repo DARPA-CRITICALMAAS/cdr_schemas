@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -50,7 +50,9 @@ class DepositTypeCandidate(BaseModel):
     normalized_uri: DepositType = Field(
         description="The deposit type of an inventory item"
     )
-    confidence: float = Field(description="Score deposit type of an inventory item")
+    confidence: Optional[Union[float | int]] = Field(
+        description="Score deposit type of an inventory item"
+    )
     source: str = Field(
         description="Source of the classification (automated model version / SME / etc...)"
     )

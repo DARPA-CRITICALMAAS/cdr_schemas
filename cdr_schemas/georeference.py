@@ -70,7 +70,7 @@ class GroundControlPoint(BaseModel):
             Point geometry, in pixel coordinates.
         """,
     )
-    confidence: Optional[float] = Field(
+    confidence: Optional[Union[float | int]] = Field(
         default=None,
         description="""
             Confidence associated with this extraction.

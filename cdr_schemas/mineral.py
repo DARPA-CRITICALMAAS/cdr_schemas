@@ -91,9 +91,7 @@ class MappableCriteria(BaseModel):
     potential_dataset: list[EvidenceLayer] = Field(
         default_factory=list, description="List of evidence layers"
     )
-    supporting_references: list[Reference] = Field(
-        default_factory=list, description="List of references"
-    )
+    supporting_references: list[Reference]
 
 
 class MineralSystem(BaseModel):

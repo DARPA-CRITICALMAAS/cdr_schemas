@@ -1,0 +1,838 @@
+[
+  {
+    "$defs": {
+      "Accelerator": {
+        "enum": [
+          "cpu",
+          "gpu"
+        ],
+        "title": "Accelerator",
+        "type": "string"
+      },
+      "CallbacksConfig": {
+        "properties": {
+          "model_checkpoint": {
+            "$ref": "#/$defs/ModelCheckpointConfig"
+          },
+          "early_stopping": {
+            "$ref": "#/$defs/EarlyStoppingConfig"
+          },
+          "model_summary": {
+            "$ref": "#/$defs/ModelSummaryConfig"
+          },
+          "rich_progress_bar": {
+            "$ref": "#/$defs/RichProgressBarConfig"
+          }
+        },
+        "required": [
+          "model_checkpoint",
+          "early_stopping",
+          "model_summary",
+          "rich_progress_bar"
+        ],
+        "title": "CallbacksConfig",
+        "type": "object"
+      },
+      "DDPStrategy": {
+        "enum": [
+          "ddp",
+          "dpp_notebook",
+          "ddp_spawn"
+        ],
+        "title": "DDPStrategy",
+        "type": "string"
+      },
+      "DataConfig": {
+        "properties": {
+          "tif_dir": {
+            "title": "Tif Dir",
+            "type": "string"
+          },
+          "window_size": {
+            "title": "Window Size",
+            "type": "integer"
+          },
+          "multiplier": {
+            "title": "Multiplier",
+            "type": "number"
+          },
+          "downsample": {
+            "title": "Downsample",
+            "type": "boolean"
+          },
+          "oversample": {
+            "title": "Oversample",
+            "type": "boolean"
+          },
+          "likely_neg_range": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Likely Neg Range",
+            "type": "array"
+          },
+          "frac_train_split": {
+            "title": "Frac Train Split",
+            "type": "number"
+          },
+          "batch_size": {
+            "title": "Batch Size",
+            "type": "integer"
+          },
+          "num_workers": {
+            "title": "Num Workers",
+            "type": "integer"
+          },
+          "pin_memory": {
+            "title": "Pin Memory",
+            "type": "boolean"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          },
+          "log_path": {
+            "title": "Log Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tif_dir",
+          "window_size",
+          "multiplier",
+          "downsample",
+          "oversample",
+          "likely_neg_range",
+          "frac_train_split",
+          "batch_size",
+          "num_workers",
+          "pin_memory",
+          "seed",
+          "log_path"
+        ],
+        "title": "DataConfig",
+        "type": "object"
+      },
+      "EarlyStoppingConfig": {
+        "properties": {
+          "monitor": {
+            "title": "Monitor",
+            "type": "string"
+          },
+          "min_delta": {
+            "title": "Min Delta",
+            "type": "number"
+          },
+          "patience": {
+            "title": "Patience",
+            "type": "integer"
+          },
+          "verbose": {
+            "title": "Verbose",
+            "type": "boolean"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "strict": {
+            "title": "Strict",
+            "type": "boolean"
+          },
+          "check_finite": {
+            "title": "Check Finite",
+            "type": "boolean"
+          },
+          "stopping_threshold": {
+            "title": "Stopping Threshold",
+            "type": "number"
+          },
+          "divergence_threshold": {
+            "title": "Divergence Threshold",
+            "type": "number"
+          },
+          "check_on_train_epoch_end": {
+            "title": "Check On Train Epoch End",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "monitor",
+          "min_delta",
+          "patience",
+          "verbose",
+          "mode",
+          "strict",
+          "check_finite",
+          "stopping_threshold",
+          "divergence_threshold",
+          "check_on_train_epoch_end"
+        ],
+        "title": "EarlyStoppingConfig",
+        "type": "object"
+      },
+      "ExtrasConfig": {
+        "properties": {
+          "ignore_warnings": {
+            "title": "Ignore Warnings",
+            "type": "boolean"
+          },
+          "enforce_tags": {
+            "title": "Enforce Tags",
+            "type": "boolean"
+          },
+          "print_config": {
+            "title": "Print Config",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ignore_warnings",
+          "enforce_tags",
+          "print_config"
+        ],
+        "title": "ExtrasConfig",
+        "type": "object"
+      },
+      "HydraConfig": {
+        "properties": {},
+        "title": "HydraConfig",
+        "type": "object"
+      },
+      "LoggerConfig": {
+        "properties": {
+          "save_dir": {
+            "title": "Save Dir",
+            "type": "string"
+          },
+          "offline": {
+            "title": "Offline",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "anonymous": {
+            "title": "Anonymous",
+            "type": "boolean"
+          },
+          "project": {
+            "title": "Project",
+            "type": "string"
+          },
+          "log_model": {
+            "title": "Log Model",
+            "type": "boolean"
+          },
+          "prefix": {
+            "title": "Prefix",
+            "type": "string"
+          },
+          "group": {
+            "title": "Group",
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "job_type": {
+            "title": "Job Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "save_dir",
+          "offline",
+          "id",
+          "anonymous",
+          "project",
+          "log_model",
+          "prefix",
+          "group",
+          "tags",
+          "job_type"
+        ],
+        "title": "LoggerConfig",
+        "type": "object"
+      },
+      "MAEClassifierConfig": {
+        "properties": {
+          "backbone_ckpt": {
+            "title": "Backbone Ckpt",
+            "type": "string"
+          },
+          "backbone_net": {
+            "$ref": "#/$defs/MAEPretrainConfig"
+          },
+          "freeze_backbone": {
+            "title": "Freeze Backbone",
+            "type": "boolean"
+          },
+          "dropout_rate": {
+            "title": "Dropout Rate",
+            "type": "number"
+          }
+        },
+        "required": [
+          "backbone_ckpt",
+          "backbone_net",
+          "freeze_backbone",
+          "dropout_rate"
+        ],
+        "title": "MAEClassifierConfig",
+        "type": "object"
+      },
+      "MAEPretrainConfig": {
+        "properties": {
+          "image_size": {
+            "title": "Image Size",
+            "type": "integer"
+          },
+          "patch_size": {
+            "title": "Patch Size",
+            "type": "integer"
+          },
+          "input_dim": {
+            "title": "Input Dim",
+            "type": "integer"
+          },
+          "enc_dim": {
+            "title": "Enc Dim",
+            "type": "integer"
+          },
+          "encoder_layer": {
+            "title": "Encoder Layer",
+            "type": "integer"
+          },
+          "encoder_head": {
+            "title": "Encoder Head",
+            "type": "integer"
+          },
+          "dec_dim": {
+            "title": "Dec Dim",
+            "type": "integer"
+          },
+          "output_dim": {
+            "title": "Output Dim",
+            "type": "integer"
+          },
+          "decoder_layer": {
+            "title": "Decoder Layer",
+            "type": "integer"
+          },
+          "decoder_head": {
+            "title": "Decoder Head",
+            "type": "integer"
+          },
+          "mask_ratio": {
+            "title": "Mask Ratio",
+            "type": "number"
+          }
+        },
+        "required": [
+          "image_size",
+          "patch_size",
+          "input_dim",
+          "enc_dim",
+          "encoder_layer",
+          "encoder_head",
+          "dec_dim",
+          "output_dim",
+          "decoder_layer",
+          "decoder_head",
+          "mask_ratio"
+        ],
+        "title": "MAEPretrainConfig",
+        "type": "object"
+      },
+      "ModelCheckpointConfig": {
+        "properties": {
+          "dirpath": {
+            "title": "Dirpath",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "monitor": {
+            "title": "Monitor",
+            "type": "string"
+          },
+          "verbose": {
+            "title": "Verbose",
+            "type": "boolean"
+          },
+          "save_last": {
+            "title": "Save Last",
+            "type": "boolean"
+          },
+          "save_top_k": {
+            "title": "Save Top K",
+            "type": "integer"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "auto_insert_metric_name": {
+            "title": "Auto Insert Metric Name",
+            "type": "boolean"
+          },
+          "save_weights_only": {
+            "title": "Save Weights Only",
+            "type": "boolean"
+          },
+          "every_n_train_steps": {
+            "title": "Every N Train Steps",
+            "type": "integer"
+          },
+          "train_time_interval": {
+            "title": "Train Time Interval",
+            "type": "number"
+          },
+          "every_n_epochs": {
+            "title": "Every N Epochs",
+            "type": "integer"
+          },
+          "save_on_train_epoch_end": {
+            "title": "Save On Train Epoch End",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "dirpath",
+          "filename",
+          "monitor",
+          "verbose",
+          "save_last",
+          "save_top_k",
+          "mode",
+          "auto_insert_metric_name",
+          "save_weights_only",
+          "every_n_train_steps",
+          "train_time_interval",
+          "every_n_epochs",
+          "save_on_train_epoch_end"
+        ],
+        "title": "ModelCheckpointConfig",
+        "type": "object"
+      },
+      "ModelConfig": {
+        "properties": {
+          "optimizer": {
+            "$ref": "#/$defs/OptimizerConfig"
+          },
+          "scheduler": {
+            "$ref": "#/$defs/SchedulerConfig"
+          },
+          "net": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ResNetClassifierConfig"
+              },
+              {
+                "$ref": "#/$defs/MAEPretrainConfig"
+              },
+              {
+                "$ref": "#/$defs/MAEClassifierConfig"
+              }
+            ],
+            "title": "Net"
+          },
+          "compile": {
+            "title": "Compile",
+            "type": "boolean"
+          },
+          "gain": {
+            "title": "Gain",
+            "type": "number"
+          },
+          "extract_attributions": {
+            "title": "Extract Attributions",
+            "type": "boolean"
+          },
+          "mc_samples": {
+            "title": "Mc Samples",
+            "type": "integer"
+          },
+          "smoothing": {
+            "title": "Smoothing",
+            "type": "number"
+          },
+          "warmup_epoch": {
+            "title": "Warmup Epoch",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "optimizer",
+          "scheduler",
+          "net",
+          "compile",
+          "gain",
+          "extract_attributions",
+          "mc_samples",
+          "smoothing",
+          "warmup_epoch"
+        ],
+        "title": "ModelConfig",
+        "type": "object"
+      },
+      "ModelSummaryConfig": {
+        "properties": {
+          "max_depth": {
+            "title": "Max Depth",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "max_depth"
+        ],
+        "title": "ModelSummaryConfig",
+        "type": "object"
+      },
+      "OptimizerConfig": {
+        "properties": {
+          "lr": {
+            "title": "Lr",
+            "type": "number"
+          },
+          "weight_decay": {
+            "title": "Weight Decay",
+            "type": "number"
+          }
+        },
+        "required": [
+          "lr",
+          "weight_decay"
+        ],
+        "title": "OptimizerConfig",
+        "type": "object"
+      },
+      "PathsConfig": {
+        "properties": {
+          "root_dir": {
+            "title": "Root Dir",
+            "type": "string"
+          },
+          "work_dir": {
+            "title": "Work Dir",
+            "type": "string"
+          },
+          "data_dir": {
+            "title": "Data Dir",
+            "type": "string"
+          },
+          "log_dir": {
+            "title": "Log Dir",
+            "type": "string"
+          },
+          "output_dir": {
+            "title": "Output Dir",
+            "type": "string"
+          }
+        },
+        "required": [
+          "root_dir",
+          "work_dir",
+          "data_dir",
+          "log_dir",
+          "output_dir"
+        ],
+        "title": "PathsConfig",
+        "type": "object"
+      },
+      "PreprocessConfig": {
+        "properties": {
+          "raster_stacks": {
+            "items": {
+              "$ref": "#/$defs/RasterStack"
+            },
+            "title": "Raster Stacks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "raster_stacks"
+        ],
+        "title": "PreprocessConfig",
+        "type": "object"
+      },
+      "RasterStack": {
+        "properties": {
+          "raster_stack_path": {
+            "title": "Raster Stack Path",
+            "type": "string"
+          },
+          "raster_files_path": {
+            "title": "Raster Files Path",
+            "type": "string"
+          },
+          "raster_files": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Raster Files",
+            "type": "array"
+          },
+          "raster_files_types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Raster Files Types",
+            "type": "array"
+          }
+        },
+        "required": [
+          "raster_stack_path",
+          "raster_files_path",
+          "raster_files",
+          "raster_files_types"
+        ],
+        "title": "RasterStack",
+        "type": "object"
+      },
+      "ResNetClassifierConfig": {
+        "properties": {
+          "num_input_channels": {
+            "title": "Num Input Channels",
+            "type": "integer"
+          },
+          "num_output_classes": {
+            "title": "Num Output Classes",
+            "type": "integer"
+          },
+          "dropout_rate": {
+            "title": "Dropout Rate",
+            "type": "number"
+          }
+        },
+        "required": [
+          "num_input_channels",
+          "num_output_classes",
+          "dropout_rate"
+        ],
+        "title": "ResNetClassifierConfig",
+        "type": "object"
+      },
+      "RichProgressBarConfig": {
+        "properties": {},
+        "title": "RichProgressBarConfig",
+        "type": "object"
+      },
+      "SchedulerConfig": {
+        "properties": {
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "factor": {
+            "title": "Factor",
+            "type": "number"
+          },
+          "patience": {
+            "title": "Patience",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mode",
+          "factor",
+          "patience"
+        ],
+        "title": "SchedulerConfig",
+        "type": "object"
+      },
+      "TrainerConfig": {
+        "properties": {
+          "default_root_dir": {
+            "title": "Default Root Dir",
+            "type": "string"
+          },
+          "min_epochs": {
+            "title": "Min Epochs",
+            "type": "integer"
+          },
+          "max_epochs": {
+            "title": "Max Epochs",
+            "type": "integer"
+          },
+          "accelerator": {
+            "$ref": "#/$defs/Accelerator"
+          },
+          "devices": {
+            "title": "Devices",
+            "type": "integer"
+          },
+          "precision": {
+            "title": "Precision",
+            "type": "integer"
+          },
+          "val_check_interval": {
+            "title": "Val Check Interval",
+            "type": "number"
+          },
+          "deterministic": {
+            "title": "Deterministic",
+            "type": "boolean"
+          },
+          "benchmark": {
+            "title": "Benchmark",
+            "type": "boolean"
+          },
+          "strategy": {
+            "$ref": "#/$defs/DDPStrategy"
+          },
+          "num_nodes": {
+            "title": "Num Nodes",
+            "type": "integer"
+          },
+          "sync_batchnorm": {
+            "title": "Sync Batchnorm",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "default_root_dir",
+          "min_epochs",
+          "max_epochs",
+          "accelerator",
+          "devices",
+          "precision",
+          "val_check_interval",
+          "deterministic",
+          "benchmark",
+          "strategy",
+          "num_nodes",
+          "sync_batchnorm"
+        ],
+        "title": "TrainerConfig",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "preprocess": {
+        "$ref": "#/$defs/PreprocessConfig"
+      },
+      "data": {
+        "$ref": "#/$defs/DataConfig"
+      },
+      "model": {
+        "$ref": "#/$defs/ModelConfig"
+      },
+      "callbacks": {
+        "$ref": "#/$defs/CallbacksConfig"
+      },
+      "logger": {
+        "$ref": "#/$defs/LoggerConfig"
+      },
+      "trainer": {
+        "$ref": "#/$defs/TrainerConfig"
+      },
+      "paths": {
+        "$ref": "#/$defs/PathsConfig"
+      },
+      "extras": {
+        "$ref": "#/$defs/ExtrasConfig"
+      },
+      "experiment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Experiment"
+      },
+      "hparams_search": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Hparams Search"
+      },
+      "debug": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Debug"
+      },
+      "task_name": {
+        "title": "Task Name",
+        "type": "string"
+      },
+      "tags": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Tags",
+        "type": "array"
+      },
+      "train": {
+        "title": "Train",
+        "type": "boolean"
+      },
+      "test": {
+        "title": "Test",
+        "type": "boolean"
+      },
+      "ckpt_path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Ckpt Path"
+      },
+      "seed": {
+        "title": "Seed",
+        "type": "integer"
+      },
+      "hydra": {
+        "$ref": "#/$defs/HydraConfig"
+      }
+    },
+    "required": [
+      "preprocess",
+      "data",
+      "model",
+      "callbacks",
+      "logger",
+      "trainer",
+      "paths",
+      "extras",
+      "experiment",
+      "hparams_search",
+      "debug",
+      "task_name",
+      "tags",
+      "train",
+      "test",
+      "ckpt_path",
+      "seed",
+      "hydra"
+    ],
+    "title": "SRIExperimentConfig",
+    "type": "object"
+  }
+]

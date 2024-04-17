@@ -1,4 +1,4 @@
-# SRIExperimentConfig
+# SRIExperimentInput
 
 ### Properties
 
@@ -33,6 +33,32 @@
     - *null*
 - **`seed`** *(integer)*
 - **`hydra`**: Refer to *[HydraConfig](#HydraConfig)*.
+
+## SRIExperimentOuput
+
+### Properties
+
+- **`checkpoint`**
+  - **Any of**
+    - *string*
+    - *null*
+- **`logs`**
+  - **Any of**
+    - *string*
+    - *null*
+- **`likelihood_raster`**
+  - **Any of**
+    - *string*
+    - *null*
+- **`uncertainty_raster`**
+  - **Any of**
+    - *string*
+    - *null*
+- **`attribution_rasters`**
+  - **Any of**
+    - *array*
+      - **Items** *(string)*
+    - *null*
 
 ## CallbacksConfig
 

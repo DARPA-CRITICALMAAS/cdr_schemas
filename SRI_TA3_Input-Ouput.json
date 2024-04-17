@@ -832,7 +832,78 @@
       "seed",
       "hydra"
     ],
-    "title": "SRIExperimentConfig",
+    "title": "SRIExperimentInput",
+    "type": "object"
+  },
+  {
+    "properties": {
+      "checkpoint": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Checkpoint"
+      },
+      "logs": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Logs"
+      },
+      "likelihood_raster": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Likelihood Raster"
+      },
+      "uncertainty_raster": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Uncertainty Raster"
+      },
+      "attribution_rasters": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Attribution Rasters"
+      }
+    },
+    "required": [
+      "checkpoint",
+      "logs",
+      "likelihood_raster",
+      "uncertainty_raster",
+      "attribution_rasters"
+    ],
+    "title": "SRIExperimentOuput",
     "type": "object"
   }
 ]

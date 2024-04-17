@@ -205,7 +205,7 @@ class PreprocessConfig(BaseModel):
     raster_stacks: List[RasterStack]
 
 # SRI Experiment config for all run parameters
-class SRIExperimentConfig(BaseModel):
+class SRIExperimentInput(BaseModel):
     preprocess: PreprocessConfig
     data: DataConfig
     model: ModelConfig
@@ -224,6 +224,14 @@ class SRIExperimentConfig(BaseModel):
     ckpt_path: Optional[str]
     seed: int
     hydra: HydraConfig
+
+# SRI Experiment outputs
+class SRIExperimentOuput(BaseModel):
+    checkpoint: Optional[str]
+    logs: Optional[str]
+    likelihood_raster: Optional[str]
+    uncertainty_raster: Optional[str]
+    attribution_rasters: Optional[List[str]]
 
 
 class NeighborhoodFunction(Enum):
@@ -264,7 +272,7 @@ class BeakTrainConfig(BaseModel):
     som_grid: SOMGrid
 
 class SRIModel(BaseModel):
-    train_config: SRIExperimentConfig
+    train_config: SRIExperimentInput
     pass
 
 class BeakModel(BaseModel):

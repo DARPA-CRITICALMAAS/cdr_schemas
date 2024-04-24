@@ -8,7 +8,8 @@ test_1 = {
     "map_unit": None,
     "legend_bbox": [1, 2, 3, 4],
     "abbreviation": "ni",
-    "description": "nickel description",
+    "overlay":True,
+    "legend_description": [{"text":"nickel description"}],
 }
 
 def test_poly_extraction_1():

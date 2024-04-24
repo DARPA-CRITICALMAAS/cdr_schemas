@@ -6,6 +6,7 @@ from cdr_schemas.common import (
     CRITICALMAAS_PIXEL,
     GeoJsonType,
     GeomType,
+    LegendDescription,
     ModelProvenance,
 )
 
@@ -97,7 +98,12 @@ class PolygonLegendAndFeaturesResult(BaseModel):
     abbreviation: str = Field(
         default="", description="Abbreviation of the map unit label."
     )
-    description: str = Field(default="", description="Description of the map unit")
+    legend_description: List[LegendDescription] = Field(
+        default_factory=list,
+        description="""
+            List of all legend descriptions
+        """,
+    )
     legend_bbox: List[Union[float, int]] = Field(
         default_factory=list,
         description="""The rough 2 point bounding box of the map units label.
@@ -109,6 +115,10 @@ class PolygonLegendAndFeaturesResult(BaseModel):
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
+    )
+    overlay: Optional[bool] = Field(
+        default=None,
+        description="Wheather or not the map unit can be overlayed on other map units",
     )
     color: str = Field(default="", description="The color of the map unit")
     pattern: str = Field(default="", description="The pattern of the map unit")

@@ -9,7 +9,7 @@ test_1 = {
     "map_unit": None,
     "legend_bbox": [1, 2, 3, 4],
     "abbreviation": "ni_deposit",
-    "description": "nickel deposit description",
+     "legend_description": [{"text":"nickel deposit description"}],
 }
 
 def test_point_extraction_1():

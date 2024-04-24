@@ -6,6 +6,7 @@ from cdr_schemas.common import (
     CRITICALMAAS_PIXEL,
     GeoJsonType,
     GeomType,
+    LegendDescription,
     ModelProvenance,
 )
 
@@ -96,8 +97,11 @@ class PointLegendAndFeaturesResult(BaseModel):
     abbreviation: str = Field(
         default="", description="Abbreviation of the map unit label."
     )
-    description: str = Field(
-        default="", description="Description of the map unit in the legend"
+    legend_description: List[LegendDescription] = Field(
+        default_factory=list,
+        description="""
+            List of all legend descriptions
+        """,
     )
     legend_bbox: List[Union[float, int]] = Field(
         default_factory=list,

@@ -8,7 +8,7 @@ test_1 = {
     "map_unit": None,
     "legend_bbox": [1, 2, 3, 4],
     "abbreviation": "ni",
-    "description": "nickel description",
+    "legend_description": [{"text":"nickel description"}],
 }
 
 def test_line_extraction_1():

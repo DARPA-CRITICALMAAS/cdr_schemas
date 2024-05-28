@@ -34,6 +34,13 @@ class PolygonProperty(BaseModel):
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
+    )
 
     model_config = ConfigDict(protected_namespaces=())
 
@@ -126,6 +133,13 @@ class PolygonLegendAndFeaturesResult(BaseModel):
     category: str = Field(default="", description="TODO - what is this?")
     map_unit: Optional[MapUnit] = Field(
         default=None, description="Human annotated information on the map unit"
+    )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
     )
 
     # Segmentation Fields

@@ -47,6 +47,13 @@ class Area_Extraction(BaseModel):
             The text within the extraction area.
         """,
     )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
+    )
 
     # Model Provenance
     model: str = Field(description="Name of the model used to generate this data")

@@ -28,17 +28,20 @@ class PointProperties(BaseModel):
     Properties of the Point.
     """
 
-    # Model Provenance
     model: str = Field(description="Name of the model used to generate this data")
     model_version: str = Field(
         description="Version of the model used to generate this data"
     )
-    model_config = ConfigDict(protected_namespaces=())
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
-
-    # Point Properties
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
+    )
     bbox: Optional[List[Union[float, int]]] = Field(
         default=None,
         description="""The extacted 2 point bounding box of the point item.
@@ -51,6 +54,7 @@ class PointProperties(BaseModel):
     dip_direction: Optional[int] = Field(  # TODO add description
         default=None, description="TODO : Add description"
     )
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class PointFeature(BaseModel):
@@ -114,6 +118,13 @@ class PointLegendAndFeaturesResult(BaseModel):
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
+    )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
     )
 
     # Segmentation Fields

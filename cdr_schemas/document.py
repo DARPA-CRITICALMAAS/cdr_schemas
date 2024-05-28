@@ -51,6 +51,9 @@ class UploadDocument(BaseModel):
             The version of the system used.
         """,
     )
+    system_name: str = Field(
+        default="", description="Human readable name for visualization"
+    )
 
 
 class Document(BaseModel):
@@ -82,6 +85,9 @@ class Document(BaseModel):
         description="""
             The version of the system used.
         """,
+    )
+    system_name: str = Field(
+        default="", description="Human readable name for visualization"
     )
 
 
@@ -117,4 +123,7 @@ class DocumentExtraction(BaseModel):
         description="""
             The version of the system used.
         """,
+    )
+    system_name: str = Field(
+        default="", description="Human readable name for visualization"
     )

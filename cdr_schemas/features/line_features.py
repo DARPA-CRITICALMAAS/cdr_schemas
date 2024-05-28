@@ -45,6 +45,13 @@ class LineProperty(BaseModel):
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
+    )
 
     # Line Properties
     dash_pattern: Optional[DashType] = Field(
@@ -114,6 +121,13 @@ class LineLegendAndFeaturesResult(BaseModel):
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
+    )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
     )
 
     # Segmentation Fields

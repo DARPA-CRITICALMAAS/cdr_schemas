@@ -33,3 +33,6 @@ class Map(BaseModel):
             The version of the system used.
         """,
     )
+    system_name: str = Field(
+        default="", description="Human readable name for visualization"
+    )

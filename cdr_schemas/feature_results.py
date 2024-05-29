@@ -18,9 +18,6 @@ class FeatureResults(BaseModel):
     system_version: str = Field(
         description="The version of the system used to generate results."
     )
-    system_name: str = Field(
-        default="", description="Human readable name for visualization"
-    )
     cog_id: str = Field(description="Cog id.")
     line_feature_results: List[LineLegendAndFeaturesResult] = Field(
         default_factory=list,

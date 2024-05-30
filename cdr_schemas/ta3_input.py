@@ -27,8 +27,8 @@ class LayerDataType(str, Enum):
     BINARY= "binary"
 
 class DataFormat(str, Enum):
-    TIF: "tif"
-    SHP: "shp"
+    TIF= "tif"
+    SHP= "shp"
 
 class DataSource(BaseModel):
     DOI: Optional[str]

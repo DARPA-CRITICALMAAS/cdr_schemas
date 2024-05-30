@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -17,18 +17,40 @@ class ScalingType(str, Enum):
     MAXABS = 'maxabs'
     STANDARD = 'standard'
 
+class LayerCategory(str, Enum):
+    GEOPHYSICS = "geophysics"
+    GEOLOGY = "geology"
+    GEOCHEMISTRY = "geochemistry"
+
+class LayerDataType(str, Enum):
+    CONTINUOUS= "continuous"
+    BINARY= "binary"
+
+class DataFormat(str, Enum):
+    TIF: "tif"
+    SHP: "shp"
+
 class DataSource(BaseModel):
     DOI: Optional[str]
     authors: Optional[List[str]]
     date_created: Optional[str]
     last_updated: Optional[str]
+    category: Optional[Union[LayerCategory, str]]
+    subcategory: Optional[str]
+    description: Optional[str]
+    derivative_ops: Optional[str]
+    type: LayerDataType
+    resolution: Optional[tuple]
+    format: DataFormat
+    download_url: Optional[str]
+
 
 class EvidenceLayer(BaseModel):
     title: Optional[str]
     resampling_method: InterpolationType
     scaling_method: ScalingType
     normalization_method: str
-    source: DataSource
+    # source: LayerDataType
 
 
 class StackMetaData(BaseModel):

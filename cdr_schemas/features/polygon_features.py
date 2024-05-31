@@ -33,8 +33,8 @@ class PolygonProperty(BaseModel):
     reference_id: str = Field(
         default="",
         description="""
-            Identifies the original CDR item ID from which this new item was derived, aiding in tracking provenance.
-.
+            Identifies the original CDR item ID from which this new item was derived,
+            aiding in tracking provenance.
         """,
     )
     confidence: Optional[Union[float, int]] = Field(
@@ -127,8 +127,8 @@ class PolygonLegendAndFeaturesResult(BaseModel):
     reference_id: str = Field(
         default="",
         description="""
-            Identifies the original CDR item ID from which this new item was derived, aiding in tracking provenance.
-.
+            Identifies the original CDR item ID from which this new item was derived,
+            aiding in tracking provenance.
         """,
     )
 

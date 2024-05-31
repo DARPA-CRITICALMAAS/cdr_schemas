@@ -50,8 +50,8 @@ class Area_Extraction(BaseModel):
     reference_id: str = Field(
         default="",
         description="""
-            Identifies the original CDR item ID from which this new item was derived, aiding in tracking provenance.
-.
+            Identifies the original CDR item ID from which this new item was derived,
+            aiding in tracking provenance.
         """,
     )
 

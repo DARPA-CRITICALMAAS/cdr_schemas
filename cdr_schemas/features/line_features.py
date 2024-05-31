@@ -40,17 +40,22 @@ class LineProperty(BaseModel):
     model_version: str = Field(
         description="Version of the model used to generate this data"
     )
-    model_config = ConfigDict(protected_namespaces=())
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
-
     # Line Properties
     dash_pattern: Optional[DashType] = Field(
         default=None, description="values = {solid, dash, dotted}"
     )
     symbol: str = Field(default="", description="TODO : Add description")
-
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
+    )
+    model_config = ConfigDict(protected_namespaces=())
 
 class LineFeature(BaseModel):
     """
@@ -110,6 +115,13 @@ class LineLegendAndFeaturesResult(BaseModel):
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
+    )
+    reference_id: str = Field(
+        default="",
+        description="""
+            If item is created from an already existing item reference_id is the original item id.
+            Helps track provenance.
+        """,
     )
 
     # Segmentation Fields

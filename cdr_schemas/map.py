@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 
@@ -15,8 +13,8 @@ class Map(BaseModel):
     """JSON model for 'Map''"""
 
     id: str = Field(..., description="The CDR ID of the Map")
-    provenance: Optional[list[MapProvenance]] = Field(
-        None, description="provenance list"
+    provenance: list[MapProvenance] = Field(
+        default_factory=list, description="provenance list"
     )
     is_open: bool = Field(
         ...,

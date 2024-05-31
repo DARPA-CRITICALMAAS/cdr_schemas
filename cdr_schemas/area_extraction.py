@@ -7,15 +7,15 @@ from cdr_schemas.common import GeomType
 
 
 class AreaType(str, Enum):
-    Map_Area = "Map_Area"
-    Legend_Area = "Legend_Area"
-    CrossSection = "CrossSection"
-    OCR = "OCR"
-    Polygon_Legend_Area = "Polygon_Legend_Area"
-    Line_Point_Legend_Area = "Line_Point_Legend_Area"
-    Line_Legend_Area = "Line_Legend_Area"
-    Point_Legend_Area = "Point_Legend_Area"
-    Correlation_Diagram = "Correlation_Diagram"
+    Map_Area = "map_area"
+    Legend_Area = "legend_area"
+    CrossSection = "cross_section"
+    OCR = "ocr"
+    Polygon_Legend_Area = "polygon_legend_area"
+    Line_Point_Legend_Area = "line_point_legend_area"
+    Line_Legend_Area = "line_legend_area"
+    Point_Legend_Area = "point_legend_area"
+    Correlation_Diagram = "correlation_diagram"
 
 
 class Area_Extraction(BaseModel):
@@ -24,10 +24,16 @@ class Area_Extraction(BaseModel):
     """
 
     type: GeomType = GeomType.Polygon
-    coordinates: List[List[List[Union[float, int]]]]
-    bbox: Optional[List[Union[float, int]]] = Field(
-        description="""The extacted bounding box of the area.
-        Column value from left, row value from bottom."""
+    coordinates: List[List[List[Union[float, int]]]] = Field(
+        description="""The coordinates of the areas boundry. Format is expected
+                    to be [x,y] coordinate pairs where the top left is the
+                    origin (0,0)."""
+    )
+    bbox: List[Union[float, int]] = Field(
+        default_factory=list,
+        description="""The extracted bounding box of the area.
+                    Format is expected to be [x1,y1,x2,y2] where the top left
+                    is the origin (0,0).""",
     )
     category: AreaType = Field(
         ...,
@@ -35,18 +41,19 @@ class Area_Extraction(BaseModel):
             The type of area extraction.
         """,
     )
-    text: Optional[str] = Field(
-        ...,
+    text: str = Field(
+        default="",
         description="""
             The text within the extraction area.
         """,
     )
-    confidence: Optional[float] = Field(
-        description="The prediction probability from the ML model"
-    )
-    model: Optional[str] = Field(description="model name used for extraction")
-    model_version: Optional[str] = Field(
-        description="model version used for extraction"
-    )
 
+    # Model Provenance
+    model: str = Field(description="Name of the model used to generate this data")
+    model_version: str = Field(
+        description="Version of the model used to generate this data"
+    )
     model_config = ConfigDict(protected_namespaces=())
+    confidence: Optional[Union[float, int]] = Field(
+        default=None, description="The prediction confidence of the model"
+    )

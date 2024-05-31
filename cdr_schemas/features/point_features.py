@@ -32,7 +32,7 @@ class PointProperties(BaseModel):
     model_version: str = Field(
         description="Version of the model used to generate this data"
     )
-    model_config = ConfigDict(protected_namespaces=())
+
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
@@ -50,6 +50,14 @@ class PointProperties(BaseModel):
     dip_direction: Optional[int] = Field(  # TODO add description
         default=None, description="TODO : Add description"
     )
+    reference_id: str = Field(
+        default="",
+        description="""
+            Identifies the original CDR item ID from which this new item was derived,
+            aiding in tracking provenance.
+        """,
+    )
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class PointFeature(BaseModel):
@@ -110,6 +118,13 @@ class PointLegendAndFeaturesResult(BaseModel):
         description="""The more precise polygon bounding box of the map units
                     label. Format is expected to be [x,y] coordinate pairs
                     where the top left is the origin (0,0).""",
+    )
+    reference_id: str = Field(
+        default="",
+        description="""
+            Identifies the original CDR item ID from which this new item was derived,
+            aiding in tracking provenance.
+        """,
     )
 
     # Segmentation Fields

@@ -57,6 +57,7 @@ class LineProperty(BaseModel):
     )
     model_config = ConfigDict(protected_namespaces=())
 
+
 class LineFeature(BaseModel):
     """
     Line Feature.

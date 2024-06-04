@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cdr_schemas"
-version = "0.2.7+draft"
+version = "0.2.8"
 description = "CDR Schemas"
 authors = []
 readme = "README.md"

@@ -6,6 +6,86 @@ from urllib.parse import unquote
 import pooch
 from cdr_schemas.ta3_input import DataSource, LayerCategory, LayerDataType, DataFormat
 from collections import namedtuple
+from pooch.processors import ExtractorProcessor
+import netCDF4
+import sciencebasepy
+import time
+class ExtractNetCDF(ExtractorProcessor):  # pylint: disable=too-few-public-methods
+    """
+    Processor that unpacks a zip archive and returns a list of all files.
+
+    Use with :meth:`pooch.Pooch.fetch` or :func:`pooch.retrieve` to unzip a
+    downloaded data file into a folder in the local data store. The
+    method/function will return a list with the names of the unzipped files
+    instead of the zip archive.
+
+    The output folder is ``{fname}.unzip``.
+
+    Parameters
+    ----------
+    members : list or None
+        If None, will unpack all files in the zip archive. Otherwise, *members*
+        must be a list of file names to unpack from the archive. Only these
+        files will be unpacked.
+    extract_dir : str or None
+        If None, files will be unpacked to the default location (a folder in
+        the same location as the downloaded zip file, with the suffix
+        ``.unzip`` added). Otherwise, files will be unpacked to
+        ``extract_dir``, which is interpreted as a *relative path* (relative to
+        the cache location provided by :func:`pooch.retrieve` or
+        :meth:`pooch.Pooch.fetch`).
+
+    """
+
+    @property
+    def suffix(self):
+        """
+        String appended to unpacked archive folder name.
+        Only used if extract_dir is None.
+        """
+        return ".extracted"
+
+    def _all_members(self, fname):
+        """Return all members from a given archive."""
+        # with ZipFile(fname, "r") as zip_file:
+        #     return zip_file.namelist()
+        return netCDF4.Dataset(fname).variables.keys()
+
+
+    def _extract_file(self, fname, extract_dir):
+        """
+        This method receives an argument for the archive to extract and the
+        destination path.
+        """
+        with netCDF4.Dataset(fname) as f:
+            if self.members is None:
+                pass
+        pass
+        # with ZipFile(fname, "r") as zip_file:
+        #     if self.members is None:
+        #         get_logger().info(
+        #             "Unzipping contents of '%s' to '%s'", fname, extract_dir
+        #         )
+        #         # Unpack all files from the archive into our new folder
+        #         zip_file.extractall(path=extract_dir)
+        #     else:
+        #         for member in self.members:
+        #             get_logger().info(
+        #                 "Extracting '%s' from '%s' to '%s'", member, fname, extract_dir
+        #             )
+        #             # If the member is a dir, we need to get the names of the
+        #             # elements it contains for extraction (ZipFile does not
+        #             # support dirs on .extract). If it's not a dir, this will
+        #             # only include the member itself.
+        #             # Based on:
+        #             # https://stackoverflow.com/questions/8008829/extract-only-a-single-directory-from-tar
+        #             subdir_members = [
+        #                 name
+        #                 for name in zip_file.namelist()
+        #                 if os.path.normpath(name).startswith(os.path.normpath(member))
+        #             ]
+        #             # Extract the data file from within the archive
+        #             zip_file.extractall(members=subdir_members, path=extract_dir)
 
 # Our data:
 # https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/edit#gid=1946475221
@@ -16,6 +96,10 @@ from collections import namedtuple
 # Completed
 # https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/export?gid=1946475221&format=xlsx
 spreadsheet_url = "https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/export?gid=1946475221&format=xlsx"
+
+# sleep_time = 1.0
+# sciencebase_session = sciencebasepy.SbSession()
+# time.sleep(sleep_time)
 
 filename = Path('ta3_layer_data.xlsx')
 if filename.is_file():
@@ -35,20 +119,42 @@ else:
 df = pd.read_excel(filename, sheet_name=None)['Original']
 df_geophysics = df[df['Category'].str.contains('Geophysics')]
 
-gk = df.groupby('Download URI')
+gk = df_geophysics.groupby('Download URI')
 
 SchemaItem = namedtuple('SchemaItem', ['local_path', 'instantiated_schema'])
 schema_items = []
 for data_url in gk.groups:
+    data_file = unquote(data_url).split('/')[-1].replace(' ', '_')
     match data_url:
-        case "http://www.ceus-ssc.com/Database/CEUS-SSC%20Gravity%20Anomaly%20Database%20Grids.zip":
-            data_file = unquote(data_url).split('/')[-1].replace(' ', '_')
-            members = ['CEUS_GRAV_Isostatic_CEUSSSC_R0.tif',
-                       'CEUS_GRAV_RI_CEUSSSC_R0.tif',
-                       'CEUS_GRAV_RI_HD_CEUSSSC_R0.TIF',
-                       'CEUS_GRAV_RI_1VD_CEUSSSC_R0.tif',
-                       'CEUS_GRAV_RI_HD_1VD_CEUSSSC_R0.TIF',
-                       ]
+        case "http://www.ceus-ssc.com/Database/CEUS-SSC%20Gravity%20Anomaly%20Database%20Grids.zip" | "http://www.ceus-ssc.com/Database/Full-Spectrum%20Magnetic%20Anomaly%20Database%20for%20the%20Central%20and%20Eastern%20United%20States.zip":
+
+            match data_url:
+                case "http://www.ceus-ssc.com/Database/CEUS-SSC%20Gravity%20Anomaly%20Database%20Grids.zip":
+                    members = ['CEUS_GRAV_Isostatic_CEUSSSC_R0.tif',
+                               'CEUS_GRAV_RI_CEUSSSC_R0.tif',
+                               'CEUS_GRAV_RI_HD_CEUSSSC_R0.TIF',
+                               'CEUS_GRAV_RI_1VD_CEUSSSC_R0.tif',
+                               'CEUS_GRAV_RI_HD_1VD_CEUSSSC_R0.TIF',
+                               ]
+                    authors = ['Keller, G.R.']
+                    date_created = '2010'
+                    subcategory = 'gravity'
+                case "http://www.ceus-ssc.com/Database/Full-Spectrum%20Magnetic%20Anomaly%20Database%20for%20the%20Central%20and%20Eastern%20United%20States.zip":
+                    members = [
+                        'CEUS_MAG_DRTP_CEUSSSC_R0.TIF',
+                        'CEUS_MAG_DRTP_TDR_CEUSSSC_R0.tif',
+                        'CEUS_MAG_DRTP_HD_TDR_CEUSSSC_R0.TIF',
+                        'CEUS_MAG_TMAG_AAS_CEUSSSC_R0.tif'
+                    ]
+                    authors = [
+                        "Ravat, D.", "Finn, C.", "Hill, P.", "Kucks, R.", "Phillips, J.", "Blakely, R.",
+                        "Bouligand, C.", "Sabaka, T.", "Elshayat, A.", "Aref, A.", "Elawadi, E."
+                    ]
+                    date_created = '2009'
+                    subcategory = 'magnetic'
+
+
+
             file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
                                        processor=pooch.Unzip(members=members))
 
@@ -62,11 +168,11 @@ for data_url in gk.groups:
                 resolution = resolution_raw.split('x')[0].strip(), resolution_raw.split('x')[0].split(' ')[0]
                 instantiated_schema = DataSource(
                     DOI= None,
-                    authors= ['Keller, G.R.'],
-                    date_created= '2010',
+                    authors= authors,
+                    date_created= date_created,
                     last_updated= None,
                     category= LayerCategory.GEOPHYSICS,
-                    subcategory=None,
+                    subcategory=subcategory,
                     description= matching_row['Type'].values[0],
                     derivative_ops= str(matching_row['Derivative Ops'].values[0]),
                     type=LayerDataType.CONTINUOUS,
@@ -75,5 +181,48 @@ for data_url in gk.groups:
                     download_url=data_url
                 )
                 schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
+            pass
+
+        case 'https://ds.iris.edu/files/products/emc/emc-files/CONUS-MT-2023.r0.0-n4.nc':
+            #
+            # file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
+            #                            processor=ExtractNetCDF())
+            pass
+
+        case _:
+            matching_index = gk.groups[data_url]
+            matching_row = df_geophysics.loc[matching_index]
+            sciencebaselink = matching_row['General Link'].values[0]
+            sciencebase_id = sciencebaselink.split("/")[-1]
+
+            # sciencebase_item = sciencebase_session.get_item(sciencebase_id)
+            file_paths = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
+                                       processor=pooch.Unzip())
+
+            tif_paths = list(filter(lambda x: x.lower().endswith('.tif') or x.endswith('.tiff'), file_paths))
+
+            authors = None
+            date_created = None
+            last_updated = None
+            category = None
+            subcategory = None
+            description = None
+            derivative_ops = None
+
+            instantiated_schema = DataSource(
+                DOI=None,
+                authors=authors,
+                date_created=date_created,
+                last_updated=None,
+                category=LayerCategory.GEOPHYSICS,
+                subcategory=subcategory,
+                description=matching_row['Type'].values[0],
+                derivative_ops=str(matching_row['Derivative Ops'].values[0]),
+                type=LayerDataType.CONTINUOUS,
+                resolution=resolution,
+                format=DataFormat.TIF,
+                download_url=data_url
+            )
+            schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
             pass
     pass

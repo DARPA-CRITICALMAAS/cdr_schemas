@@ -3,6 +3,7 @@ from pathlib import Path
 from types import ModuleType
 
 from jinja2 import Template
+from jinja2.filters import FILTERS
 from pydantic_mermaid import MermaidGenerator
 
 import cdr_schemas.area_extraction
@@ -47,10 +48,14 @@ def replaces_block(text: str, block: str):
     return f"{prefix}{begin_mark}\n{comment}\n{block}\n{end_mark}{suffix}"
 
 
+def mk_quote(s: str) -> str:
+    return s.replace(" ", "-")
+
+
 def run():
     diagrams = []
+    FILTERS["mk_quote"] = mk_quote
     template = Template(Path("docs/schemas.md.j2").read_text())
-
     modules = [
         Module(title="area extraction", ref=cdr_schemas.area_extraction),
         Module(title="georeference", ref=cdr_schemas.georeference),

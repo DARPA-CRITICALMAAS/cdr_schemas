@@ -33,8 +33,7 @@ class DataFormat(str, Enum):
 class DataSource(BaseModel):
     DOI: Optional[str]
     authors: Optional[List[str]]
-    date_created: Optional[str]
-    last_updated: Optional[str]
+    publication_date: Optional[str]
     category: Optional[Union[LayerCategory, str]]
     subcategory: Optional[str]
     description: Optional[str]

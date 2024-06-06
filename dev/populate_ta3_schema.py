@@ -1,9 +1,12 @@
+import zipfile
+
 import requests
 from pathlib import Path
 import \
     pandas as pd  # NOTE Need openpyxl else -- ImportError: Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl.
 from urllib.parse import unquote
 import pooch
+import re
 from cdr_schemas.ta3_input import DataSource, LayerCategory, LayerDataType, DataFormat
 from collections import namedtuple
 from pooch.processors import ExtractorProcessor
@@ -97,9 +100,9 @@ class ExtractNetCDF(ExtractorProcessor):  # pylint: disable=too-few-public-metho
 # https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/export?gid=1946475221&format=xlsx
 spreadsheet_url = "https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/export?gid=1946475221&format=xlsx"
 
-# sleep_time = 1.0
-# sciencebase_session = sciencebasepy.SbSession()
-# time.sleep(sleep_time)
+sleep_time = 1.0
+sciencebase_session = sciencebasepy.SbSession()
+time.sleep(sleep_time)
 
 filename = Path('ta3_layer_data.xlsx')
 if filename.is_file():
@@ -137,7 +140,7 @@ for data_url in gk.groups:
                                'CEUS_GRAV_RI_HD_1VD_CEUSSSC_R0.TIF',
                                ]
                     authors = ['Keller, G.R.']
-                    date_created = '2010'
+                    publication_date = '2010'
                     subcategory = 'gravity'
                 case "http://www.ceus-ssc.com/Database/Full-Spectrum%20Magnetic%20Anomaly%20Database%20for%20the%20Central%20and%20Eastern%20United%20States.zip":
                     members = [
@@ -150,10 +153,8 @@ for data_url in gk.groups:
                         "Ravat, D.", "Finn, C.", "Hill, P.", "Kucks, R.", "Phillips, J.", "Blakely, R.",
                         "Bouligand, C.", "Sabaka, T.", "Elshayat, A.", "Aref, A.", "Elawadi, E."
                     ]
-                    date_created = '2009'
+                    publication_date = '2009'
                     subcategory = 'magnetic'
-
-
 
             file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
                                        processor=pooch.Unzip(members=members))
@@ -169,8 +170,7 @@ for data_url in gk.groups:
                 instantiated_schema = DataSource(
                     DOI= None,
                     authors= authors,
-                    date_created= date_created,
-                    last_updated= None,
+                    publication_date=publication_date,
                     category= LayerCategory.GEOPHYSICS,
                     subcategory=subcategory,
                     description= matching_row['Type'].values[0],
@@ -195,26 +195,46 @@ for data_url in gk.groups:
             sciencebaselink = matching_row['General Link'].values[0]
             sciencebase_id = sciencebaselink.split("/")[-1]
 
-            # sciencebase_item = sciencebase_session.get_item(sciencebase_id)
-            file_paths = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
-                                       processor=pooch.Unzip())
+            sciencebase_item = sciencebase_session.get_item(sciencebase_id)
+            time.sleep(sleep_time)
+            try:
+                file_paths = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
+                                           processor=pooch.Unzip())
+            except zipfile.BadZipFile:
+                file_paths = pooch.retrieve(url=data_url, fname=data_file, known_hash=None)
 
             tif_paths = list(filter(lambda x: x.lower().endswith('.tif') or x.endswith('.tiff'), file_paths))
 
-            authors = None
-            date_created = None
-            last_updated = None
-            category = None
-            subcategory = None
-            description = None
-            derivative_ops = None
+            citation = sciencebase_item["citation"]
+
+            # find index of the citation year (b/c all authors are before that)
+            year_pos = re.search("[0-9][0-9][0-9][0-9]", citation).regs[0][0]
+            authors = [f"{author}." for author in citation[:year_pos].split("., ")][:-2]
+            authors[-1].replace("and ", "")
+
+            publication_date = sciencebase_item["dates"][0]["dateString"]
+
+            if sciencebase_item["title"].startswith("[Geophysical Data]"):
+                category = LayerCategory.GEOPHYSICS
+            elif sciencebase_item["title"].startswith("[Geochemical Data]"):
+                category = LayerCategory.GEOCHEMISTRY
+            else:   # TODO: is there anything else besides GEOLOGY?
+                category = LayerCategory.GEOLOGY
+
+            # TODO
+            if "magnetic" in sciencebase_item["title"].lower():
+                subcategory = "magnetic"
+            else:
+                subcategory = None
+
+            # description = sciencebase_item["body"]
+            resolution = None
 
             instantiated_schema = DataSource(
                 DOI=None,
                 authors=authors,
-                date_created=date_created,
-                last_updated=None,
-                category=LayerCategory.GEOPHYSICS,
+                publication_date=publication_date,
+                category=category,
                 subcategory=subcategory,
                 description=matching_row['Type'].values[0],
                 derivative_ops=str(matching_row['Derivative Ops'].values[0]),
@@ -223,6 +243,7 @@ for data_url in gk.groups:
                 format=DataFormat.TIF,
                 download_url=data_url
             )
-            schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
+            for tif_path in tif_paths:
+                schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
             pass
-    pass
+pass

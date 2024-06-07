@@ -57,6 +57,8 @@ class PointProperties(BaseModel):
             aiding in tracking provenance.
         """,
     )
+    validated: bool = Field(False, description="Validated by human")
+
     model_config = ConfigDict(protected_namespaces=())
 
 
@@ -126,6 +128,7 @@ class PointLegendAndFeaturesResult(BaseModel):
             aiding in tracking provenance.
         """,
     )
+    validated: bool = Field(False, description="Validated by human")
 
     # Segmentation Fields
     crs: str = Field(

@@ -124,7 +124,6 @@ class ProjectionResult(BaseModel):
     validated: bool = Field(False, description="Validated in a HMI")
 
 
-
 class GeoreferenceResult(BaseModel):
     """
     Georeference Result.

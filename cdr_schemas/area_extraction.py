@@ -54,6 +54,7 @@ class Area_Extraction(BaseModel):
             aiding in tracking provenance.
         """,
     )
+    validated: bool = Field(False, description="Validated in a HMI")
 
     # Model Provenance
     model: str = Field(description="Name of the model used to generate this data")

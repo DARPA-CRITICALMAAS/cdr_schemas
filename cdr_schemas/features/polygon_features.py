@@ -37,6 +37,8 @@ class PolygonProperty(BaseModel):
             aiding in tracking provenance.
         """,
     )
+    validated: bool = Field(False, description="Validated in a HMI")
+
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
     )
@@ -131,6 +133,7 @@ class PolygonLegendAndFeaturesResult(BaseModel):
             aiding in tracking provenance.
         """,
     )
+    validated: bool = Field(False, description="Validated in a HMI")
 
     # Segmentation Fields
     crs: str = Field(

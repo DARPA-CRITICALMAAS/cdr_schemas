@@ -1,19 +1,32 @@
+from collections import namedtuple
 import os
+from pathlib import Path
+import re
+import requests
+import time
+from urllib.parse import unquote
 import zipfile
 
-import requests
-from pathlib import Path
-import \
-    pandas as pd  # NOTE Need openpyxl else -- ImportError: Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl.
-from urllib.parse import unquote
-import pooch
-import re
-from cdr_schemas.ta3_input import DataSource, LayerCategory, LayerDataType, DataFormat
-from collections import namedtuple
-from pooch.processors import ExtractorProcessor
+import pandas as pd  # NOTE Need openpyxl else --
+# ImportError: Missing optional dependency 'openpyxl'.
+# Use pip or conda to install openpyxl.
+
 import netCDF4
+import numpy as np
+import pooch
+from pooch.processors import ExtractorProcessor
+import rasterio
+from rasterio.plot import show
+from rasterio.io import MemoryFile
+from rasterio.shutil import copy
+from rio_cogeo import cog_validate, cog_info
+from rio_cogeo.cogeo import cog_translate
+from rio_cogeo.profiles import cog_profiles
 import sciencebasepy
-import time
+
+from cdr_schemas.ta3_input import DataSource, LayerCategory, LayerDataType, DataFormat
+
+
 class ExtractNetCDF(ExtractorProcessor):  # pylint: disable=too-few-public-methods
     """
     Processor that unpacks a zip archive and returns a list of all files.
@@ -99,6 +112,40 @@ def parse_resolution(matching_row):
         resolution = resolution_raw.split('x')[0].strip(), resolution_raw.split('x')[0].split(' ')[0]
     return resolution
 
+# https://guide.cloudnativegeo.org/cloud-optimized-geotiffs/writing-cogs-in-python.html
+def cogify(tif_path: str):
+    with rasterio.Env():
+        with rasterio.open(tif_path) as src:
+            arr = src.read()
+            kwargs = src.meta
+
+    # Defining the output COG filename
+    cog_filename = tif_path.replace(".tif", "_COG.tif")
+
+    # Setting to default GTiff driver as we will be using `rio-cogeo.cog_translate()`
+    # predictor=2/standard predictor implies horizontal differencing
+    kwargs.update(driver="GTiff", predictor=2)
+
+    with MemoryFile() as memfile:
+        # Opening an empty MemoryFile for in memory operation - faster
+        with memfile.open(**kwargs) as mem:
+            # Writing the array values to MemoryFile using the rasterio.io module
+            # https://rasterio.readthedocs.io/en/stable/api/rasterio.io.html
+            mem.write(arr)
+
+            dst_profile = cog_profiles.get("deflate")
+
+            # Creating destination COG
+            cog_translate(
+                mem,
+                cog_filename,
+                dst_profile,
+                use_cog_driver=True,
+                in_memory=False
+            )
+
+    return cog_filename
+
 # Our data:
 # https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/edit#gid=1946475221
 
@@ -132,16 +179,6 @@ df = pd.read_excel(filename, sheet_name=None)['Original']
 df_geophysics = df[df['Category'].str.contains('Geophysics')]
 
 gk = df_geophysics.groupby('Download URI')
-
-bad_list = [
-    "https://www.sciencebase.gov/catalog/file/get/619a9a3ad34eb622f692f961?f=__disk__2a%2F8f%2F2c%2F2a8f2ced08239dcc7895ffa728c8e94093c98e47",
-    "https://www.sciencebase.gov/catalog/file/get/619a9a3ad34eb622f692f961?f=__disk__dc%2Fa2%2Fc4%2Fdca2c4a3f6f32b2f63853bbb00748b949c74e95a",
-    "https://www.sciencebase.gov/catalog/file/get/619a9f02d34eb622f692f96c?f=__disk__ef%2F78%2F9e%2Fef789e155f8b4afe033dadfaa945ebad3a25e13d",
-    "https://www.sciencebase.gov/catalog/file/get/619a9f02d34eb622f692f96c?f=__disk__ef%2Ffe%2Fcb%2Feffecbe42eee9535979fafc40a74fa4c0841d92a",
-    "https://www.sciencebase.gov/catalog/file/get/62434c71d34e22d73748d369?f=__disk__32%2Ffa%2F5f%2F32fa5f37667e518cd73a62464023a49f61055b12",
-    "https://www.sciencebase.gov/catalog/file/get/62434c71d34e22d73748d369?f=__disk__46%2F90%2F24%2F46902490096de71c94212d8d9dacd28c80b80d7c",
-    "https://www.sciencebase.gov/catalog/file/get/62434c71d34e22d73748d369?f=__disk__a0%2F1c%2F7e%2Fa01c7e7f5563f830369a926a18b8d4bdf7ce710b"
-]
 
 SchemaItem = namedtuple('SchemaItem', ['local_path', 'instantiated_schema'])
 schema_items = []
@@ -199,7 +236,8 @@ for data_url in gk.groups:
                     format=DataFormat.TIF,
                     download_url=data_url
                 )
-                schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
+                cog = cogify(str(tif_path))
+                schema_items.append(SchemaItem(local_path=cog, instantiated_schema=instantiated_schema))
             pass
 
         case 'https://ds.iris.edu/files/products/emc/emc-files/CONUS-MT-2023.r0.0-n4.nc':
@@ -253,7 +291,8 @@ for data_url in gk.groups:
                 download_url=matching_row["Download URI"].values[0]
             )
             for tif_path in tif_paths:
-                schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
+                cog = cogify(tif_path)
+                schema_items.append(SchemaItem(local_path=cog, instantiated_schema=instantiated_schema))
             for shp_path in shp_paths:
                 schema_items.append(SchemaItem(local_path=shp_path, instantiated_schema=instantiated_schema))
             pass

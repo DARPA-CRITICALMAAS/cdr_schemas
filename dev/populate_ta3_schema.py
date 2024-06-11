@@ -1,3 +1,4 @@
+import os
 import zipfile
 
 import requests
@@ -90,6 +91,14 @@ class ExtractNetCDF(ExtractorProcessor):  # pylint: disable=too-few-public-metho
         #             # Extract the data file from within the archive
         #             zip_file.extractall(members=subdir_members, path=extract_dir)
 
+def parse_resolution(matching_row):
+    resolution_raw = matching_row['Resolution in ESRI:102008 - North_America_Albers_Equal_Area_Conic CRS'].values[0]
+    if pd.isnull(resolution_raw):
+        resolution = None
+    else:
+        resolution = resolution_raw.split('x')[0].strip(), resolution_raw.split('x')[0].split(' ')[0]
+    return resolution
+
 # Our data:
 # https://docs.google.com/spreadsheets/d/1Up06vfwoUpanmrzVcvdK_4ZJ0WUoFPgm/edit#gid=1946475221
 
@@ -124,6 +133,16 @@ df_geophysics = df[df['Category'].str.contains('Geophysics')]
 
 gk = df_geophysics.groupby('Download URI')
 
+bad_list = [
+    "https://www.sciencebase.gov/catalog/file/get/619a9a3ad34eb622f692f961?f=__disk__2a%2F8f%2F2c%2F2a8f2ced08239dcc7895ffa728c8e94093c98e47",
+    "https://www.sciencebase.gov/catalog/file/get/619a9a3ad34eb622f692f961?f=__disk__dc%2Fa2%2Fc4%2Fdca2c4a3f6f32b2f63853bbb00748b949c74e95a",
+    "https://www.sciencebase.gov/catalog/file/get/619a9f02d34eb622f692f96c?f=__disk__ef%2F78%2F9e%2Fef789e155f8b4afe033dadfaa945ebad3a25e13d",
+    "https://www.sciencebase.gov/catalog/file/get/619a9f02d34eb622f692f96c?f=__disk__ef%2Ffe%2Fcb%2Feffecbe42eee9535979fafc40a74fa4c0841d92a",
+    "https://www.sciencebase.gov/catalog/file/get/62434c71d34e22d73748d369?f=__disk__32%2Ffa%2F5f%2F32fa5f37667e518cd73a62464023a49f61055b12",
+    "https://www.sciencebase.gov/catalog/file/get/62434c71d34e22d73748d369?f=__disk__46%2F90%2F24%2F46902490096de71c94212d8d9dacd28c80b80d7c",
+    "https://www.sciencebase.gov/catalog/file/get/62434c71d34e22d73748d369?f=__disk__a0%2F1c%2F7e%2Fa01c7e7f5563f830369a926a18b8d4bdf7ce710b"
+]
+
 SchemaItem = namedtuple('SchemaItem', ['local_path', 'instantiated_schema'])
 schema_items = []
 for data_url in gk.groups:
@@ -133,12 +152,13 @@ for data_url in gk.groups:
 
             match data_url:
                 case "http://www.ceus-ssc.com/Database/CEUS-SSC%20Gravity%20Anomaly%20Database%20Grids.zip":
-                    members = ['CEUS_GRAV_Isostatic_CEUSSSC_R0.tif',
-                               'CEUS_GRAV_RI_CEUSSSC_R0.tif',
-                               'CEUS_GRAV_RI_HD_CEUSSSC_R0.TIF',
-                               'CEUS_GRAV_RI_1VD_CEUSSSC_R0.tif',
-                               'CEUS_GRAV_RI_HD_1VD_CEUSSSC_R0.TIF',
-                               ]
+                    members = [
+                        'CEUS_GRAV_Isostatic_CEUSSSC_R0.tif',
+                        'CEUS_GRAV_RI_CEUSSSC_R0.tif',
+                        'CEUS_GRAV_RI_HD_CEUSSSC_R0.TIF',
+                        'CEUS_GRAV_RI_1VD_CEUSSSC_R0.tif',
+                        'CEUS_GRAV_RI_HD_1VD_CEUSSSC_R0.TIF',
+                    ]
                     authors = ['Keller, G.R.']
                     publication_date = '2010'
                     subcategory = 'gravity'
@@ -165,8 +185,7 @@ for data_url in gk.groups:
 
                 matching_row = df_geophysics.loc[df_geophysics['Evidence Layer Raster prefix'] == Path(tif).stem]
 
-                resolution_raw = matching_row['Resolution in ESRI:102008 - North_America_Albers_Equal_Area_Conic CRS'].values[0]
-                resolution = resolution_raw.split('x')[0].strip(), resolution_raw.split('x')[0].split(' ')[0]
+                resolution = parse_resolution(matching_row)
                 instantiated_schema = DataSource(
                     DOI= None,
                     authors= authors,
@@ -202,8 +221,11 @@ for data_url in gk.groups:
                                            processor=pooch.Unzip())
             except zipfile.BadZipFile:
                 file_paths = pooch.retrieve(url=data_url, fname=data_file, known_hash=None)
+                os.rename(file_paths, file_paths + ".tif")
+                file_paths = [file_paths + ".tif"]
 
             tif_paths = list(filter(lambda x: x.lower().endswith('.tif') or x.endswith('.tiff'), file_paths))
+            shp_paths = list(filter(lambda x: x.lower().endswith('.shp'), file_paths))
 
             citation = sciencebase_item["citation"]
 
@@ -214,36 +236,25 @@ for data_url in gk.groups:
 
             publication_date = sciencebase_item["dates"][0]["dateString"]
 
-            if sciencebase_item["title"].startswith("[Geophysical Data]"):
-                category = LayerCategory.GEOPHYSICS
-            elif sciencebase_item["title"].startswith("[Geochemical Data]"):
-                category = LayerCategory.GEOCHEMISTRY
-            else:   # TODO: is there anything else besides GEOLOGY?
-                category = LayerCategory.GEOLOGY
-
-            # TODO
-            if "magnetic" in sciencebase_item["title"].lower():
-                subcategory = "magnetic"
-            else:
-                subcategory = None
-
-            # description = sciencebase_item["body"]
-            resolution = None
+            resolution = parse_resolution(matching_row)
+            format = "tif" if len(tif_paths) > 0 else "shp"
 
             instantiated_schema = DataSource(
                 DOI=None,
                 authors=authors,
                 publication_date=publication_date,
-                category=category,
-                subcategory=subcategory,
+                category=matching_row["Category"].values[0],
+                subcategory=matching_row["Sub Category"].values[0],
                 description=matching_row['Type'].values[0],
                 derivative_ops=str(matching_row['Derivative Ops'].values[0]),
                 type=LayerDataType.CONTINUOUS,
                 resolution=resolution,
-                format=DataFormat.TIF,
-                download_url=data_url
+                format=format,
+                download_url=matching_row["Download URI"].values[0]
             )
             for tif_path in tif_paths:
                 schema_items.append(SchemaItem(local_path=tif_path, instantiated_schema=instantiated_schema))
+            for shp_path in shp_paths:
+                schema_items.append(SchemaItem(local_path=shp_path, instantiated_schema=instantiated_schema))
             pass
 pass

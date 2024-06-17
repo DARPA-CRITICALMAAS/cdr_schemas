@@ -1,12 +1,10 @@
 from enum import Enum
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, StrictStr
 
 from .ta3_input import StackMetaData
 
-
-from pydantic import BaseModel, StrictStr
 
 class Accelerator(str, Enum):
     CPU = "cpu"

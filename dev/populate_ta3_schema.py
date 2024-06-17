@@ -1,30 +1,23 @@
-from collections import namedtuple
 import os
-from pathlib import Path
 import re
-import requests
 import time
-from urllib.parse import unquote
 import zipfile
-
-import pandas as pd  # NOTE Need openpyxl else --
-# ImportError: Missing optional dependency 'openpyxl'.
-# Use pip or conda to install openpyxl.
+from collections import namedtuple
+from pathlib import Path
+from urllib.parse import unquote
 
 import netCDF4
-import numpy as np
+import pandas as pd  # NOTE Need openpyxl else import error
 import pooch
-from pooch.processors import ExtractorProcessor
 import rasterio
-from rasterio.plot import show
+import requests
+import sciencebasepy
+from pooch.processors import ExtractorProcessor
 from rasterio.io import MemoryFile
-from rasterio.shutil import copy
-from rio_cogeo import cog_validate, cog_info
 from rio_cogeo.cogeo import cog_translate
 from rio_cogeo.profiles import cog_profiles
-import sciencebasepy
 
-from cdr_schemas.ta3_input import DataSource, LayerCategory, LayerDataType, DataFormat
+from cdr_schemas.ta3_input import DataFormat, DataSource, LayerCategory, LayerDataType
 
 
 class ExtractNetCDF(ExtractorProcessor):  # pylint: disable=too-few-public-methods
@@ -244,8 +237,8 @@ for data_url in gk.groups:
 
         case 'https://ds.iris.edu/files/products/emc/emc-files/CONUS-MT-2023.r0.0-n4.nc':
 
-            file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
-                                       processor=ExtractNetCDF())
+            # file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
+            #                            processor=ExtractNetCDF())
             pass
 
         case _:

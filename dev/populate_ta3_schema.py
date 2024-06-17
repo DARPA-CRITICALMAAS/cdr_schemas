@@ -141,7 +141,9 @@ def cogify(tif_path: str):
                 cog_filename,
                 dst_profile,
                 use_cog_driver=True,
-                in_memory=False
+                in_memory=False,
+                web_optimized=True,
+                overview_resampling="cubic"
             )
 
     return cog_filename
@@ -241,9 +243,9 @@ for data_url in gk.groups:
             pass
 
         case 'https://ds.iris.edu/files/products/emc/emc-files/CONUS-MT-2023.r0.0-n4.nc':
-            #
-            # file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
-            #                            processor=ExtractNetCDF())
+
+            file_path = pooch.retrieve(url=data_url, fname=data_file, known_hash=None,
+                                       processor=ExtractNetCDF())
             pass
 
         case _:

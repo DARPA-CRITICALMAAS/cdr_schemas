@@ -8,9 +8,10 @@ from .ta3_input import StackMetaData
 
 from pydantic import BaseModel, StrictStr
 
-class Accelerator(Enum):
-    CPU: "cpu"
-    GPU: "gpu"
+class Accelerator(str, Enum):
+    CPU = "cpu"
+    GPU = "gpu"
+
 class SRITrainConfig(BaseModel):
     _target_: StrictStr
 
@@ -33,29 +34,30 @@ class SRITrainConfig(BaseModel):
     deterministic: bool
 
 
-class NeighborhoodFunction(Enum):
-    GAUSSIAN: "gaussian"
-    BUBBLE: "bubble"
+class NeighborhoodFunction(str, Enum):
+    GAUSSIAN = "gaussian"
+    BUBBLE = "bubble"
 
-class SOMType(Enum):
-    TOROID: "toroid"
-    SHEET: "sheet"
+class SOMType(str, Enum):
+    TOROID = "toroid"
+    SHEET = "sheet"
 
-class NeighborhoodDecay(Enum):
-    LINEAR: "linear"
-    EXPONENTIAL: "exponential"
+class NeighborhoodDecay(str, Enum):
+    LINEAR = "linear"
+    EXPONENTIAL = "exponential"
 
-class LearningRateDecay(Enum):
-    LINEAR: "linear"
-    EXPONENTIAL: "exponential"
+class LearningRateDecay(str, Enum):
+    LINEAR = "linear"
+    EXPONENTIAL = "exponential"
 
-class SOMInitialization(Enum):
-    RANDOM: "random"
-    PCA: "pca"
+class SOMInitialization(str, Enum):
+    RANDOM = "random"
+    PCA = "pca"
 
-class SOMGrid(Enum):
-    HEXAGONAL: "hexagonal"
-    RECTANGULAR: "rectangular"
+class SOMGrid(str, Enum):
+    HEXAGONAL = "hexagonal"
+    RECTANGULAR = "rectangular"
+
 class BeakTrainConfig(BaseModel):
     dimensions_x: int
     dimensions_y: int

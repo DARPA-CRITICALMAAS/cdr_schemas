@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel, Field
 
-from .ta3_input import StackMetaData
+from .prospectivity_input import StackMetaData
 
 
 class Accelerator(str, Enum):
@@ -11,16 +11,11 @@ class Accelerator(str, Enum):
     GPU = "gpu"
 
 
-class SRITrainConfig(BaseModel):
-    _target_: StrictStr
-
-    default_root_dir: StrictStr
-
+class NeuralNetTrainConfig(BaseModel):
     min_epochs: int  # prevents early stopping
     max_epochs: int
 
     accelerator: Accelerator
-    devices: int
 
     # mixed precision for extra speed-up
     precision: int
@@ -63,7 +58,7 @@ class SOMGrid(str, Enum):
     RECTANGULAR = "rectangular"
 
 
-class BeakTrainConfig(BaseModel):
+class SOMTrainConfig(BaseModel):
     dimensions_x: int
     dimensions_y: int
     num_epochs: int
@@ -78,13 +73,13 @@ class BeakTrainConfig(BaseModel):
     som_grid: SOMGrid
 
 
-class SRIModel(BaseModel):
-    train_config: SRITrainConfig
+class NeuralNetModel(BaseModel):
+    train_config: NeuralNetTrainConfig
     pass
 
 
-class BeakModel(BaseModel):
-    train_config: BeakTrainConfig
+class SOMModel(BaseModel):
+    train_config: SOMTrainConfig
     pass
 
 
@@ -113,6 +108,6 @@ class CMAModel(BaseModel):
             Organization that created the model
         """,
     )
-    cma_model_type: Union[SRIModel, BeakModel]
+    cma_model_type: Union[NeuralNetModel, SOMModel]
 
     training_data: StackMetaData

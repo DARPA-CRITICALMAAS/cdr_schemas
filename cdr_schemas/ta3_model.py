@@ -10,6 +10,7 @@ class Accelerator(str, Enum):
     CPU = "cpu"
     GPU = "gpu"
 
+
 class SRITrainConfig(BaseModel):
     _target_: StrictStr
 
@@ -36,25 +37,31 @@ class NeighborhoodFunction(str, Enum):
     GAUSSIAN = "gaussian"
     BUBBLE = "bubble"
 
+
 class SOMType(str, Enum):
     TOROID = "toroid"
     SHEET = "sheet"
+
 
 class NeighborhoodDecay(str, Enum):
     LINEAR = "linear"
     EXPONENTIAL = "exponential"
 
+
 class LearningRateDecay(str, Enum):
     LINEAR = "linear"
     EXPONENTIAL = "exponential"
+
 
 class SOMInitialization(str, Enum):
     RANDOM = "random"
     PCA = "pca"
 
+
 class SOMGrid(str, Enum):
     HEXAGONAL = "hexagonal"
     RECTANGULAR = "rectangular"
+
 
 class BeakTrainConfig(BaseModel):
     dimensions_x: int
@@ -70,13 +77,16 @@ class BeakTrainConfig(BaseModel):
     som_initialization: SOMInitialization
     som_grid: SOMGrid
 
+
 class SRIModel(BaseModel):
     train_config: SRITrainConfig
     pass
 
+
 class BeakModel(BaseModel):
     train_config: BeakTrainConfig
     pass
+
 
 class CMAModel(BaseModel):
     title: Optional[str] = Field(

@@ -6,29 +6,36 @@ from pydantic import BaseModel, Field
 
 class InterpolationType(str, Enum):
     """Enum for the possible values of type field of MapUnit"""
-    LINEAR = 'linear'
-    CUBIC = 'cubic'
-    NEAREST = 'nearest'
-    NONE = 'none'
+
+    LINEAR = "linear"
+    CUBIC = "cubic"
+    NEAREST = "nearest"
+    NONE = "none"
+
 
 class ScalingType(str, Enum):
     """Enum for the possible values of type field of MapUnit"""
-    MINMAX = 'minmax'
-    MAXABS = 'maxabs'
-    STANDARD = 'standard'
+
+    MINMAX = "minmax"
+    MAXABS = "maxabs"
+    STANDARD = "standard"
+
 
 class LayerCategory(str, Enum):
     GEOPHYSICS = "geophysics"
     GEOLOGY = "geology"
     GEOCHEMISTRY = "geochemistry"
 
+
 class LayerDataType(str, Enum):
-    CONTINUOUS= "continuous"
-    BINARY= "binary"
+    CONTINUOUS = "continuous"
+    BINARY = "binary"
+
 
 class DataFormat(str, Enum):
-    TIF= "tif"
-    SHP= "shp"
+    TIF = "tif"
+    SHP = "shp"
+
 
 class DataSource(BaseModel):
     DOI: Optional[str]
@@ -90,13 +97,9 @@ class StackMetaData(BaseModel):
         """,
     )
 
-
-
     evidence_layers: List[EvidenceLayer]
 
     # model: str
     # model_version: str
     #
     # model_config = ConfigDict(protected_namespaces=())
-
-

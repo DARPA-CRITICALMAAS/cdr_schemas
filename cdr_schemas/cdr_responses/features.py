@@ -32,7 +32,12 @@ class PolygonExtractionResponse(BaseModel):
     )
     validated: bool = Field(default=False, description="Validated by human")
     legend_id: str = Field(default="", description="Associated CDR Legend ID")
-    projected_feature: Optional[List[ProjectedFeature]]
+    projected_feature: List[ProjectedFeature] = Field(
+        default_factory=list,
+        description="""
+            List of projected feature. Probably will only be one result.
+        """,
+    )
     legend_item: Optional[Any] = Field(
         default=None,
         description="Some cdr endpoints can allow a legend item data attached to each feature.",
@@ -63,7 +68,12 @@ class PointExtractionResponse(BaseModel):
     )
     validated: bool = Field(default=False, description="Validated by human")
     legend_id: str = Field(default="", description="Associated CDR Legend ID")
-    projected_feature: Optional[List[ProjectedFeature]]
+    projected_feature: List[ProjectedFeature] = Field(
+        default_factory=list,
+        description="""
+            List of projected feature. Probably will only be one result.
+        """,
+    )
     legend_item: Optional[Any] = Field(
         default=None,
         description="Some cdr endpoints can allow a legend item data attached to each feature.",
@@ -90,7 +100,12 @@ class LineExtractionResponse(BaseModel):
     )
     validated: bool = Field(default=False, description="Validated by human")
     legend_id: str = Field(default="", description="Associated CDR Legend ID")
-    projected_feature: Optional[List[ProjectedFeature]]
+    projected_feature: List[ProjectedFeature] = Field(
+        default_factory=list,
+        description="""
+            List of projected feature. Probably will only be one result.
+        """,
+    )
     legend_item: Optional[Any] = Field(
         default=None,
         description="Some cdr endpoints can allow a legend item data attached to each feature.",

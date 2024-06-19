@@ -24,5 +24,5 @@ class LegendItem(BaseModel):
     map_unit_b_age: Optional[float]=None
     map_unit_t_age: Optional[float]=None
 
-class LegendItems(BaseModel):
+class LegendItemsResponse(BaseModel):
     legend_items: Optional[List[LegendItem]]

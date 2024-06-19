@@ -6,7 +6,8 @@ authors = []
 readme = "README.md"
 packages = [
          {include = "cdr_schemas"},
-         {include = "cdr_schemas/**/*.py"}
+         {include = "cdr_schemas/**/*.py"},
+         {include = "cdr_schemas/**/**/*.py"}
 ]
 
 [tool.poetry.dependencies]

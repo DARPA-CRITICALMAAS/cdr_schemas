@@ -43,6 +43,6 @@ class AreaExtractionResponse(BaseModel):
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,
         description="""
-            List of projected feature. Probably will only be one result.
+            List of projected versions of this feature. Probably will only be one result.
         """,
     )

@@ -8,8 +8,10 @@ from cdr_schemas.features.polygon_features import Polygon
 
 
 class ProjectedFeature(BaseModel):
-    cdr_projection_id: str = Field(description="CDR Projection id used for transform.")
-    feature_type: str = Field(description="Feature type. polygon, point, line")
+    cdr_projection_id: str = Field(
+        description="CDR projection id used for creating transform"
+    )
+    feature_type: str = Field(description="Feature type. E.g. polygon, point, line")
     projected_geojson: Optional[Union[Polygon, Point, Line]] = Field(
         description="Projected geojson in EPSG 4326"
     )
@@ -19,23 +21,27 @@ class ProjectedFeature(BaseModel):
 
 
 class PolygonExtractionResponse(BaseModel):
-    polygon_id: str = Field(default="", description="CDR Polygon ID")
-    cog_id: str = Field(default="", description="Cog ID")
-    px_bbox: List[Union[float, int]] = Field(default_factory=list)
+    polygon_id: str = Field(default="", description="CDR polygon id")
+    cog_id: str = Field(default="", description="Cog id")
+    px_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
+        description="""The rough 2 point bounding box of the item.
+                    Format is expected to be [x1,y1,x2,y2].""",
+    )
     px_geojson: Polygon
     reference_id: Union[str, None] = Field(
         default=None, description="Polygon id of older version of this polygon."
     )
     confidence: Optional[float] = None
     model_id: str = Field(
-        default="", description="CDR Model ID for the model used to generate this item"
+        default="", description="CDR model id for the model used to generate this item"
     )
     system: str = Field(default="", description="System that published this item")
     system_version: str = Field(
-        default="", description="System Version that published this item"
+        default="", description="System version that published this item"
     )
     validated: bool = Field(default=False, description="Validated by human")
-    legend_id: str = Field(default="", description="Associated CDR Legend ID")
+    legend_id: str = Field(default="", description="Associated CDR legend id")
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,
         description="""
@@ -44,14 +50,18 @@ class PolygonExtractionResponse(BaseModel):
     )
     legend_item: Optional[Any] = Field(
         default=None,
-        description="Some cdr endpoints can allow a legend item data attached to each feature.",
+        description="Some CDR endpoints can allow legend item data attached to each feature.",
     )
 
 
 class PointExtractionResponse(BaseModel):
-    point_id: str = Field(default="", description="CDR Point ID")
-    cog_id: str = Field(default="", description="Cog ID")
-    px_bbox: List[Union[float, int]] = Field(default_factory=list)
+    point_id: str = Field(default="", description="CDR point id")
+    cog_id: str = Field(default="", description="Cog id")
+    px_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
+        description="""The rough 2 point bounding box of the item.
+                    Format is expected to be [x1,y1,x2,y2].""",
+    )
     px_geojson: Point
     dip: Optional[Union[int, None]] = Field(
         default=None, description="Point dip value."
@@ -64,14 +74,17 @@ class PointExtractionResponse(BaseModel):
     )
     confidence: Optional[float] = None
     model_id: str = Field(
-        default="", description="CDR Model ID for the model used to generate this item"
+        default="",
+        description="""
+            Model id associated with the model and version used to generate this item
+        """,
     )
     system: str = Field(default="", description="System that published this item")
     system_version: str = Field(
         default="", description="System Version that published this item"
     )
     validated: bool = Field(default=False, description="Validated by human")
-    legend_id: str = Field(default="", description="Associated CDR Legend ID")
+    legend_id: str = Field(default="", description="Associated legend id")
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,
         description="""
@@ -80,30 +93,34 @@ class PointExtractionResponse(BaseModel):
     )
     legend_item: Optional[Any] = Field(
         default=None,
-        description="Some cdr endpoints can allow a legend item data attached to each feature.",
+        description="Some CDR endpoints can allow legend item data attached to each feature",
     )
 
 
 class LineExtractionResponse(BaseModel):
-    line_id: str = Field(default="", description="CDR Line ID")
-    cog_id: str = Field(default="", description="Cog ID")
-    px_bbox: List[Union[float, int]] = Field(default_factory=list)
+    line_id: str = Field(default="", description="CDR line id")
+    cog_id: str = Field(default="", description="Cog id")
+    px_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
+        description="""The rough 2 point bounding box of the item.
+                    Format is expected to be [x1,y1,x2,y2].""",
+    )
     px_geojson: Line
     dash_pattern: str = Field(default="", description="Dash pattern of line")
-    symbol: str = Field(default="", description="symbol on line")
+    symbol: str = Field(default="", description="Symbol on line")
     reference_id: Union[str, None] = Field(
         default=None, description="Line id of older version of this line."
     )
     confidence: Optional[float] = None
     model_id: str = Field(
-        default="", description="CDR Model ID for the model used to generate this item"
+        default="", description="model id for the model used to generate this item"
     )
     system: str = Field(default="", description="System that published this item")
     system_version: str = Field(
-        default="", description="System Version that published this item"
+        default="", description="System version that published this item"
     )
     validated: bool = Field(default=False, description="Validated by human")
-    legend_id: str = Field(default="", description="Associated CDR Legend ID")
+    legend_id: str = Field(default="", description="Associated legend id")
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,
         description="""
@@ -112,5 +129,5 @@ class LineExtractionResponse(BaseModel):
     )
     legend_item: Optional[Any] = Field(
         default=None,
-        description="Some cdr endpoints can allow a legend item data attached to each feature.",
+        description="Some CDR endpoints can allow a legend item data attached to each feature.",
     )

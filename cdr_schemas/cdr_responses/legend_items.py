@@ -11,10 +11,9 @@ from cdr_schemas.features.polygon_features import Polygon
 
 
 class LegendItemResponse(BaseModel):
-    legend_id: str = Field(default="", description="CDR Legend ID")
+    legend_id: str = Field(default="", description="CDR legend id")
     abbreviation: str = Field(default="", description="Abbreviation of legend item")
     description: str = Field(default="", description="Legend item description")
-    px_bbox: List[Union[float, int]]
     color: str = Field(default="", description="Color")
     reference_id: Union[str, None] = Field(
         default=None, description="Legend id of older version of this legend item."
@@ -22,7 +21,12 @@ class LegendItemResponse(BaseModel):
     label: str = Field(default="", description="Label of legend item")
     pattern: str = Field(
         default="",
-        description="If category polygon, this can be filled in with pattern type",
+        description="If category of type polygon this can be filled in with pattern type",
+    )
+    px_bbox: List[Union[float, int]] = Field(
+        default_factory=list,
+        description="""The rough 2 point bounding box of the item.
+                    Format is expected to be [x1,y1,x2,y2].""",
     )
     px_geojson: Polygon
     cog_id: str = Field(default="", description="Cog id")
@@ -31,15 +35,15 @@ class LegendItemResponse(BaseModel):
     )
     system: str = Field(default="", description="System that published this item")
     system_version: str = Field(
-        default="", description="System Version that published this item"
+        default="", description="System version that published this item"
     )
     model_id: str = Field(
-        default="", description="CDR Model ID for the model used to generate this item"
+        default="", description="Model id for the model used to generate this item"
     )
     validated: bool = Field(default=False, description="Validated by human")
     confidence: Optional[float] = None
-    map_unit_age_text: str = Field(default="", description="Age of Map Unit")
-    map_unit_lithology: str = Field(default="", description="Map Unit lithology")
+    map_unit_age_text: str = Field(default="", description="Age of map unit")
+    map_unit_lithology: str = Field(default="", description="Map unit lithology")
     map_unit_b_age: Optional[float] = None
     map_unit_t_age: Optional[float] = None
 

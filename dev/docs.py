@@ -18,6 +18,8 @@ import cdr_schemas.map
 import cdr_schemas.map_results
 import cdr_schemas.metadata
 import cdr_schemas.mineral
+import cdr_schemas.prospectivity_input
+import cdr_schemas.prospectivity_models
 
 
 @dataclass
@@ -69,6 +71,8 @@ def run():
         Module(title="mineral", ref=cdr_schemas.mineral),
         Module(title="map results", ref=cdr_schemas.map_results),
         Module(title="map", ref=cdr_schemas.map),
+        Module(title="prospectivity input", ref=cdr_schemas.prospectivity_input),
+        Module(title="prospectivity models", ref=cdr_schemas.prospectivity_models),
     ]
 
     for m in modules:

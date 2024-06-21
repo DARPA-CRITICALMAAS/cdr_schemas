@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "cdr_schemas"
-version = "0.2.9"
+version = "0.3.0"
 description = "CDR Schemas"
 authors = []
 readme = "README.md"
 packages = [
          {include = "cdr_schemas"},
-         {include = "cdr_schemas/**/*.py"}
+         {include = "cdr_schemas/**/*.py"},
+         {include = "cdr_schemas/**/**/*.py"}
 ]
 
 [tool.poetry.dependencies]

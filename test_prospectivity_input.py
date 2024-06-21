@@ -1,5 +1,5 @@
-from cdr_schemas.ta3_input import StackMetaData
-from cdr_schemas.ta3_model import CMAModel
+from cdr_schemas.prospectivity_input import StackMetaData
+from cdr_schemas.prospectivity_models import CMAModel
 import erdantic as erd
 
 from PIL import Image

@@ -23,7 +23,7 @@ class ProjectedFeature(BaseModel):
 class PolygonExtractionResponse(BaseModel):
     polygon_id: str = Field(default="", description="CDR polygon id")
     cog_id: str = Field(default="", description="Cog id")
-    px_bbox: List[Union[float, int]] = Field(
+    px_bbox: Optional[List[Union[float, int]]] = Field(
         default_factory=list,
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",
@@ -57,7 +57,7 @@ class PolygonExtractionResponse(BaseModel):
 class PointExtractionResponse(BaseModel):
     point_id: str = Field(default="", description="CDR point id")
     cog_id: str = Field(default="", description="Cog id")
-    px_bbox: List[Union[float, int]] = Field(
+    px_bbox: Optional[List[Union[float, int]]] = Field(
         default_factory=list,
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",
@@ -100,7 +100,7 @@ class PointExtractionResponse(BaseModel):
 class LineExtractionResponse(BaseModel):
     line_id: str = Field(default="", description="CDR line id")
     cog_id: str = Field(default="", description="Cog id")
-    px_bbox: List[Union[float, int]] = Field(
+    px_bbox: Optional[List[Union[float, int]]] = Field(
         default_factory=list,
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",

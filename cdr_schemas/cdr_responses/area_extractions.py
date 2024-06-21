@@ -13,7 +13,7 @@ class AreaExtractionResponse(BaseModel):
     reference_id: Union[str, None] = Field(
         default=None, description="Legend id of older version of this legend item."
     )
-    px_bbox: List[Union[float, int]] = Field(
+    px_bbox: Optional[List[Union[float, int]]] = Field(
         default_factory=list,
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",

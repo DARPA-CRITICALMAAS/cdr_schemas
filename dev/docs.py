@@ -72,7 +72,7 @@ def run():
         Module(title="map results", ref=cdr_schemas.map_results),
         Module(title="map", ref=cdr_schemas.map),
         Module(title="prospectivity input", ref=cdr_schemas.prospectivity_input),
-        Module(title="prospectivity models", ref=cdr_schemas.prospectivity_models)
+        Module(title="prospectivity models", ref=cdr_schemas.prospectivity_models),
     ]
 
     for m in modules:

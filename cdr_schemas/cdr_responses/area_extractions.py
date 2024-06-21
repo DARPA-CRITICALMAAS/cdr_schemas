@@ -18,7 +18,7 @@ class AreaExtractionResponse(BaseModel):
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",
     )
-    px_geojson: Polygon
+    px_geojson: Optional[Polygon]
     system: str = Field(default="", description="System that published this item")
     system_version: str = Field(
         default="", description="System version that published this item"

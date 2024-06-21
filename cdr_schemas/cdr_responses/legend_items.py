@@ -28,7 +28,7 @@ class LegendItemResponse(BaseModel):
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",
     )
-    px_geojson: Polygon
+    px_geojson: Optional[Polygon]
     cog_id: str = Field(default="", description="Cog id")
     category: str = Field(
         default="", description="Category of legend item. Polygon, point, or line."

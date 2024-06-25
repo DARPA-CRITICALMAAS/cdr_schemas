@@ -1,101 +1,34 @@
 from datetime import datetime
-from enum import Enum
 from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from cdr_schemas.document import Document
 
-
-class Geometry(Enum):
-    Point = "Point"
-    Polygon = "Polygon"
-
-
-class ResourceReserveCategory(Enum):
-    INFERRED = "Inferred Mineral Resource"
-    INDICATED = "Indicated Mineral Resource"
-    MEASURED = "Measured Mineral Resource"
-    PROBABLE = "Probable Mineral Reserve"
-    PROVEN = "Proven Mineral Reserve"
-
-
-class GeologyInfo(BaseModel):
-    age: str = Field(default="", description="Age of the geologic unit or event")
-    unit_name: str = Field(default="", description="Name of the geologic unit")
-    description: str = ""
-    lithology: List[str] = Field(default_factory=list, description="Lithology")
-    process: List[str] = Field(default_factory=list, description="Process")
-    environment: List[str] = Field(default_factory=list, description="environment")
-    comments: str = ""
-
-
-class Ore(BaseModel):
-    ore_unit: str = Field(
-        description="The unit in which ore quantity is measured, eg, metric tonnes"
-    )
-    ore_value: float = Field(description="The value of ore quantity")
-
-
-class DepositType(BaseModel):
-    name: str = Field(description="Deposit type name")
-    environment: str = Field(description="Deposit type environment")
-    group: str = Field(description="Deposit type group")
-
-
-class DepositTypeCandidate(BaseModel):
-    observed_name: str = Field(
-        description="Source dataset that the site info is retrieved from. e.g., MRDS"
-    )
-    normalized_uri: DepositType = Field(
-        description="The deposit type of an inventory item"
-    )
-    confidence: Optional[Union[float, int]] = Field(
-        description="Score deposit type of an inventory item"
-    )
-    source: str = Field(
-        description="Source of the classification (automated model version / SME / etc...)"
-    )
-
-
-class BoundingBox(BaseModel):
-    x_min: float
-    x_max: float
-    y_min: float
-    y_max: float
-
-
-class PageInfo(BaseModel):
-    page: int
-    bounding_box: Optional[BoundingBox] = Field(
-        description="Coordinates of the document where reference is found"
-    )
-
-
-class Reference(BaseModel):
-    document: Document
-    page_info: List[PageInfo] = Field(
-        default_factory=list,
-        description="List of pages and their respective bounding boxes where the reference is found",
-    )
+class DocumentReference(BaseModel):
+    cdr_id: str
+    page: Optional[int]
+    x_min: Optional[float]
+    x_max: Optional[float]
+    y_min: Optional[float]
+    y_max: Optional[float]
 
 
 class EvidenceLayer(BaseModel):
-    name: str
+    name: str = Field(default="")
     relevance_score: float
 
 
 class MappableCriteria(BaseModel):
     criteria: str
-    theoretical: str = ""
+    theoretical: str = Field(default="")
     potential_dataset: list[EvidenceLayer] = Field(
         default_factory=list, description="List of evidence layers"
     )
-    supporting_references: list[Reference]
+    supporting_references: list[DocumentReference]
 
 
 class MineralSystem(BaseModel):
-    deposit_type: list[DepositType]
+    deposit_type: list[str] = Field(default_factory=list)
     source: list[MappableCriteria]
     pathway: list[MappableCriteria]
     trap: list[MappableCriteria] = Field(
@@ -112,35 +45,106 @@ class MineralSystem(BaseModel):
     )
 
 
-class Commodity(BaseModel):
-    name: str
+class GeologyInfo(BaseModel):
+    age: str = Field(default="", description="Age of the geologic unit or event")
+    unit_name: str = Field(default="", description="Name of the geologic unit")
+    description: str = ""
+    lithology: List[str] = Field(default_factory=list, description="Lithology")
+    process: List[str] = Field(default_factory=list, description="Process")
+    environment: List[str] = Field(default_factory=list, description="environment")
+    comments: str = ""
 
 
-class Grade(BaseModel):
-    grade_unit: str = Field(
-        description="The unit in which grade is measured, eg, percent"
+class DepositTypeCandidate(BaseModel):
+    observed_name: str = Field(
+        description="Source dataset that the site info is retrieved from. e.g., MRDS"
     )
-    grade_value: float = Field(description="The value of grade")
+
+    name: str = Field(description="Deposit type name")
+
+    confidence: Optional[Union[float, int]] = Field(
+        description="Score deposit type of an inventory item"
+    )
+    source: str = Field(
+        description="Source of the classification (automated model version / SME / etc...)"
+    )
+
+
+class RecordReference(BaseModel):
+    record_id: str = Field(default="", description="id in source")
+    source: str = Field(default="", description="Source information")
+    uri: str = Field(default="", description="uri of source")
+
+
+class MineralInventoryCategory(BaseModel):
+    category: str = Field(description="category name")
+    confidence: Optional[Union[float, int]]
+    source: str = Field(
+        description="Source of the classification (automated model version / SME / etc...)"
+    )
+
+
+class GeoLocationInfo(BaseModel):
+    crs: str = Field(
+        description="The Coordinate Reference System (CRS) of the location"
+    )
+
+    geom: str = Field(
+        description="Type: Polygon or Point, value indicates the geolocation of the site"
+    )
 
 
 class MineralInventory(BaseModel):
-    commodity: Commodity = Field(description="The commodity of an inventory item")
-    observed_commodity: str = Field(
-        default="",
-        description="The observed commodity in the source data (textual format)",
-    )
-    category: Optional[ResourceReserveCategory] = Field(
-        description="The category of an inventory item"
-    )
-    ore: Optional[Ore] = Field(description="The ore of an inventory item")
-    grade: Optional[Grade] = Field(description="The grade of an inventory item")
-    cutoff_grade: Optional[Grade] = Field(
-        description="The cutoff grade of the observed inventory item"
-    )
     contained_metal: Optional[float] = Field(
         description="The quantity of a contained metal in an inventory item"
     )
-    reference: Reference = Field(description="The reference of an inventory item")
+    commodity: str = Field(default="", description="The commodity of an inventory item")
+    commodity_observed_name: str = Field(
+        default="",
+        description="The observed commodity in the source data (textual format)",
+    )
+
+    ore_unit: str = Field(
+        default="",
+        description="The unit in which ore quantity is measured, eg, metric tonnes",
+    )
+    ore_value: Optional[float] = Field(description="The value of ore quantity")
+
+    grade_unit: str = Field(
+        default="", description="The unit in which grade is measured, eg, percent"
+    )
+    grade_value: Optional[float] = Field(description="The value of grade")
+
+    cutoff_grade_unit: str = Field(
+        default="", description="The unit in which grade is measured, eg, percent"
+    )
+    cutoff_grade_value: Optional[float] = Field(description="The value of grade")
+
+    material_form: Optional[float]
+    material_form_unit: str = Field(default="")
+    material_form_conversion: Optional[float]
+
+    categories: List[MineralInventoryCategory] = Field(
+        default_factory=list,
+        description="""
+            A list of categories
+        """,
+    )
+
+    documents: List[DocumentReference] = Field(
+        default_factory=list,
+        description="""
+            A list of document references
+        """,
+    )
+
+    records: List[RecordReference] = Field(
+        default_factory=list,
+        description="""
+            A list of records references from databases or other sources
+        """,
+    )
+
     date: Optional[datetime] = Field(
         description="When in the point of time mineral inventory valid"
     )
@@ -150,22 +154,8 @@ class MineralInventory(BaseModel):
     )
 
 
-class LocationInfo(BaseModel):
-    location: Geometry = Field(
-        description="Type: Polygon or Point, value indicates the geolocation of the site"
-    )
-    crs: str = Field(
-        description="The Coordinate Reference System (CRS) of the location"
-    )
-    country: str = Field(
-        default="", description="Country that the mine site resides in"
-    )
-    state_or_province: Optional[str] = Field(
-        description="State or province that the mine site resides in"
-    )
-
-
 class MineralSite(BaseModel):
+    id: str = Field(description="Mineral Site Id")
     source_id: str = Field(
         description="Source dataset that the site info is retrieved from. e.g., MRDS"
     )
@@ -173,7 +163,23 @@ class MineralSite(BaseModel):
         description="Unique ID of the record that the info is retrieved from e.g., 10022920"
     )
     name: str = Field(default="", description="Name of the mine, e.g., Tungsten Jim")
-    mineral_inventory: list[MineralInventory]
-    location_info: LocationInfo
-    geology_info: Optional[GeologyInfo]
-    deposit_type_candidate: list[DepositTypeCandidate]
+
+    site_rank: str = Field(default="")
+    site_type: str = Field(default="")
+    country: List[str] = Field(default_factory=list)
+    province: List[str] = Field(default_factory=list)
+    location: Optional[GeoLocationInfo]
+
+    mineral_inventory: List[MineralInventory] = Field(
+        default_factory=list,
+        description="""
+            A list of mineral inventories
+        """,
+    )
+
+    deposit_type_candidate: List[DepositTypeCandidate] = Field(
+        default_factory=list,
+        description="""
+            A list of deposit types candidates
+        """,
+    )

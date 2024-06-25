@@ -94,6 +94,13 @@ class GeoLocationInfo(BaseModel):
     )
 
 
+class Confidence(BaseModel):
+    confidence: Optional[Union[float, int]]
+    source: str = Field(
+        description="Source of the classification (automated model version / SME / etc...)"
+    )
+
+
 class MineralInventory(BaseModel):
     contained_metal: Optional[float] = Field(
         description="The quantity of a contained metal in an inventory item"
@@ -123,6 +130,8 @@ class MineralInventory(BaseModel):
     material_form: Optional[float]
     material_form_unit: str = Field(default="")
     material_form_conversion: Optional[float]
+
+    confidence: Confidence
 
     categories: List[MineralInventoryCategory] = Field(
         default_factory=list,

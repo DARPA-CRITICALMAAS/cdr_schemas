@@ -23,7 +23,7 @@ class LegendItemResponse(BaseModel):
         default="",
         description="If category of type polygon this can be filled in with pattern type",
     )
-    px_bbox: Optional[List[Union[float, int]]] = Field(
+    px_bbox: List[Union[float, int]] = Field(
         default_factory=list,
         description="""The rough 2 point bounding box of the item.
                     Format is expected to be [x1,y1,x2,y2].""",

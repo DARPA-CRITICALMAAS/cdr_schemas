@@ -55,6 +55,12 @@ class GeologyInfo(BaseModel):
     comments: str = Field(default="")
 
 
+class DepositType(BaseModel):
+    name: str = Field(description="Deposit type name")
+    environment: str = Field(description="Deposit type environment")
+    group: str = Field(description="Deposit type group")
+
+
 class DepositTypeCandidate(BaseModel):
     observed_name: str = Field(
         default="",

@@ -6,11 +6,11 @@ from pydantic import BaseModel, Field
 
 class DocumentReference(BaseModel):
     cdr_id: str
-    page: Optional[int]
-    x_min: Optional[float]
-    x_max: Optional[float]
-    y_min: Optional[float]
-    y_max: Optional[float]
+    page: Optional[int] = Field(default=None)
+    x_min: Optional[float] = Field(default=None)
+    x_max: Optional[float] = Field(default=None)
+    y_min: Optional[float] = Field(default=None)
+    y_max: Optional[float] = Field(default=None)
 
 
 class EvidenceLayer(BaseModel):
@@ -29,8 +29,8 @@ class MappableCriteria(BaseModel):
 
 class MineralSystem(BaseModel):
     deposit_type: list[str] = Field(default_factory=list)
-    source: list[MappableCriteria]
-    pathway: list[MappableCriteria]
+    source: list[MappableCriteria] = Field(default_factory=list)
+    pathway: list[MappableCriteria] = Field(default_factory=list)
     trap: list[MappableCriteria] = Field(
         default_factory=list, description="Mappable Criteria: trap"
     )
@@ -48,22 +48,23 @@ class MineralSystem(BaseModel):
 class GeologyInfo(BaseModel):
     age: str = Field(default="", description="Age of the geologic unit or event")
     unit_name: str = Field(default="", description="Name of the geologic unit")
-    description: str = ""
+    description: str = Field(default="")
     lithology: List[str] = Field(default_factory=list, description="Lithology")
     process: List[str] = Field(default_factory=list, description="Process")
     environment: List[str] = Field(default_factory=list, description="environment")
-    comments: str = ""
+    comments: str = Field(default="")
 
 
 class DepositTypeCandidate(BaseModel):
     observed_name: str = Field(
-        description="Source dataset that the site info is retrieved from. e.g., MRDS"
+        default="",
+        description="Source dataset that the site info is retrieved from. e.g., MRDS",
     )
 
     name: str = Field(description="Deposit type name")
 
     confidence: Optional[Union[float, int]] = Field(
-        description="Score deposit type of an inventory item"
+        default=None, description="Score deposit type of an inventory item"
     )
     source: str = Field(
         description="Source of the classification (automated model version / SME / etc...)"
@@ -78,7 +79,9 @@ class RecordReference(BaseModel):
 
 class MineralInventoryCategory(BaseModel):
     category: str = Field(description="category name")
-    confidence: Optional[Union[float, int]]
+    confidence: Optional[Union[float, int]] = Field(
+        default=None,
+    )
     source: str = Field(
         description="Source of the classification (automated model version / SME / etc...)"
     )
@@ -95,7 +98,7 @@ class GeoLocationInfo(BaseModel):
 
 
 class Confidence(BaseModel):
-    confidence: Optional[Union[float, int]]
+    confidence: Optional[Union[float, int]] = Field(default=None)
     source: str = Field(
         description="Source of the classification (automated model version / SME / etc...)"
     )
@@ -103,7 +106,8 @@ class Confidence(BaseModel):
 
 class MineralInventory(BaseModel):
     contained_metal: Optional[float] = Field(
-        description="The quantity of a contained metal in an inventory item"
+        default=None,
+        description="The quantity of a contained metal in an inventory item",
     )
     commodity: str = Field(default="", description="The commodity of an inventory item")
     commodity_observed_name: str = Field(
@@ -115,23 +119,25 @@ class MineralInventory(BaseModel):
         default="",
         description="The unit in which ore quantity is measured, eg, metric tonnes",
     )
-    ore_value: Optional[float] = Field(description="The value of ore quantity")
+    ore_value: Optional[float] = Field(
+        default=None, description="The value of ore quantity"
+    )
 
     grade_unit: str = Field(
         default="", description="The unit in which grade is measured, eg, percent"
     )
-    grade_value: Optional[float] = Field(description="The value of grade")
+    grade_value: Optional[float] = Field(default=None, description="The value of grade")
 
     cutoff_grade_unit: str = Field(
         default="", description="The unit in which grade is measured, eg, percent"
     )
-    cutoff_grade_value: Optional[float] = Field(description="The value of grade")
+    cutoff_grade_value: Optional[float] = Field(default=None)
 
-    material_form: Optional[float]
+    material_form: Optional[float] = Field(default=None)
     material_form_unit: str = Field(default="")
-    material_form_conversion: Optional[float]
+    material_form_conversion: Optional[float] = Field(default=None)
 
-    confidence: Confidence
+    confidence: Optional[Confidence] = Field(default=None)
 
     categories: List[MineralInventoryCategory] = Field(
         default_factory=list,
@@ -155,7 +161,7 @@ class MineralInventory(BaseModel):
     )
 
     date: Optional[datetime] = Field(
-        description="When in the point of time mineral inventory valid"
+        default=None, description="When in the point of time mineral inventory valid"
     )
     zone: str = Field(
         default="",
@@ -166,10 +172,12 @@ class MineralInventory(BaseModel):
 class MineralSite(BaseModel):
     id: str = Field(description="Mineral Site Id")
     source_id: str = Field(
-        description="Source dataset that the site info is retrieved from. e.g., MRDS"
+        default="",
+        description="Source dataset that the site info is retrieved from. e.g., MRDS",
     )
     record_id: str = Field(
-        description="Unique ID of the record that the info is retrieved from e.g., 10022920"
+        default="",
+        description="Unique ID of the record that the info is retrieved from e.g., 10022920",
     )
     name: str = Field(default="", description="Name of the mine, e.g., Tungsten Jim")
 
@@ -177,8 +185,7 @@ class MineralSite(BaseModel):
     site_type: str = Field(default="")
     country: List[str] = Field(default_factory=list)
     province: List[str] = Field(default_factory=list)
-    location: Optional[GeoLocationInfo]
-
+    location: Optional[GeoLocationInfo] = Field(default=None)
     mineral_inventory: List[MineralInventory] = Field(
         default_factory=list,
         description="""

@@ -166,8 +166,8 @@ class MineralInventory(BaseModel):
         """,
     )
 
-    date: Optional[datetime] = Field(
-        default=None, description="When in the point of time mineral inventory valid"
+    date: str = Field(
+        default="", description="When in the point of time mineral inventory valid"
     )
     zone: str = Field(
         default="",

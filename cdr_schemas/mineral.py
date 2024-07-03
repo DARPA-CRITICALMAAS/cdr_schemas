@@ -55,6 +55,7 @@ class GeologyInfo(BaseModel):
 
 
 class DepositType(BaseModel):
+    id: Optional[str] = Field(default=None, description="Deposit type id")
     name: str = Field(description="Deposit type name")
     environment: str = Field(description="Deposit type environment")
     group: str = Field(description="Deposit type group")

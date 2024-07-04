@@ -15,9 +15,7 @@ class ProjectedFeature(BaseModel):
     projected_geojson: Optional[Union[Polygon, Point, Line]] = Field(
         description="Projected geojson in EPSG 4326"
     )
-    projected_bbox: List[Union[float, int]] = Field(
-        default_factory=list, description="Projected bbox in EPSG 4326"
-    )
+    projected_bbox: Optional[Polygon] = Field(default=None, description="Optional bbox")
 
 
 class PolygonExtractionResponse(BaseModel):

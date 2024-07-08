@@ -205,3 +205,18 @@ class MineralSite(BaseModel):
             A list of deposit types candidates
         """,
     )
+
+    validated: bool = Field(False, description="Validated by human")
+
+    system: str = Field(
+        ...,
+        description="""
+            The name of the system used.
+        """,
+    )
+    system_version: str = Field(
+        ...,
+        description="""
+            The version of the system used.
+        """,
+    )

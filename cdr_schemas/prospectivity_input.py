@@ -63,6 +63,8 @@ class CriticalMineralAssessment(BaseModel):
     crs: str
     extent: Polygon
     resolution: tuple
+    mineral: str
+    description: str
 
 
 class CMATemplate(BaseModel):

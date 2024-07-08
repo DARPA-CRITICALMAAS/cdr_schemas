@@ -1,6 +1,8 @@
 from enum import Enum
+from pathlib import Path
 from typing import List, Optional, Union
 
+from geojson_pydantic import Polygon
 from pydantic import BaseModel, Field
 
 
@@ -56,6 +58,17 @@ class ProcessedDataLayer(BaseModel):
     resampling_method: InterpolationType
     scaling_method: ScalingType
     normalization_method: str  # source: LayerDataType
+
+
+class CriticalMineralAssessment(BaseModel):
+    crs: str
+    extent: Polygon
+    resolution: tuple
+
+
+class CMATemplate(BaseModel):
+    cma: CriticalMineralAssessment
+    file: Union[str, Path]
 
 
 class StackMetaData(BaseModel):

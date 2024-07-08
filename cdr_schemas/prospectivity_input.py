@@ -1,5 +1,4 @@
 from enum import Enum
-from pathlib import Path
 from typing import List, Optional, Union
 
 from geojson_pydantic import Polygon
@@ -68,7 +67,7 @@ class CriticalMineralAssessment(BaseModel):
 
 class CMATemplate(BaseModel):
     cma: CriticalMineralAssessment
-    file: Union[str, Path]
+    file: str
 
 
 class StackMetaData(BaseModel):

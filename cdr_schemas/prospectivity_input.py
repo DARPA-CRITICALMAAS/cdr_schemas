@@ -69,7 +69,7 @@ class CriticalMineralAssessment(BaseModel):
 
 class CMATemplate(BaseModel):
     cma: CriticalMineralAssessment
-    file: str   # path to template raster defining extent,crs for resampling
+    file: str  # path to template raster defining extent,crs for resampling
 
 
 class StackMetaData(BaseModel):

@@ -27,7 +27,10 @@ test_2 = {
             {
                 "id": "11",
                 "geometry": {"coordinates": [23.33, 122]},
-                "properties": {"model": "test", "model_version": "1"},
+                "properties": {
+                    "model": "test",
+                     "model_version": "1",
+                     "bbox":[]},
             }
         ]
     },

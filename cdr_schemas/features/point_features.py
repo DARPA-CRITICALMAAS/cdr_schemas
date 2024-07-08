@@ -38,7 +38,7 @@ class PointProperties(BaseModel):
     )
 
     # Point Properties
-    bbox: Optional[List[Union[float, int]]] = Field(
+    bbox: List[Union[float, int]] = Field(
         default=None,
         description="""The extacted 2 point bounding box of the point item.
                     Format is expected to be [x1,y1,x2,y2] where the top left

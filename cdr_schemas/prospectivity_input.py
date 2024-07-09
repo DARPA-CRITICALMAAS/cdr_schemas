@@ -1,6 +1,7 @@
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
+from geojson_pydantic import MultiPolygon
 from pydantic import BaseModel, Field
 
 
@@ -56,6 +57,19 @@ class ProcessedDataLayer(BaseModel):
     resampling_method: InterpolationType
     scaling_method: ScalingType
     normalization_method: str  # source: LayerDataType
+
+
+class CriticalMineralAssessment(BaseModel):
+    crs: str
+    extent: MultiPolygon
+    resolution: Tuple[int, int]
+    mineral: str
+    description: str
+
+
+class CMATemplate(BaseModel):
+    cma: CriticalMineralAssessment
+    file: str  # path to template raster defining extent,crs for resampling
 
 
 class StackMetaData(BaseModel):

@@ -67,7 +67,7 @@ class DepositTypeCandidate(BaseModel):
         description="Source dataset that the site info is retrieved from. e.g., MRDS",
     )
 
-    name: str = Field(description="Deposit type name")
+    deposit_type_id: Optional[str] = Field(default=None, description="Deposit type id")
 
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="Score deposit type of an inventory item"

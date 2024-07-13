@@ -220,3 +220,26 @@ class MineralSite(BaseModel):
             The version of the system used.
         """,
     )
+
+
+class GradeAndTonnage(BaseModel):
+    id: Optional[str] = Field(default=None, description="grade and tonnage record id")
+    mineral_site_id: str = Field(description="Mineral Site Id")
+    name: str = Field(default="")
+    commodity: str = Field(..., description="Commodity Name")
+    country: str = Field(default="")
+    province: str = Field(default="")
+    crs: str = Field(
+        default="", description="The Coordinate Reference System (CRS) of the location"
+    )
+    geom: Optional[str] = Field(
+        default="",
+        description="Type: Polygon or Point, value indicates the geolocation of the site",
+    )
+    document_url: str = Field(default="")
+    total_contained_metal: Optional[float] = Field(default=None)
+    total_tonnage: Optional[float] = Field(default=None)
+    total_grade: Optional[float] = Field(default=None)
+
+    system: str = Field(..., description="The name of the system used.")
+    system_version: str = Field(..., description="The version of the system used.")

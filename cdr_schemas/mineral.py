@@ -254,25 +254,12 @@ class DedupSite(BaseModel):
         description="Type: Polygon or Point, value indicates the geolocation of the site",
     )
 
-    top1_deposit_type_id: str = Field(default="")
-    top1_deposit_classification_source: str = Field(default="")
-    top1_deposit_classification_confidence: Optional[float] = Field(default=None)
-
-    top2_deposit_type_id: str = Field(default="")
-    top2_deposit_classification_source: str = Field(default="")
-    top2_deposit_classification_confidence: Optional[float] = Field(default=None)
-
-    top3_deposit_type_id: str = Field(default="")
-    top3_deposit_classification_source: str = Field(default="")
-    top3_deposit_classification_confidence: Optional[float] = Field(default=None)
-
-    top4_deposit_type_id: str = Field(default="")
-    top4_deposit_classification_source: str = Field(default="")
-    top4_deposit_classification_confidence: Optional[float] = Field(default=None)
-
-    top5_deposit_type_id: str = Field(default="")
-    top5_deposit_classification_source: str = Field(default="")
-    top5_deposit_classification_confidence: Optional[float] = Field(default=None)
+    deposit_type_candidate: List[DepositTypeCandidate] = Field(
+        default_factory=list,
+        description="""
+            A list of deposit types candidates
+        """,
+    )
 
     system: str = Field(..., description="The name of the system used.")
     system_version: str = Field(..., description="The version of the system used.")

@@ -222,13 +222,30 @@ class MineralSite(BaseModel):
     )
 
 
-class GradeAndTonnageSite(BaseModel):
+class HyperSiteRecord(BaseModel):
     id: Optional[str] = Field(default=None, description="grade and tonnage record id")
     mineral_site_id: str = Field(description="Mineral Site Id")
     name: str = Field(default="", description="Mineral Site Name")
-    commodity: str = Field(..., description="Commodity Name")
     country: str = Field(default="")
     province: str = Field(default="")
+    site_rank: str = Field(default="")
+    site_type: str = Field(default="")
+
+
+class HyperSite(BaseModel):
+    id: Optional[str] = Field(default=None, description="grade and tonnage record id")
+    sites: List[HyperSiteRecord] = Field(
+        default_factory=list, description="Mineral Sites"
+    )
+
+    commodity: str = Field(..., description="Commodity Name")
+    contained_metal: Optional[float] = Field(default=None)
+    contained_metal_units: str = Field(default="")
+    tonnage: Optional[float] = Field(default=None)
+    tonnage_units: str = Field(default="")
+    grade: Optional[float] = Field(default=None)
+    grade_units: str = Field(default="")
+
     crs: str = Field(
         default="", description="The Coordinate Reference System (CRS) of the location"
     )
@@ -237,37 +254,27 @@ class GradeAndTonnageSite(BaseModel):
         description="Type: Polygon or Point, value indicates the geolocation of the site",
     )
 
-
-class GradeAndTonnage(BaseModel):
-    id: Optional[str] = Field(default=None, description="grade and tonnage record id")
-    sites: List[GradeAndTonnageSite] = Field(default_factory=list, description="Mineral Sites")
-
-    contained_metal: Optional[float] = Field(default=None)
-    contained_metal_units: str = Field(default="")
-    tonnage: Optional[float] = Field(default=None)
-    tonnage_units: str = Field(default="")
-    grade: Optional[float] = Field(default=None)
-    grade_units: str = Field(default="")
-
     top1_deposit_type_id: str = Field(default="")
+    top1_deposit_classification_source: str = Field(default="")
     top1_deposit_classification_confidence: Optional[float] = Field(default=None)
 
     top2_deposit_type_id: str = Field(default="")
+    top2_deposit_classification_source: str = Field(default="")
     top2_deposit_classification_confidence: Optional[float] = Field(default=None)
 
     top3_deposit_type_id: str = Field(default="")
+    top3_deposit_classification_source: str = Field(default="")
     top3_deposit_classification_confidence: Optional[float] = Field(default=None)
 
     top4_deposit_type_id: str = Field(default="")
+    top4_deposit_classification_source: str = Field(default="")
     top4_deposit_classification_confidence: Optional[float] = Field(default=None)
 
     top5_deposit_type_id: str = Field(default="")
+    top5_deposit_classification_source: str = Field(default="")
     top5_deposit_classification_confidence: Optional[float] = Field(default=None)
 
     system: str = Field(..., description="The name of the system used.")
     system_version: str = Field(..., description="The version of the system used.")
     data_snapshot: str = Field(..., description="version of data")
     data_snapshot_date: str = Field(..., description="date of data")
-
-
-

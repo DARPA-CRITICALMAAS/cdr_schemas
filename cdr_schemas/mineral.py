@@ -222,8 +222,8 @@ class MineralSite(BaseModel):
     )
 
 
-class HyperSiteRecord(BaseModel):
-    id: Optional[str] = Field(default=None, description="grade and tonnage record id")
+class DedupSiteRecord(BaseModel):
+    id: Optional[str] = Field(default=None, description="dedup site record record id")
     mineral_site_id: str = Field(description="Mineral Site Id")
     name: str = Field(default="", description="Mineral Site Name")
     country: str = Field(default="")
@@ -232,9 +232,9 @@ class HyperSiteRecord(BaseModel):
     site_type: str = Field(default="")
 
 
-class HyperSite(BaseModel):
-    id: Optional[str] = Field(default=None, description="grade and tonnage record id")
-    sites: List[HyperSiteRecord] = Field(
+class DedupSite(BaseModel):
+    id: Optional[str] = Field(default=None, description="dedup site id")
+    sites: List[DedupSiteRecord] = Field(
         default_factory=list, description="Mineral Sites"
     )
 

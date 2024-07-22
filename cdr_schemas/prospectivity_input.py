@@ -57,7 +57,7 @@ class ImputeMethod(str, Enum):
 
 class Impute(BaseModel):
     impute_method: ImputeMethod
-    window_size = Tuple[int, int] = Field(
+    window_size = List[int] = Field(
         default=(3, 3),
         description="Size of window centered around pixel to be imputed.",
     )

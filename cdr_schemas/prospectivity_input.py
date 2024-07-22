@@ -89,6 +89,7 @@ class ProspectivityOutputLayer(BaseModel):
     title: str = Field(description="Title for prospectivity layer")
 
 
+# MTRI to CDR:
 # send to cdr to create new cma. Will be associated with template raster uploaded
 class CreateCriticalMineralAssessment(BaseModel):
     crs: str
@@ -98,12 +99,14 @@ class CreateCriticalMineralAssessment(BaseModel):
     description: str
 
 
+# CDR to Anyone
 class CriticalMineralAssessment(CreateCriticalMineralAssessment):
     cma_id: str = Field(description="ID of the cma")
     download_url: str = Field(description="url to view template raster")
 
 
-# MTRI UI TO CDR: define preprocessing actions
+# MTRI UI TO CDR:
+# define preprocessing actions
 class DefineProcessDataLayer(BaseModel):
     cma_id: str = Field(description="ID of the cma")
     data_source_id: str = Field(description="Data source id used to create this layer")
@@ -115,7 +118,8 @@ class DefineProcessDataLayer(BaseModel):
     normalization_method: str = Field(default="", description="normalization method")
 
 
-# CDR to TA3: define preprocessing actions
+# CDR to TA3:
+# define preprocessing actions
 class CreateProcessDataLayer(BaseModel):
     cma: CriticalMineralAssessment = Field(
         description="CMA with all information needed for processing"
@@ -163,7 +167,7 @@ class CreateProspectModelMetaData(BaseModel):
     )
 
 
-# CDR to TA3
+# CDR to TA3: EVENT
 # provides a model run id, cma
 class ProspectModelMetaData(BaseModel):
     model_run_id: str = Field(description="CDR id of the model run")

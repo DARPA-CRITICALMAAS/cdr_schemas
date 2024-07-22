@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Union
 
 from geojson_pydantic import MultiPolygon
 from pydantic import BaseModel, Field
@@ -47,7 +47,7 @@ class ImputeMethod(str, Enum):
 
 class Impute(BaseModel):
     impute_method: ImputeMethod
-    window_size = List[int] = Field(
+    window_size: List[int] = Field(
         default=[3, 3],
         description="Size of window centered around pixel to be imputed.",
     )
@@ -55,17 +55,17 @@ class Impute(BaseModel):
 
 class CreateDataSource(BaseModel):
     DOI: str = Field(default="")
-    authors: Optional[List[str]]
-    publication_date: Optional[str]
-    category: Optional[Union[LayerCategory, str]]
-    subcategory: Optional[str]
-    description: Optional[str]
-    derivative_ops: Optional[str]
+    authors: List[str] = Field(default_factory=list)
+    publication_date: str = Field(default="")
+    category: LayerCategory = Field(default="")
+    subcategory: str = Field(default="")
+    description: str = Field(default="")
+    derivative_ops: str = Field(default="")
     type: LayerDataType
-    resolution: Optional[tuple]
+    resolution: List[Union[int, float]] = Field(default_factory=list)
     format: DataFormat
     reference_url: str = ""
-    evidence_layer_raster_prefix: str
+    evidence_layer_raster_prefix: str = ""
 
 
 # TA3 TO CDR:
@@ -73,8 +73,8 @@ class CreateDataSource(BaseModel):
 class ProspectivityOutputLayer(BaseModel):
     system: str
     system_version: str
-    model: str
-    model_version: str
+    model: str = ""
+    model_version: str = ""
     model_run_id: str = Field(description="Connect this output to a model run")
     output_type: str  # one of (likelihood, uncertainty)
     cma_id: str = Field(description="id of the cma")
@@ -128,9 +128,9 @@ class CreateProspectModelMetaData(BaseModel):
     cma_id: str = Field(description="CMA id")
     system: str
     system_version: str
-    author: str
-    date: str
-    organization: str
+    author: str = ""
+    date: str = ""
+    organization: str = ""
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"

@@ -1,23 +1,13 @@
 from enum import Enum
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 from geojson_pydantic import MultiPolygon
 from pydantic import BaseModel, Field
 
 from cdr_schemas.prospectivity_models import (
-    NeuralNetTrainConfig,
     NeuralNetUserOptions,
     SOMTrainConfig,
 )
-
-
-class InterpolationType(str, Enum):
-    """Enum for the possible values of type field of MapUnit"""
-
-    LINEAR = "linear"
-    CUBIC = "cubic"
-    NEAREST = "nearest"
-    NONE = "none"
 
 
 class ScalingType(str, Enum):
@@ -58,13 +48,13 @@ class ImputeMethod(str, Enum):
 class Impute(BaseModel):
     impute_method: ImputeMethod
     window_size = List[int] = Field(
-        default=(3, 3),
+        default=[3, 3],
         description="Size of window centered around pixel to be imputed.",
     )
 
 
-class DataSource(BaseModel):
-    DOI: Optional[str]
+class CreateDataSource(BaseModel):
+    DOI: str = Field(default="")
     authors: Optional[List[str]]
     publication_date: Optional[str]
     category: Optional[Union[LayerCategory, str]]
@@ -74,7 +64,8 @@ class DataSource(BaseModel):
     type: LayerDataType
     resolution: Optional[tuple]
     format: DataFormat
-    download_url: Optional[str]
+    reference_url: str = ""
+    evidence_layer_raster_prefix: str
 
 
 # TA3 TO CDR:
@@ -85,6 +76,7 @@ class ProspectivityOutputLayer(BaseModel):
     model: str
     model_version: str
     model_run_id: str = Field(description="Connect this output to a model run")
+    output_type: str  # one of (likelihood, uncertainty)
     cma_id: str = Field(description="id of the cma")
     title: str = Field(description="Title for prospectivity layer")
 
@@ -94,15 +86,12 @@ class ProspectivityOutputLayer(BaseModel):
 class CreateCriticalMineralAssessment(BaseModel):
     crs: str
     extent: MultiPolygon
-    resolution: Tuple[int, int]
+    resolution: List[Union[float, int]]
     mineral: str
     description: str
 
 
-# CDR to Anyone
-class CriticalMineralAssessment(CreateCriticalMineralAssessment):
-    cma_id: str = Field(description="ID of the cma")
-    download_url: str = Field(description="url to view template raster")
+TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
 
 
 # MTRI UI TO CDR:
@@ -111,26 +100,9 @@ class DefineProcessDataLayer(BaseModel):
     cma_id: str = Field(description="ID of the cma")
     data_source_id: str = Field(description="Data source id used to create this layer")
     title: str = Field(description="Title to use for processed layer")
-    transform_method: Union[TransformMethod, Impute] = Field(
-        default="", description="Transformation method used"
+    transform_methods: TranformMethods = Field(
+        default_factory=list, description="Transformation method used"
     )
-    scaling_method: ScalingType = Field(default="", description="Scaling type if any")
-    normalization_method: str = Field(default="", description="normalization method")
-
-
-# CDR to TA3:
-# define preprocessing actions
-class CreateProcessDataLayer(BaseModel):
-    cma: CriticalMineralAssessment = Field(
-        description="CMA with all information needed for processing"
-    )
-    data_source: DataSource = Field(description="Data source to create this layer")
-    title: str = Field(description="Title to use for processed layer")
-    transform_method: Union[TransformMethod, Impute] = Field(
-        default="", description="Transformation method used"
-    )
-    scaling_method: ScalingType = Field(default="", description="Scaling type if any")
-    normalization_method: str = Field(default="", description="normalization method")
 
 
 # TA3 TO CDR:
@@ -145,11 +117,9 @@ class SaveProcessedDataLayer(BaseModel):
     title: str = Field(description="Title for processed layer")
     system: str
     system_version: str
-    transform_method: Union[TransformMethod, Impute] = Field(
+    transform_methods: TranformMethods = Field(
         default="", description="Transformation method used"
     )
-    scaling_method: ScalingType = Field(default="", description="Scaling type if any")
-    normalization_method: str = Field(default="", description="normalization method")
 
 
 # MTRI UI to CDR:
@@ -161,16 +131,7 @@ class CreateProspectModelMetaData(BaseModel):
     author: str
     date: str
     organization: str
-    train_config: Union[SOMTrainConfig, NeuralNetTrainConfig, NeuralNetUserOptions]
+    train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
     )
-
-
-# CDR to TA3: EVENT
-# provides a model run id, cma
-class ProspectModelMetaData(BaseModel):
-    model_run_id: str = Field(description="CDR id of the model run")
-    cma: CriticalMineralAssessment = Field(description="CMA info")
-    train_config: Union[SOMTrainConfig, NeuralNetTrainConfig, NeuralNetUserOptions]
-    evidence_layers: List[CreateProcessDataLayer]

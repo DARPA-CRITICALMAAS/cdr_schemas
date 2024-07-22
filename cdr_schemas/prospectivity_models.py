@@ -4,11 +4,6 @@ from typing import Optional, Tuple
 from pydantic import BaseModel, Field
 
 
-class Accelerator(str, Enum):
-    CPU = "cpu"
-    GPU = "gpu"
-
-
 class NeuralNetUserOptions(BaseModel):
     smoothing: Optional[float] = Field(
         default=0.5,
@@ -21,23 +16,6 @@ class NeuralNetUserOptions(BaseModel):
     negative_sampling_fraction: Optional[Tuple[float, float]] = Field(
         default=(0.0, 0.25)
     )
-
-
-class NeuralNetTrainConfig(BaseModel):
-    min_epochs: int  # prevents early stopping
-    max_epochs: int
-
-    accelerator: Accelerator
-
-    # mixed precision for extra speed-up
-    precision: int
-
-    # perform a validation loop twice every training epoch
-    val_check_interval: float
-
-    # set True to to ensure deterministic results
-    # makes training slower but gives more reproducibility than just setting seeds
-    deterministic: bool
 
 
 class NeighborhoodFunction(str, Enum):

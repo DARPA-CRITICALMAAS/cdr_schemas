@@ -1,7 +1,8 @@
 from enum import Enum
-from typing import  Optional, Tuple
+from typing import Optional, Tuple
 
 from pydantic import BaseModel, Field
+
 
 class Accelerator(str, Enum):
     CPU = "cpu"
@@ -100,43 +101,3 @@ class SOMTrainConfig(BaseModel):
     )
     initial_learning_rate: Optional[float]
     final_learning_rate: Optional[float]
-
-
-# class NeuralNetModel(BaseModel):
-#     train_config: NeuralNetTrainConfig
-#     pass
-
-
-# class SOMModel(BaseModel):
-#     train_config: SOMTrainConfig
-#     pass
-
-
-# class CMAModel(BaseModel):
-#     title: str = Field(
-#         description="""
-#             Title of the CMA.
-#         """,
-#     )
-#     date: str = Field(
-#         default="", description="Model creation date"
-#     )
-#     authors: List[str] = Field(
-#         default_factory=list,
-#         description="""
-#             Creators of the model
-#         """,
-#     )
-#     organization: Optional[str] = Field(
-#         ...,
-#         description="""
-#             Organization that created the model
-#         """,
-#     )
-#     cma_model_type: Union[NeuralNetModel, SOMModel]
-
-#     training_data: StackMetaData
-#     cma_template: CMATemplate
-
-
-

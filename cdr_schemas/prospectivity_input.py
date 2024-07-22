@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple, Union
 
 from geojson_pydantic import MultiPolygon
 from pydantic import BaseModel, Field
-
+from cdr_schemas.prospectivity_models import NeuralNetTrainConfig, SOMTrainConfig
 
 class InterpolationType(str, Enum):
     """Enum for the possible values of type field of MapUnit"""
@@ -38,19 +38,6 @@ class DataFormat(str, Enum):
     SHP = "shp"
 
 
-class DataSource(BaseModel):
-    DOI: Optional[str]
-    authors: Optional[List[str]]
-    publication_date: Optional[str]
-    category: Optional[Union[LayerCategory, str]]
-    subcategory: Optional[str]
-    description: Optional[str]
-    derivative_ops: Optional[str]
-    type: LayerDataType
-    resolution: Optional[tuple]
-    format: DataFormat
-    download_url: Optional[str]
-
 
 class TransformMethod(str, Enum):
     LOG = "log"
@@ -71,11 +58,47 @@ class Impute(BaseModel):
     )
 
 
+class DataSource(BaseModel):
+    DOI: Optional[str]
+    authors: Optional[List[str]]
+    publication_date: Optional[str]
+    category: Optional[Union[LayerCategory, str]]
+    subcategory: Optional[str]
+    description: Optional[str]
+    derivative_ops: Optional[str]
+    type: LayerDataType
+    resolution: Optional[tuple]
+    format: DataFormat
+    download_url: Optional[str]
+
+
+# TA3 can send this with the raster as their model output. 
+class ProspectivityLayer(BaseModel):
+    system: str
+    system_version: str
+    model: str
+    model_version: str
+    model_run_id: str = Field(description="Connect this output to a model run")
+    cma_id: str = Field(description="id of the cma")
+    title: str = Field(description="Title for prospectivity layer")
+    
+    
+
+
+# TA3 can send this along with a processed data layer used for training to support their model output. 
+# If possible the ta3 teams can send the whole stack used to generate the output for reproducibility 
+# by sending each layer with these metadata associating them with the model_run_id.
 class ProcessedDataLayer(BaseModel):
-    title: Optional[str]
-    transform_method: Union[TransformMethod, Impute]
-    scaling_method: ScalingType
-    normalization_method: str  # source: LayerDataType
+    model_run_id: str = Field(description="Connect this processed data layer to a model run output layer")
+    data_source_id: str = Field(description="Data source id used to create this layer")
+    cma_id: str = Field(description="id of the cma")
+    title: str = Field(description="title for processed layer")
+    system: str
+    system_version: str
+    transform_method: Union[TransformMethod, Impute] = Field(default="", description="Transformation method used")
+    scaling_method: ScalingType = Field(default="", description= "Scaling type if any")
+    normalization_method: str = Field(default="",description="normalization method")
+    
 
 
 class CriticalMineralAssessment(BaseModel):
@@ -86,41 +109,29 @@ class CriticalMineralAssessment(BaseModel):
     description: str
 
 
+# send to cdr to create new cma.
 class CMATemplate(BaseModel):
     cma: CriticalMineralAssessment
-    file: str  # path to template raster defining extent,crs for resampling
-
-
-class StackMetaData(BaseModel):
-    title: Optional[str] = Field(
+    file_name: str = Field(
         ...,
         description="""
-            Title of the map/cog.
-        """,
-    )
-    year: Optional[int] = Field(
-        ...,
-        description="""
-            Year the map was made. i.e. 2012
-        """,
-    )
-    crs: Optional[str] = Field(
-        ...,
-        description="""
-            CRS of the map. i.e. "EPSG:4267"
-        """,
-    )
-    authors: Optional[List[str]] = Field(
-        ...,
-        description="""
-            Creators of the dataset
-        """,
-    )
-    organization: Optional[str] = Field(
-        ...,
-        description="""
-            Organization that created the map
+            Name of file uploaded for template raster.
         """,
     )
 
-    evidence_layers: List[ProcessedDataLayer]
+
+#### send to TA3
+# send to cdr from Ericks UI
+class StackMetaDataForCDR(BaseModel):
+    cma_id: str = Field(description="CMA id")
+    train_config: Union[SOMTrainConfig,NeuralNetTrainConfig]
+    evidence_layer_ids: List[str] = Field(description= "Datasource ids in the cdr")
+
+
+# What is sent from CDR to TA3 teams for a model run
+class StackMetaDataForProcessing(BaseModel):
+    model_run_id: str = Field(description="CDR id of the model run")
+    cma_id: str = Field(description="CMA id")
+    cma_template_url: str = Field(description= "s3 url to the template raster to help with processing")
+    train_config: Union[SOMTrainConfig,NeuralNetTrainConfig]
+    evidence_layers: List[DataSource]

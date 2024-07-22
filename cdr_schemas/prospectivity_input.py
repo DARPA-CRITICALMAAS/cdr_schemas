@@ -52,9 +52,28 @@ class DataSource(BaseModel):
     download_url: Optional[str]
 
 
+class TransformMethod(str, Enum):
+    LOG = "log"
+    ABS = "abs"
+    SQRT = "sqrt"
+
+
+class ImputeMethod(str, Enum):
+    MEAN = "mean"
+    MEDIAN = "median"
+
+
+class Impute(BaseModel):
+    impute_method: ImputeMethod
+    window_size = Tuple[int, int] = Field(
+        default=(3, 3),
+        description="Size of window centered around pixel to be imputed.",
+    )
+
+
 class ProcessedDataLayer(BaseModel):
     title: Optional[str]
-    resampling_method: InterpolationType
+    transform_method: Union[TransformMethod, Impute]
     scaling_method: ScalingType
     normalization_method: str  # source: LayerDataType
 
@@ -101,12 +120,6 @@ class StackMetaData(BaseModel):
         ...,
         description="""
             Organization that created the map
-        """,
-    )
-    scale: Optional[int] = Field(
-        ...,
-        description="""
-            Mean scale of the map. 24000 would be equivalent to 1:24000.
         """,
     )
 

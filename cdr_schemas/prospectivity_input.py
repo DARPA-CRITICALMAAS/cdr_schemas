@@ -100,7 +100,7 @@ class CreateCriticalMineralAssessment(BaseModel):
 
 class CriticalMineralAssessment(CreateCriticalMineralAssessment):
     cma_id: str = Field(description="ID of the cma")
-    cma_template_url: str = Field(description="url to view template raster")
+    download_url: str = Field(description="url to view template raster")
 
 
 # MTRI UI TO CDR: define preprocessing actions
@@ -150,7 +150,7 @@ class SaveProcessedDataLayer(BaseModel):
 
 # MTRI UI to CDR:
 # defines the cma, model training config and layer preprocessing steps
-class CMAModelMetaDataForCDR(BaseModel):
+class CreateProspectModelMetaData(BaseModel):
     cma_id: str = Field(description="CMA id")
     system: str
     system_version: str
@@ -165,7 +165,7 @@ class CMAModelMetaDataForCDR(BaseModel):
 
 # CDR to TA3
 # provides a model run id, cma
-class CMAMetaDataForModeling(BaseModel):
+class ProspectModelMetaData(BaseModel):
     model_run_id: str = Field(description="CDR id of the model run")
     cma: CriticalMineralAssessment = Field(description="CMA info")
     train_config: Union[SOMTrainConfig, NeuralNetTrainConfig, NeuralNetUserOptions]

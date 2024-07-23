@@ -249,6 +249,10 @@ class DedupSite(BaseModel):
     crs: str = Field(
         default="", description="The Coordinate Reference System (CRS) of the location"
     )
+    centroid: Optional[str] = Field(
+        default="",
+        description="Type: Point (center) of the geolocation of the site, merged if there is a collection",
+    )
     geom: Optional[str] = Field(
         default="",
         description="Type: Polygon or Point, value indicates the geolocation of the site",

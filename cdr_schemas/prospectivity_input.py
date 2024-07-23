@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Union
+from typing import List, Union, Optional
 
 from geojson_pydantic import MultiPolygon
 from pydantic import BaseModel, Field
@@ -135,3 +135,17 @@ class CreateProspectModelMetaData(BaseModel):
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
     )
+
+
+class DataSource(BaseModel):
+    DOI: Optional[str]
+    authors: Optional[List[str]]
+    publication_date: Optional[str]
+    category: Optional[Union[LayerCategory, str]]
+    subcategory: Optional[str]
+    description: Optional[str]
+    derivative_ops: Optional[str]
+    type: LayerDataType
+    resolution: Optional[tuple]
+    format: DataFormat
+    download_url: Optional[str]

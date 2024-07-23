@@ -56,10 +56,10 @@ class SOMTrainConfig(BaseModel):
     dimensions_y: Optional[int] = Field(
         default=20, description="Dimension of generated SOM space in y"
     )
-    num_initializations: int = Field(
+    num_initializations: Optional[int] = Field(
         default=5, description="Number of initializations to run"
     )
-    num_epochs: Optional[int] = Field(default=10, description="Number of epochs to run")
+    num_epochs: int = Field(default=10, description="Number of epochs to run")
     grid_type: Optional[SOMGrid] = Field(default=SOMGrid.RECTANGULAR)
     som_type: Optional[SOMType] = Field(default=SOMType.TOROID)
     som_initialization: Optional[SOMInitialization] = Field(

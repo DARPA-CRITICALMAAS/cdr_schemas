@@ -1,31 +1,21 @@
 from enum import Enum
-from typing import List, Optional, Tuple, Union
+from typing import Optional, Tuple
 
 from pydantic import BaseModel, Field
 
-from .prospectivity_input import CMATemplate, StackMetaData
 
-
-class Accelerator(str, Enum):
-    CPU = "cpu"
-    GPU = "gpu"
-
-
-class NeuralNetTrainConfig(BaseModel):
-    min_epochs: int  # prevents early stopping
-    max_epochs: int
-
-    accelerator: Accelerator
-
-    # mixed precision for extra speed-up
-    precision: int
-
-    # perform a validation loop twice every training epoch
-    val_check_interval: float
-
-    # set True to to ensure deterministic results
-    # makes training slower but gives more reproducibility than just setting seeds
-    deterministic: bool
+class NeuralNetUserOptions(BaseModel):
+    smoothing: Optional[float] = Field(
+        default=0.5,
+        description="Controls certainty of data labels. Low smoothing results in large gradients between low vs high prospectivity areas. High smoothing results in incremental gradients between low vs high prospectivity areas.",
+    )
+    dropout: Optional[float] = Field(
+        default=0.5,
+        description="Dropout influences variance of network outputs. Low dropout results in deterministic prospectivity map. High dropout results in probabilistic prospectivity map.",
+    )
+    negative_sampling_fraction: Optional[Tuple[float, float]] = Field(
+        default=(0.0, 0.25)
+    )
 
 
 class NeighborhoodFunction(str, Enum):
@@ -66,10 +56,10 @@ class SOMTrainConfig(BaseModel):
     dimensions_y: Optional[int] = Field(
         default=20, description="Dimension of generated SOM space in y"
     )
-    num_initializations: int = Field(
+    num_initializations: Optional[int] = Field(
         default=5, description="Number of initializations to run"
     )
-    num_epochs: Optional[int] = Field(default=10, description="Number of epochs to run")
+    num_epochs: int = Field(default=10, description="Number of epochs to run")
     grid_type: Optional[SOMGrid] = Field(default=SOMGrid.RECTANGULAR)
     som_type: Optional[SOMType] = Field(default=SOMType.TOROID)
     som_initialization: Optional[SOMInitialization] = Field(
@@ -89,58 +79,3 @@ class SOMTrainConfig(BaseModel):
     )
     initial_learning_rate: Optional[float]
     final_learning_rate: Optional[float]
-
-
-class NeuralNetModel(BaseModel):
-    train_config: NeuralNetTrainConfig
-    pass
-
-
-class SOMModel(BaseModel):
-    train_config: SOMTrainConfig
-    pass
-
-
-class CMAModel(BaseModel):
-    title: Optional[str] = Field(
-        ...,
-        description="""
-            Title of the model.
-        """,
-    )
-    date: Optional[int] = Field(
-        ...,
-        description="""
-            Date that the model was made. i.e. 2012
-        """,
-    )
-    authors: Optional[List[str]] = Field(
-        ...,
-        description="""
-            Creators of the model
-        """,
-    )
-    organization: Optional[str] = Field(
-        ...,
-        description="""
-            Organization that created the model
-        """,
-    )
-    cma_model_type: Union[NeuralNetModel, SOMModel]
-
-    training_data: StackMetaData
-    cma_template: CMATemplate
-
-
-class NeuralNetUserOptions(BaseModel):
-    smoothing: Optional[float] = Field(
-        default=0.5,
-        description="Controls certainty of data labels. Low smoothing results in large gradients between low vs high prospectivity areas. High smoothing results in incremental gradients between low vs high prospectivity areas.",
-    )
-    dropout: Optional[float] = Field(
-        default=0.5,
-        description="Dropout influences variance of network outputs. Low dropout results in deterministic prospectivity map. High dropout results in probabilistic prospectivity map.",
-    )
-    negative_sampling_fraction: Optional[Tuple[float, float]] = Field(
-        default=(0.0, 0.25)
-    )

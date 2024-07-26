@@ -117,9 +117,9 @@ class SaveProcessedDataLayer(BaseModel):
     title: str = Field(description="Title for processed layer")
     system: str
     system_version: str
-    # transform_methods: TranformMethods = Field(
-    #     default="", description="Transformation method used"
-    # )
+    transform_methods: TranformMethods = Field(
+        default="", description="Transformation method used"
+    )
 
 
 # MTRI UI to CDR:

@@ -131,6 +131,7 @@ class CreateProspectModelMetaData(BaseModel):
     author: str = ""
     date: str = ""
     organization: str = ""
+    model_type: str
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"

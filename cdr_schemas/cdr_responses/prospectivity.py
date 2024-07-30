@@ -21,9 +21,6 @@ class DataSource(CreateDataSource):
 
 
 class CreateProcessDataLayer(BaseModel):
-    cma: CriticalMineralAssessment = Field(
-        description="CMA with all information needed for processing"
-    )
     data_source: DataSource = Field(description="Data source to create this layer")
     title: str = Field(description="Title to use for processed layer")
     transform_methods: TranformMethods = Field(
@@ -39,5 +36,6 @@ class ProspectModelMetaData(BaseModel):
 
     model_run_id: str = Field(description="CDR id of the model run")
     cma: CriticalMineralAssessment = Field(description="CMA info")
+    model_type: str
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
     evidence_layers: List[CreateProcessDataLayer]

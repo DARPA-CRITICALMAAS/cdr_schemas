@@ -27,6 +27,7 @@ class LayerCategory(str, Enum):
 class LayerDataType(str, Enum):
     CONTINUOUS = "continuous"
     BINARY = "binary"
+    CATEGORICAL = "categorical"
 
 
 class DataFormat(str, Enum):

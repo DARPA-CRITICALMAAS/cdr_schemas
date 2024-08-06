@@ -81,7 +81,7 @@ class PointExtractionResponse(BaseModel):
     system_version: str = Field(
         default="", description="System Version that published this item"
     )
-    validated: bool = Field(default=False, description="Validated by human")
+    validated: Optional[bool] = Field(default=None, description="Validated by human")
     legend_id: str = Field(default="", description="Associated legend id")
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,
@@ -117,7 +117,7 @@ class LineExtractionResponse(BaseModel):
     system_version: str = Field(
         default="", description="System version that published this item"
     )
-    validated: bool = Field(default=False, description="Validated by human")
+    validated: Optional[bool] = Field(default=None, description="Validated by human")
     legend_id: str = Field(default="", description="Associated legend id")
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,

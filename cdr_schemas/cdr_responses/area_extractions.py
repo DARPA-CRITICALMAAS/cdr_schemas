@@ -26,7 +26,7 @@ class AreaExtractionResponse(BaseModel):
     model_id: str = Field(
         default="", description="Model id for the model used to generate this item"
     )
-    validated: bool = Field(default=False, description="Validated by human")
+    validated: Optional[bool] = Field(default=None, description="Validated by human")
     confidence: Optional[float] = None
     category: AreaType = Field(
         ...,

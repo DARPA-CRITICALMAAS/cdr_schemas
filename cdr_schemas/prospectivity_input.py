@@ -92,7 +92,7 @@ class CreateCriticalMineralAssessment(BaseModel):
     description: str
 
 
-TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
+TranformMethods = List[Union[TransformMethod, Impute, ScalingType, str]]
 
 
 # MTRI UI TO CDR:

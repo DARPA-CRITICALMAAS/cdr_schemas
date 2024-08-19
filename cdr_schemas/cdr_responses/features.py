@@ -39,7 +39,9 @@ class PolygonExtractionResponse(BaseModel):
         default="", description="System version that published this item"
     )
     validated: Optional[bool] = Field(default=None, description="Validated by human")
-    legend_id: Optional[str] = Field(default=None, description="Associated CDR legend id")
+    legend_id: Optional[str] = Field(
+        default=None, description="Associated CDR legend id"
+    )
     projected_feature: List[ProjectedFeature] = Field(
         default_factory=list,
         description="""

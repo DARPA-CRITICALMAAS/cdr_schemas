@@ -39,7 +39,7 @@ class PointProperties(BaseModel):
 
     # Point Properties
     bbox: List[Union[float, int]] = Field(
-        default=None,
+        default_factory=list,
         description="""The extacted 2 point bounding box of the point item.
                     Format is expected to be [x1,y1,x2,y2] where the top left
                     is the origin (0,0).""",
@@ -57,7 +57,7 @@ class PointProperties(BaseModel):
             aiding in tracking provenance.
         """,
     )
-    validated: bool = Field(False, description="Validated by human")
+    validated: Optional[bool] = Field(None, description="Validated by human")
 
     model_config = ConfigDict(protected_namespaces=())
 
@@ -128,7 +128,7 @@ class PointLegendAndFeaturesResult(BaseModel):
             aiding in tracking provenance.
         """,
     )
-    validated: bool = Field(False, description="Validated by human")
+    validated: Optional[bool] = Field(None, description="Validated by human")
 
     # Segmentation Fields
     crs: str = Field(

@@ -30,7 +30,7 @@ class Line(BaseModel):
     type: GeomType = GeomType.LineString
 
 
-class LineProperty(BaseModel):
+class LineProperties(BaseModel):
     """
     Properties of the line.
     """
@@ -55,7 +55,7 @@ class LineProperty(BaseModel):
             aiding in tracking provenance.
         """,
     )
-    validated: bool = Field(False, description="Validated by human")
+    validated: Optional[bool] = Field(None, description="Validated by human")
     model_config = ConfigDict(protected_namespaces=())
 
 
@@ -70,7 +70,7 @@ class LineFeature(BaseModel):
                     The ids are used to link the line geometries is px-coord and geo-coord."""
     )
     geometry: Line
-    properties: LineProperty
+    properties: LineProperties
 
 
 class LineFeatureCollection(BaseModel):
@@ -125,7 +125,7 @@ class LineLegendAndFeaturesResult(BaseModel):
             aiding in tracking provenance.
         """,
     )
-    validated: bool = Field(False, description="Validated by human")
+    validated: Optional[bool] = Field(None, description="Validated by human")
 
     # Segmentation Fields
     crs: str = Field(

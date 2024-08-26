@@ -23,7 +23,7 @@ class Polygon(BaseModel):
     type: GeomType = GeomType.Polygon
 
 
-class PolygonProperty(BaseModel):
+class PolygonProperties(BaseModel):
     """
     Properties of the polygon.
     """
@@ -37,7 +37,7 @@ class PolygonProperty(BaseModel):
             aiding in tracking provenance.
         """,
     )
-    validated: bool = Field(False, description="Validated by human")
+    validated: Optional[bool] = Field(None, description="Validated by human")
 
     confidence: Optional[Union[float, int]] = Field(
         default=None, description="The prediction confidence of the model"
@@ -57,7 +57,7 @@ class PolygonFeature(BaseModel):
                 The ids are used to link the polygon geometries is px-coord and geo-coord."""
     )
     geometry: Polygon
-    properties: PolygonProperty
+    properties: PolygonProperties
 
 
 class PolygonFeatureCollection(BaseModel):
@@ -133,7 +133,7 @@ class PolygonLegendAndFeaturesResult(BaseModel):
             aiding in tracking provenance.
         """,
     )
-    validated: bool = Field(False, description="Validated by human")
+    validated: Optional[bool] = Field(None, description="Validated by human")
 
     # Segmentation Fields
     crs: str = Field(

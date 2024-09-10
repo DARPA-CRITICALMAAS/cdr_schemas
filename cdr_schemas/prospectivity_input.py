@@ -90,6 +90,7 @@ class CreateCriticalMineralAssessment(BaseModel):
     resolution: List[Union[float, int]]
     mineral: str
     description: str
+    creation_date: str
 
 
 TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]

@@ -12,6 +12,7 @@ from cdr_schemas.common import (
 
 
 class DashType(str, Enum):
+    none = ""
     solid = "solid"
     dash = "dash"
     dotted = "dotted"
@@ -44,8 +45,8 @@ class LineProperties(BaseModel):
         default=None, description="The prediction confidence of the model"
     )
     # Line Properties
-    dash_pattern: Optional[DashType] = Field(
-        default=None, description="values = {solid, dash, dotted}"
+    dash_pattern: DashType = Field(
+        default=DashType.none, description="values = {solid, dash, dotted}"
     )
     symbol: str = Field(default="", description="TODO : Add description")
     reference_id: str = Field(

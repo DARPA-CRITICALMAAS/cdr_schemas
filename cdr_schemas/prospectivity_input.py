@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import List, Optional, Union
+from datetime import datetime
 
 from geojson_pydantic import MultiPolygon
 from pydantic import BaseModel, Field
@@ -90,7 +91,7 @@ class CreateCriticalMineralAssessment(BaseModel):
     resolution: List[Union[float, int]]
     mineral: str
     description: str
-
+    creation_date: datetime = Field(default_factory=datetime.now)
 
 TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -90,6 +91,7 @@ class CreateCriticalMineralAssessment(BaseModel):
     resolution: List[Union[float, int]]
     mineral: str
     description: str
+    creation_date: datetime = Field(default_factory=datetime.now)
 
 
 TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]

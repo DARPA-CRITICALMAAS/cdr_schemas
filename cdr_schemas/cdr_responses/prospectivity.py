@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Union
 
 from pydantic import BaseModel, Field
@@ -13,6 +14,7 @@ from cdr_schemas.prospectivity_models import NeuralNetUserOptions, SOMTrainConfi
 class CriticalMineralAssessment(CreateCriticalMineralAssessment):
     cma_id: str = Field(description="ID of the cma")
     download_url: str = Field(description="url to view template raster")
+    creation_date: datetime = Field()
 
 
 class DataSource(CreateDataSource):

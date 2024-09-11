@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from cdr_schemas.features.line_features import Line
+from cdr_schemas.features.line_features import DashType, Line
 from cdr_schemas.features.point_features import Point
 from cdr_schemas.features.polygon_features import Polygon
 
@@ -106,7 +106,9 @@ class LineExtractionResponse(BaseModel):
                     Format is expected to be [x1,y1,x2,y2].""",
     )
     px_geojson: Line
-    dash_pattern: str = Field(default="", description="Dash pattern of line")
+    dash_pattern: DashType = Field(
+        default=DashType.none, description="Dash pattern of line"
+    )
     symbol: str = Field(default="", description="Symbol on line")
     reference_id: Union[str, None] = Field(
         default=None, description="Line id of older version of this line."

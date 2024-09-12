@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from cdr_schemas.prospectivity_input import (
     CreateCriticalMineralAssessment,
@@ -41,3 +41,5 @@ class ProspectModelMetaData(BaseModel):
     model_type: str
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
     evidence_layers: List[CreateProcessDataLayer]
+
+    model_config = ConfigDict(protected_namespaces=())

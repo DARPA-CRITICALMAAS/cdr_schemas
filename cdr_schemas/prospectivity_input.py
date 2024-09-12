@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List, Optional, Union
 
 from geojson_pydantic import MultiPolygon
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
     NeuralNetUserOptions,
@@ -82,6 +82,8 @@ class ProspectivityOutputLayer(BaseModel):
     cma_id: str = Field(description="id of the cma")
     title: str = Field(description="Title for prospectivity layer")
 
+    model_config = ConfigDict(protected_namespaces=())
+
 
 # MTRI to CDR:
 # send to cdr to create new cma. Will be associated with template raster uploaded
@@ -123,6 +125,7 @@ class SaveProcessedDataLayer(BaseModel):
     transform_methods: TranformMethods = Field(
         default="", description="Transformation method used"
     )
+    model_config = ConfigDict(protected_namespaces=())
 
 
 # MTRI UI to CDR:
@@ -139,6 +142,7 @@ class CreateProspectModelMetaData(BaseModel):
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
     )
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class DataSource(BaseModel):

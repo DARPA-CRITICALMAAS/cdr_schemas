@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Union
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_input import (
     CreateCriticalMineralAssessment,

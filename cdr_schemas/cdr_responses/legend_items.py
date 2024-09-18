@@ -42,8 +42,8 @@ class LegendItemResponse(BaseModel):
     )
     validated: Optional[bool] = Field(default=None, description="Validated by human")
     confidence: Optional[float] = None
-    map_unit_age_text: str = Field(default="", description="Age of map unit")
-    map_unit_lithology: str = Field(default="", description="Map unit lithology")
+    map_unit_age_text: list = Field(default_factory=list, description="Age of map unit")
+    map_unit_lithology: list = Field(default_factory=list, description="Map unit lithology")
     map_unit_b_age: Optional[float] = None
     map_unit_t_age: Optional[float] = None
 

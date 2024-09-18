@@ -123,8 +123,8 @@ class PolygonLegendAndFeaturesResult(BaseModel):
     pattern: str = Field(default="", description="The pattern of the map unit")
     ### TODO Agreed on Apr 15th call that category can be removed
     category: str = Field(default="", description="TODO - what is this?")
-    map_unit: Optional[MapUnit] = Field(
-        default=None, description="Human annotated information on the map unit"
+    map_unit: List[MapUnit] = Field(
+        default_factory=list, description="Human annotated information on the map units"
     )
     reference_id: str = Field(
         default="",

@@ -40,8 +40,6 @@ class NeuralNetUserOptions(BaseModel):
     )
 
 
-
-
 class NeighborhoodFunction(str, Enum):
     GAUSSIAN = "gaussian"
     BUBBLE = "bubble"

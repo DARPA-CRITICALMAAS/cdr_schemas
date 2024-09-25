@@ -1253,9 +1253,13 @@ classDiagram
     }
 
     class NeuralNetUserOptions {
-        smoothing: float | None = 0.5
-        dropout: float | None = 0.5
-        negative_sampling_fraction: tuple[float, float] | None = (0.0, 0.25)
+        likely_negative_range: tuple[float, float] | None = (0.1,1.0)
+        fraction_train_split: float | None = 0.8
+        upsample_multiplier: float | None = 20.0
+        dropout: tuple[float, float, float] | None = (0.0, 0.25, 0.25)
+        learning_rate: float | None = 1e-3
+        weight_decay: float | None = 1e-2
+        smoothing: float | None = 0.3
     }
 
     class NeighborhoodDecay {

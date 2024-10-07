@@ -103,7 +103,9 @@ TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
 # define preprocessing actions
 class DefineProcessDataLayer(BaseModel):
     cma_id: str = Field(description="ID of the cma")
-    data_source_id: str = Field(description="Processed data source id used to create this layer")
+    data_source_id: str = Field(
+        description="Processed data source id used to create this layer"
+    )
     title: str = Field(description="Title to use for processed layer")
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation method used"

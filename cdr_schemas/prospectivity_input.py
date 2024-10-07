@@ -103,7 +103,7 @@ TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
 # define preprocessing actions
 class DefineProcessDataLayer(BaseModel):
     cma_id: str = Field(description="ID of the cma")
-    data_source_id: str = Field(description="Data source id used to create this layer")
+    data_source_id: str = Field(description="Processed data source id used to create this layer")
     title: str = Field(description="Title to use for processed layer")
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation method used"
@@ -114,9 +114,6 @@ class DefineProcessDataLayer(BaseModel):
 # Send along with a processed data layer used for training to support their model output.
 # TA3 can send each layer of the training stack used to generate the output one layer at a time
 class SaveProcessedDataLayer(BaseModel):
-    model_run_id: str = Field(
-        description="Connect this processed data layer to a model run output layer"
-    )
     data_source_id: str = Field(description="Data source id used to create this layer")
     cma_id: str = Field(description="ID of the cma")
     title: str = Field(description="Title for processed layer")
@@ -142,6 +139,20 @@ class CreateProspectModelMetaData(BaseModel):
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
     )
+
+    model_config = ConfigDict(protected_namespaces=())
+
+
+# MTRI UI to CDR:
+# defines the layer preprocessing steps
+class CreateProcressDataLayers(BaseModel):
+    cma_id: str = Field(description="CMA id")
+    system: str
+    system_version: str
+    evidence_layers: List[DefineProcessDataLayer] = Field(
+        description="Datasource and preprocess steps"
+    )
+
     model_config = ConfigDict(protected_namespaces=())
 
 

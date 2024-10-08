@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
-from geojson_pydantic import MultiPolygon
+from geojson_pydantic import MultiPolygon, Point
 from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
@@ -153,6 +153,14 @@ class CreateProcressDataLayers(BaseModel):
     system_version: str
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
+    )
+    mineral_sites: List[str] = Field(
+        default_factory=list,
+        description="Mineral site ids from the cdr"
+    )
+    custom_mineral_sites: List[Point] = Field(
+        default_factory=list,
+        description="Mineral site locations selected by expert. Use EPSG:4326 only"
     )
 
     model_config = ConfigDict(protected_namespaces=())

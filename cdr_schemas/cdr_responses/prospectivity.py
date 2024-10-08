@@ -43,3 +43,17 @@ class ProspectModelMetaData(BaseModel):
     evidence_layers: List[CreateProcessDataLayer]
 
     model_config = ConfigDict(protected_namespaces=())
+
+
+class ProcressDataLayers(BaseModel):
+    cma: CriticalMineralAssessment = Field(description="CMA info")
+
+    evidence_layers: List[CreateProcessDataLayer] = Field(
+        description="Datasource and preprocess steps"
+    )
+    mineral_sites: List[List[int|float]] = Field(
+        default_factory=list,
+        description="Mineral site points. EPSG:4326"
+    )
+
+    model_config = ConfigDict(protected_namespaces=())

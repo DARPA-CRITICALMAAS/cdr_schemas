@@ -154,9 +154,9 @@ class CreateProcressDataLayers(BaseModel):
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
     )
-    mineral_sites: List[str] = Field(
+    dedup_sites: List[str] = Field(
         default_factory=list,
-        description="Mineral site ids from the cdr"
+        description="Dedup site ids from the cdr"
     )
     custom_mineral_sites: List[Point] = Field(
         default_factory=list,

@@ -115,10 +115,27 @@ class DefineProcessDataLayer(BaseModel):
 # TA3 TO CDR:
 # Send along with a processed data layer used for training to support their model output.
 # TA3 can send each layer of the training stack used to generate the output one layer at a time
+
+class RawDataType(str, Enum):
+    MINERAL_SITE = "mineral_site"
+    POINT = "point"
+    LINE = "line"
+    POLYGON = "polygon"
+    TIF = "tif"
+    VECTOR = "vector"
+
+
+class DataTypeId(BaseModel):
+    raw_data_type: RawDataType  = Field(description="Type of feature.")
+    id: str = Field(description="Id of feature in cdr")
+
+
 class SaveProcessedDataLayer(BaseModel):
-    data_source_id: str = Field(description="Data source id used to create this layer")
     cma_id: str = Field(description="ID of the cma")
     title: str = Field(description="Title for processed layer")
+    label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
+    raw_data_info: List[DataTypeId] = Field(default_factory=list, description="Ids and types of all features used")
+    extra_geometries: List = Field(default_factory=list, description="Extra geometries used to create this layer")
     system: str
     system_version: str
     transform_methods: TranformMethods = Field(

@@ -140,7 +140,7 @@ class SaveProcessedDataLayer(BaseModel):
     system: str
     system_version: str
     transform_methods: TranformMethods = Field(
-        default="", description="Transformation method used"
+        default_factory=list, description="Transformation method used"
     )
     model_config = ConfigDict(protected_namespaces=())
 
@@ -157,7 +157,7 @@ class DefineVectorProcessDataLayer(BaseModel):
         description="site locations selected by expert. Use EPSG:4326 only"
     )
     transform_methods: TranformMethods = Field(
-        default="", description="Transformation method used"
+        default_factory=list, description="Transformation method used"
     )
 
 # MTRI UI to CDR:

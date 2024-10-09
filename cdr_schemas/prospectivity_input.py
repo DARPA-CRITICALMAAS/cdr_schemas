@@ -110,6 +110,8 @@ class DefineProcessDataLayer(BaseModel):
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation method used"
     )
+    label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
+
 
 
 # TA3 TO CDR:
@@ -144,6 +146,19 @@ class SaveProcessedDataLayer(BaseModel):
     model_config = ConfigDict(protected_namespaces=())
 
 
+class DefineVectorProcessDataLayer(BaseModel):
+    label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
+    title: str = Field(description="Title to use for processed layer")
+    cma_id: str = Field(description="ID of the cma")
+    evidence_features: List[DataTypeId] = Field(
+        default_factory=list,
+        description="Feature ids from the cdr"
+    )
+    custom_features: List[Point] = Field(
+        default_factory=list,
+        description="site locations selected by expert. Use EPSG:4326 only"
+    )
+
 # MTRI UI to CDR:
 # defines the cma, model training config and layer preprocessing steps
 class CreateProspectModelMetaData(BaseModel):
@@ -168,17 +183,16 @@ class CreateProcressDataLayers(BaseModel):
     cma_id: str = Field(description="CMA id")
     system: str
     system_version: str
+
     evidence_layers: List[DefineProcessDataLayer] = Field(
+        default_factory=list,
         description="Datasource and preprocess steps"
     )
-    evidence_features: List[DataTypeId] = Field(
+    vector_layers: List[DefineVectorProcessDataLayer] = Field(
         default_factory=list,
-        description="Feature ids from the cdr"
+        description="A list of raster to be created using a set of vector features"
     )
-    custom_features: List[Point] = Field(
-        default_factory=list,
-        description="site locations selected by expert. Use EPSG:4326 only"
-    )
+    
 
     model_config = ConfigDict(protected_namespaces=())
 

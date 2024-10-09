@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
-from geojson_pydantic import MultiPolygon, Point
+from geojson_pydantic import MultiPolygon, Point, LineString,Polygon
 from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
@@ -102,7 +102,6 @@ TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
 # MTRI UI TO CDR:
 # define preprocessing actions
 class DefineProcessDataLayer(BaseModel):
-    cma_id: str = Field(description="ID of the cma")
     data_source_id: str = Field(
         description="Processed data source id used to create this layer"
     )
@@ -149,14 +148,16 @@ class SaveProcessedDataLayer(BaseModel):
 class DefineVectorProcessDataLayer(BaseModel):
     label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
     title: str = Field(description="Title to use for processed layer")
-    cma_id: str = Field(description="ID of the cma")
     evidence_features: List[DataTypeId] = Field(
         default_factory=list,
         description="Feature ids from the cdr"
     )
-    custom_features: List[Point] = Field(
+    extra_geometries: List[Point|LineString|Polygon] = Field(
         default_factory=list,
         description="site locations selected by expert. Use EPSG:4326 only"
+    )
+    transform_methods: TranformMethods = Field(
+        default="", description="Transformation method used"
     )
 
 # MTRI UI to CDR:

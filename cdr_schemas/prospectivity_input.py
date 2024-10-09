@@ -171,13 +171,13 @@ class CreateProcressDataLayers(BaseModel):
     evidence_layers: List[DefineProcessDataLayer] = Field(
         description="Datasource and preprocess steps"
     )
-    dedup_sites: List[str] = Field(
+    evidence_features: List[DataTypeId] = Field(
         default_factory=list,
-        description="Dedup site ids from the cdr"
+        description="Feature ids from the cdr"
     )
-    custom_mineral_sites: List[Point] = Field(
+    custom_features: List[Point] = Field(
         default_factory=list,
-        description="Mineral site locations selected by expert. Use EPSG:4326 only"
+        description="site locations selected by expert. Use EPSG:4326 only"
     )
 
     model_config = ConfigDict(protected_namespaces=())

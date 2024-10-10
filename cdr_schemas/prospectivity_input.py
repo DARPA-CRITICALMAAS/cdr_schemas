@@ -180,8 +180,8 @@ class CreateProspectModelMetaData(BaseModel):
     organization: str = ""
     model_type: str
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
-    evidence_layers: List[DefineProcessDataLayer] = Field(
-        description="Datasource and preprocess steps"
+    evidence_layers: List[str] = Field(
+        description="List of ids of processed data layers"
     )
 
     model_config = ConfigDict(protected_namespaces=())

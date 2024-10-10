@@ -7,32 +7,31 @@ from pydantic import BaseModel, Field
 class NeuralNetUserOptions(BaseModel):
     # data/model inputs processing args
     likely_negative_range: Optional[Tuple[float, float]] = Field(
-        default=(0.1,1.0),
-        description="The range of values to consider as likely negatives."
+        default=(0.1, 1.0),
+        description="The range of values to consider as likely negatives.",
     )
     fraction_train_split: Optional[float] = Field(
-        default=0.8,
-        description="The fraction of the data to use for training."
+        default=0.8, description="The fraction of the data to use for training."
     )
     upsample_multiplier: Optional[float] = Field(
         default=20.0,
-        description="The multiplier for upsampling positives in the training data split."
+        description="The multiplier for upsampling positives in the training data split.",
     )
 
     # model args
     dropout: Optional[Tuple[float, float, float]] = Field(
-        default=(0.0,0.25,0.25),
+        default=(0.0, 0.25, 0.25),
         description="Dropout influences variance of network outputs. Low dropout results in deterministic prospectivity map. High dropout results in probabilistic prospectivity map.",
     )
 
     # model training args
     learning_rate: Optional[float] = Field(
         default=1e-3,
-        description="Model learning rate. In machine learning referring to the step size at each iteration while moving toward a minimum of a loss function."
+        description="Model learning rate. In machine learning referring to the step size at each iteration while moving toward a minimum of a loss function.",
     )
     weight_decay: Optional[float] = Field(
         default=1e-2,
-        description="Model weight decay. A regularization technique that prevents the model weights from growing too large by adding a penalty term to the loss function."
+        description="Model weight decay. A regularization technique that prevents the model weights from growing too large by adding a penalty term to the loss function.",
     )
     smoothing: Optional[float] = Field(
         default=0.3,

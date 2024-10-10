@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
-from geojson_pydantic import MultiPolygon, Point, LineString,Polygon
+from geojson_pydantic import LineString, MultiPolygon, Point, Polygon
 from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
@@ -109,13 +109,15 @@ class DefineProcessDataLayer(BaseModel):
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation method used"
     )
-    label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
-
+    label_raster: bool = Field(
+        default=False, description="Layer used to train prospectivity models"
+    )
 
 
 # TA3 TO CDR:
 # Send along with a processed data layer used for training to support their model output.
 # TA3 can send each layer of the training stack used to generate the output one layer at a time
+
 
 class RawDataType(str, Enum):
     MINERAL_SITE = "mineral_site"
@@ -127,38 +129,45 @@ class RawDataType(str, Enum):
 
 
 class DataTypeId(BaseModel):
-    raw_data_type: RawDataType  = Field(description="Type of feature.")
+    raw_data_type: RawDataType = Field(description="Type of feature.")
     id: str = Field(description="Id of feature in cdr")
 
 
 class SaveProcessedDataLayer(BaseModel):
     cma_id: str = Field(description="ID of the cma")
-    title: str = Field(description="Title for processed layer")
-    label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
-    raw_data_info: List[DataTypeId] = Field(default_factory=list, description="Ids and types of all features used")
-    extra_geometries: List = Field(default_factory=list, description="Extra geometries used to create this layer")
+    title: str = Field(description="Title of processed layer")
+    label_raster: bool = Field(
+        default=False, description="Layer used to train prospectivity models"
+    )
+    raw_data_info: List[DataTypeId] = Field(
+        default_factory=list, description="cdr ids and types of all features used"
+    )
+    extra_geometries: List = Field(
+        default_factory=list, description="Extra geometries used to create this layer"
+    )
     system: str
     system_version: str
     transform_methods: TranformMethods = Field(
-        default_factory=list, description="Transformation method used"
+        default_factory=list, description="Transformation methods used"
     )
     model_config = ConfigDict(protected_namespaces=())
 
 
 class DefineVectorProcessDataLayer(BaseModel):
-    label_raster: bool = Field(default=False, description="Layer used to train prospectivity models")
+    label_raster: bool = Field(
+        default=False, description="Layer used to train prospectivity models"
+    )
     title: str = Field(description="Title to use for processed layer")
     evidence_features: List[DataTypeId] = Field(
-        default_factory=list,
-        description="Feature ids from the cdr"
+        default_factory=list, description="cdr ids and types of all features used"
     )
-    extra_geometries: List[Point|LineString|Polygon] = Field(
-        default_factory=list,
-        description="site locations selected by expert. Use EPSG:4326 only"
+    extra_geometries: List[Point | LineString | Polygon] = Field(
+        default_factory=list, description="Extra geometries to be used"
     )
     transform_methods: TranformMethods = Field(
-        default_factory=list, description="Transformation method used"
+        default_factory=list, description="Transformation methods used"
     )
+
 
 # MTRI UI to CDR:
 # defines the cma, model training config and layer preprocessing steps
@@ -186,14 +195,12 @@ class CreateProcressDataLayers(BaseModel):
     system_version: str
 
     evidence_layers: List[DefineProcessDataLayer] = Field(
-        default_factory=list,
-        description="Datasource and preprocess steps"
+        default_factory=list, description="Datasource and preprocess steps"
     )
     vector_layers: List[DefineVectorProcessDataLayer] = Field(
         default_factory=list,
-        description="A list of raster to be created using a set of vector features"
+        description="A list of raster to be created using a set of vector features",
     )
-    
 
     model_config = ConfigDict(protected_namespaces=())
 

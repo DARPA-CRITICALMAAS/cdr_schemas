@@ -19,7 +19,7 @@ class NeuralNetUserOptions(BaseModel):
     )
 
     # model args
-    dropout: Optional[Tuple[float, float, float]] = Field(
+    dropout_tuple: Optional[Tuple[float, float, float]] = Field(
         default=(0.0, 0.25, 0.25),
         description="Dropout influences variance of network outputs. Low dropout results in deterministic prospectivity map. High dropout results in probabilistic prospectivity map.",
     )

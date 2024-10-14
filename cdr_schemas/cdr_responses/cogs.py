@@ -1,6 +1,8 @@
 from typing import List, Optional
+
 from pydantic import BaseModel
-from .cma import BestBounds, CMA
+
+from .cma import CMA, BestBounds
 
 
 class CogMeta(BaseModel):
@@ -12,8 +14,8 @@ class CogMeta(BaseModel):
     publisher: str = ""
     cog_size: Optional[int] = None
     authors: List[str] = []
-    provider_name: str= ""
-    display_links_str: str= ""
+    provider_name: str = ""
+    display_links_str: str = ""
     no_map: bool = False
     provider_url: str = ""
     original_download_url: str = ""

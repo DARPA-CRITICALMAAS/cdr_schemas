@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
-from geojson_pydantic import MultiPolygon
+from geojson_pydantic import LineString, MultiPolygon, Point, Polygon
 from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
@@ -102,30 +102,71 @@ TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
 # MTRI UI TO CDR:
 # define preprocessing actions
 class DefineProcessDataLayer(BaseModel):
-    cma_id: str = Field(description="ID of the cma")
-    data_source_id: str = Field(description="Data source id used to create this layer")
+    data_source_id: str = Field(
+        description="Processed data source id used to create this layer"
+    )
     title: str = Field(description="Title to use for processed layer")
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation method used"
+    )
+    label_raster: bool = Field(
+        default=False, description="Layer used to train prospectivity models"
     )
 
 
 # TA3 TO CDR:
 # Send along with a processed data layer used for training to support their model output.
 # TA3 can send each layer of the training stack used to generate the output one layer at a time
+
+
+class RawDataType(str, Enum):
+    MINERAL_SITE = "mineral_site"
+    POINT = "point"
+    LINE = "line"
+    POLYGON = "polygon"
+    TIF = "tif"
+    VECTOR = "vector"
+
+
+class DataTypeId(BaseModel):
+    raw_data_type: RawDataType = Field(description="Type of feature.")
+    id: str = Field(description="Id of feature in cdr")
+
+
 class SaveProcessedDataLayer(BaseModel):
-    model_run_id: str = Field(
-        description="Connect this processed data layer to a model run output layer"
-    )
-    data_source_id: str = Field(description="Data source id used to create this layer")
     cma_id: str = Field(description="ID of the cma")
-    title: str = Field(description="Title for processed layer")
+    title: str = Field(description="Title of processed layer")
+    label_raster: bool = Field(
+        default=False, description="Layer used to train prospectivity models"
+    )
+    raw_data_info: List[DataTypeId] = Field(
+        default_factory=list, description="cdr ids and types of all features used"
+    )
+    extra_geometries: List = Field(
+        default_factory=list, description="Extra geometries used to create this layer"
+    )
     system: str
     system_version: str
     transform_methods: TranformMethods = Field(
-        default="", description="Transformation method used"
+        default_factory=list, description="Transformation methods used"
     )
     model_config = ConfigDict(protected_namespaces=())
+
+
+class DefineVectorProcessDataLayer(BaseModel):
+    label_raster: bool = Field(
+        default=False, description="Layer used to train prospectivity models"
+    )
+    title: str = Field(description="Title to use for processed layer")
+    evidence_features: List[DataTypeId] = Field(
+        default_factory=list, description="cdr ids and types of all features used"
+    )
+    extra_geometries: List[Point | LineString | Polygon] = Field(
+        default_factory=list, description="Extra geometries to be used"
+    )
+    transform_methods: TranformMethods = Field(
+        default_factory=list, description="Transformation methods used"
+    )
 
 
 # MTRI UI to CDR:
@@ -139,9 +180,28 @@ class CreateProspectModelMetaData(BaseModel):
     organization: str = ""
     model_type: str
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
-    evidence_layers: List[DefineProcessDataLayer] = Field(
-        description="Datasource and preprocess steps"
+    evidence_layers: List[str] = Field(
+        description="List of ids of processed data layers"
     )
+
+    model_config = ConfigDict(protected_namespaces=())
+
+
+# MTRI UI to CDR:
+# defines the layer preprocessing steps
+class CreateProcressDataLayers(BaseModel):
+    cma_id: str = Field(description="CMA id")
+    system: str
+    system_version: str
+
+    evidence_layers: List[DefineProcessDataLayer] = Field(
+        default_factory=list, description="Datasource and preprocess steps"
+    )
+    vector_layers: List[DefineVectorProcessDataLayer] = Field(
+        default_factory=list,
+        description="A list of raster to be created using a set of vector features",
+    )
+
     model_config = ConfigDict(protected_namespaces=())
 
 

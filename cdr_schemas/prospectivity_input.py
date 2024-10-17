@@ -189,7 +189,7 @@ class CreateProspectModelMetaData(BaseModel):
 
 # MTRI UI to CDR:
 # defines the layer preprocessing steps
-class CreateProcressDataLayers(BaseModel):
+class CreateProcessDataLayers(BaseModel):
     cma_id: str = Field(description="CMA id")
     system: str
     system_version: str

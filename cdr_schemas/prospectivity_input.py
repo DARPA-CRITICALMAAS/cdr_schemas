@@ -150,6 +150,7 @@ class SaveProcessedDataLayer(BaseModel):
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation methods used"
     )
+    event_id:str = Field(default= "", description="ID of the cma")
     model_config = ConfigDict(protected_namespaces=())
 
 

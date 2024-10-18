@@ -151,7 +151,7 @@ class SaveProcessedDataLayer(BaseModel):
         default_factory=list, description="Transformation methods used"
     )
     event_id:str = Field(default= "", description="ID of the cma")
-    model_config = ConfigDict(protected_namespaces=())
+    
 
 
 class DefineVectorProcessDataLayer(BaseModel):
@@ -202,8 +202,6 @@ class CreateProcessDataLayers(BaseModel):
         default_factory=list,
         description="A list of raster to be created using a set of vector features",
     )
-
-    model_config = ConfigDict(protected_namespaces=())
 
 
 class DataSource(BaseModel):

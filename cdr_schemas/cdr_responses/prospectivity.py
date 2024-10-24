@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Union
+from typing import List, Optional, Union
 
 from geojson_pydantic import LineString, Point, Polygon
 from pydantic import BaseModel, ConfigDict, Field
@@ -57,6 +57,7 @@ class CreateVectorProcessDataLayer(BaseModel):
 class ProcessedDataLayer(BaseModel):
     layer_id: str = Field(description="Layer id")
     download_url: str = Field(description="Download url")
+    label_raster: Optional[bool] = Field(description="Label raster")
 
 
 class ProspectModelMetaData(BaseModel):
@@ -70,7 +71,7 @@ class ProspectModelMetaData(BaseModel):
     model_type: str
     train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
     evidence_layers: List[ProcessedDataLayer] = Field(
-        description="Processed data layer ids."
+        description="Processed data layer info."
     )
 
     model_config = ConfigDict(protected_namespaces=())

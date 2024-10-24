@@ -150,8 +150,7 @@ class SaveProcessedDataLayer(BaseModel):
     transform_methods: TranformMethods = Field(
         default_factory=list, description="Transformation methods used"
     )
-    event_id:str = Field(default= "", description="ID of the cma")
-    
+    event_id: str = Field(default="", description="ID of the cma")
 
 
 class DefineVectorProcessDataLayer(BaseModel):

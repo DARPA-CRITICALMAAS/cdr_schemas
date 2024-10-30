@@ -64,7 +64,6 @@ class ProcessedDataLayer(BaseModel):
     label_raster: Optional[bool] = Field(description="Label raster")
     title: str = Field(description="title of layer")
 
-
 class ProspectModelMetaData(BaseModel):
     """
     # CDR to TA3: EVENT

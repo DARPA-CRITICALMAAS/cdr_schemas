@@ -73,7 +73,7 @@ class ProspectModelMetaData(BaseModel):
     model_run_id: str = Field(description="CDR id of the model run")
     cma: CriticalMineralAssessment = Field(description="CMA info")
     model_type: str
-    train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
+    train_config: Union[SOMTrainConfig, NeuralNetUserOptions, RFUserOptions]
     evidence_layers: List[ProcessedDataLayer] = Field(
         description="Processed data layer info."
     )

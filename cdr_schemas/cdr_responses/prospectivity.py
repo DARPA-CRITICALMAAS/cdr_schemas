@@ -62,6 +62,7 @@ class ProcessedDataLayer(BaseModel):
     layer_id: str = Field(description="Layer id")
     download_url: str = Field(description="Download url")
     label_raster: Optional[bool] = Field(description="Label raster")
+    title: str = Field(description="title of layer")
 
 
 class ProspectModelMetaData(BaseModel):

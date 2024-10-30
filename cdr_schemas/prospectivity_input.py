@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
     NeuralNetUserOptions,
+    RFUserOptions,
     SOMTrainConfig,
 )
 
@@ -179,7 +180,7 @@ class CreateProspectModelMetaData(BaseModel):
     date: str = ""
     organization: str = ""
     model_type: str
-    train_config: Union[SOMTrainConfig, NeuralNetUserOptions]
+    train_config: Union[SOMTrainConfig, NeuralNetUserOptions, RFUserOptions]
     evidence_layers: List[str] = Field(
         description="List of ids of processed data layers"
     )

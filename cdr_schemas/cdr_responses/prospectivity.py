@@ -10,6 +10,7 @@ from cdr_schemas.prospectivity_input import (
     DataTypeId,
     TranformMethods,
 )
+
 from cdr_schemas.prospectivity_models import (
     NeuralNetUserOptions,
     RFUserOptions,

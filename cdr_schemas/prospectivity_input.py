@@ -7,7 +7,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from cdr_schemas.prospectivity_models import (
     NeuralNetUserOptions,
-    RFUserOptions,
     SOMTrainConfig,
 )
 

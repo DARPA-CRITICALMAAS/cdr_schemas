@@ -100,3 +100,15 @@ class SOMTrainConfig(BaseModel):
     )
     initial_learning_rate: Optional[float]
     final_learning_rate: Optional[float]
+
+
+class RFUserOptions(BaseModel):
+    n_estimators: Optional[int] = Field(
+        default=100,
+        description="Controls number of trees used in sklearn RandomForestClassifier. More trees means higher accuracy but longer runtimes.  This should be interpreted as a 'compute budget' more than a hyperparameter.",
+    )
+
+    n_unlabeled: Optional[int] = Field(
+        default=40_000,
+        description="Number of unlabeled points to use to train the model.",
+    )

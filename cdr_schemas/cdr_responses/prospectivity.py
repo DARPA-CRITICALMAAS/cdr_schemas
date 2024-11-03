@@ -92,5 +92,9 @@ class ProcessDataLayers(BaseModel):
         default_factory=list,
         description="Vector features and preprocess steps. EPSG:4326",
     )
+    previously_processed: List[dict] = Field(
+        description="Preprocessed layers that have already been processed in a previous event",
+        default_factory=list,
+    )
 
     model_config = ConfigDict(protected_namespaces=())

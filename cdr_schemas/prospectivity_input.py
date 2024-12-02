@@ -97,7 +97,7 @@ class CreateCriticalMineralAssessment(BaseModel):
     creation_date: datetime = Field(default_factory=datetime.now)
 
 
-TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
+TranformMethods = List[Union[TransformMethod, Impute, ScalingType, str]]
 
 
 # MTRI UI TO CDR:

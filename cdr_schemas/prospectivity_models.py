@@ -112,3 +112,51 @@ class RFUserOptions(BaseModel):
         default=40_000,
         description="Number of unlabeled points to use to train the model.",
     )
+
+
+class NetworkArchitectureSequence(str, Enum):
+    DESCENDING = "descending"
+    CONSTANT = "constant"
+
+
+class fastBNNUserOptions(BaseModel):
+    train_test_split: Optional[float] = Field(
+        default=1.0,
+        description="Fraction of data to use for training. Value of 1 refers to all data used for training.",
+    )
+    init_negatives_multiplier: Optional[int] = Field(
+        default=20,
+        description="Multiplier for initializing negative samples based on the number of positive labels. Higher values mean more negative samples are used.",
+    )
+    upsample_positives_multiplier: Optional[float] = Field(
+        default=None,
+        description="Multiplier for upsampling positive samples. Value of 0.25 oversamples positives to 25% the number of negatives.",
+    )
+    learning_rate: Optional[float] = Field(
+        default=1e-3,
+        description="Learning rate for the neural network. Step size during loss calculation towards the minimum loss.",
+    )
+    training_epochs: Optional[int] = Field(
+        default=100,
+        description="Number of epochs to train the neural network.",
+    )
+    network_arch_depth: Optional[int] = Field(
+        default=2,
+        description="Depth of the neural network. Higher depth means more layers used tu build the network.",
+    )
+    network_arch_width: Optional[int] = Field(
+        default=1,
+        description="Minimum width of a layer. Higher width means more neurons used within each layer. Calculated on the base of 2 (i.e., 4 results in a minimum of 16 neurons).",
+    )
+    network_arch_sequence: Optional[NetworkArchitectureSequence] = Field(
+        default=NetworkArchitectureSequence.DESCENDING,
+        description="Sequence of the neural network architecture. Descending means the width decreases with each layer, constant means the width remains constant.",
+    )
+    network_arch_core_units: Optional[Tuple[int, ...]] = Field(
+        default=None,
+        description="Custom architecture for the core layers of the neural network. If not provided, width, depth and sequence will be used.",
+    )
+    network_arch_head_units: Optional[Tuple[int, ...]] = Field(
+        default=None,
+        description="Custom architecture for the head layers the neural network. If not provided, width, depth and sequence will be used.",
+    )

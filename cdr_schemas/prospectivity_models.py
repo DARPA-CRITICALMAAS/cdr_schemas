@@ -100,6 +100,15 @@ class SOMTrainConfig(BaseModel):
     )
     initial_learning_rate: Optional[float]
     final_learning_rate: Optional[float]
+    kmeans: Optional[bool] = Field(
+        default=True, description="Whether to apply KMeans after SOM run"
+    )
+    kmeans_min: Optional[float] = Field(
+        default=1, description="Minimum number of clusters for KMeans"
+    )
+    kmeans_max: Optional[float] = Field(
+        default=10, description="Maximum number of clusters for KMeans"
+    )
 
 
 class RFUserOptions(BaseModel):

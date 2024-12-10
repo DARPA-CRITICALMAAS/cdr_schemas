@@ -81,13 +81,6 @@ classDiagram
         Correlation_Diagram: str = 'correlation_diagram'
     }
 
-    class GeomType {
-        <<Enumeration>>
-        Point: str = 'Point'
-        LineString: str = 'LineString'
-        Polygon: str = 'Polygon'
-    }
-
     class Area_Extraction {
         type: GeomType = GeomType.Polygon
         coordinates: list[list[list[float | int]]]
@@ -99,6 +92,13 @@ classDiagram
         model: str
         model_version: str
         confidence: float | int | None = None
+    }
+
+    class GeomType {
+        <<Enumeration>>
+        Point: str = 'Point'
+        LineString: str = 'LineString'
+        Polygon: str = 'Polygon'
     }
 
     Area_Extraction ..> AreaType
@@ -117,6 +117,20 @@ classDiagram
 ```mermaid
 classDiagram
 
+    class GeoreferenceResult {
+        likely_CRSs: list[str] = list
+        map_area: Area_Extraction | None = None
+        projections: list[ProjectionResult] = list
+    }
+
+    class GeoreferenceResults {
+        cog_id: str
+        georeference_results: list[GeoreferenceResult] = list
+        gcps: list[GroundControlPoint] = list
+        system: str
+        system_version: str
+    }
+
     class GroundControlPoint {
         gcp_id: str
         map_geom: Geom_Point
@@ -125,6 +139,20 @@ classDiagram
         model: str
         model_version: str
         crs: str
+    }
+
+    class ProjectionResult {
+        crs: str
+        gcp_ids: list[str]
+        file_name: str
+        validated: bool = False
+    }
+
+    class GeomType {
+        <<Enumeration>>
+        Point: str = 'Point'
+        LineString: str = 'LineString'
+        Polygon: str = 'Polygon'
     }
 
     class Area_Extraction {
@@ -140,38 +168,10 @@ classDiagram
         confidence: float | int | None = None
     }
 
-    class GeoreferenceResults {
-        cog_id: str
-        georeference_results: list[GeoreferenceResult] = list
-        gcps: list[GroundControlPoint] = list
-        system: str
-        system_version: str
-    }
-
-    class GeoreferenceResult {
-        likely_CRSs: list[str] = list
-        map_area: Area_Extraction | None = None
-        projections: list[ProjectionResult] = list
-    }
-
-    class ProjectionResult {
-        crs: str
-        gcp_ids: list[str]
-        file_name: str
-        validated: bool = False
-    }
-
     class Geom_Point {
         latitude: float | int | None
         longitude: float | int | None
         type: GeomType = GeomType.Point
-    }
-
-    class GeomType {
-        <<Enumeration>>
-        Point: str = 'Point'
-        LineString: str = 'LineString'
-        Polygon: str = 'Polygon'
     }
 
     class Pixel_Point {
@@ -188,8 +188,8 @@ classDiagram
     GroundControlPoint ..> Pixel_Point
     GeoreferenceResult ..> Area_Extraction
     GeoreferenceResult ..> ProjectionResult
-    GeoreferenceResults ..> GroundControlPoint
     GeoreferenceResults ..> GeoreferenceResult
+    GeoreferenceResults ..> GroundControlPoint
 
 
 ```
@@ -203,6 +203,14 @@ classDiagram
 
 ```mermaid
 classDiagram
+
+    class CogMetaData {
+        cog_id: str
+        system: str
+        system_version: str
+        multiple_maps: bool | None = None
+        map_metadata: list[MapMetaData] = list
+    }
 
     class MapMetaData {
         title: str = ''
@@ -220,20 +228,6 @@ classDiagram
         model_version: str
     }
 
-    class MapShapeTypes {
-        <<Enumeration>>
-        rectangular: str = 'rectangular'
-        non_rectangular: str = 'non_rectangular'
-    }
-
-    class CogMetaData {
-        cog_id: str
-        system: str
-        system_version: str
-        multiple_maps: bool | None = None
-        map_metadata: list[MapMetaData] = list
-    }
-
     class MapColorSchemeTypes {
         <<Enumeration>>
         full_color: str = 'full_color'
@@ -241,8 +235,14 @@ classDiagram
         grayscale: str = 'grayscale'
     }
 
-    MapMetaData ..> MapShapeTypes
+    class MapShapeTypes {
+        <<Enumeration>>
+        rectangular: str = 'rectangular'
+        non_rectangular: str = 'non_rectangular'
+    }
+
     MapMetaData ..> MapColorSchemeTypes
+    MapMetaData ..> MapShapeTypes
     CogMetaData ..> MapMetaData
 
 
@@ -273,6 +273,14 @@ classDiagram
         point_features: PointFeatureCollection | None = None
     }
 
+    class CogMetaData {
+        cog_id: str
+        system: str
+        system_version: str
+        multiple_maps: bool | None = None
+        map_metadata: list[MapMetaData] = list
+    }
+
     class FeatureResults {
         system: str
         system_version: str
@@ -282,6 +290,21 @@ classDiagram
         polygon_feature_results: list[PolygonLegendAndFeaturesResult] = list
         cog_area_extractions: list[Area_Extraction] = list
         cog_metadata_extractions: list[CogMetaData] = list
+    }
+
+    class LineLegendAndFeaturesResult {
+        id: str
+        legend_provenance: ModelProvenance | None = None
+        name: str = ''
+        abbreviation: str = ''
+        description: str = ''
+        legend_bbox: list[float | int] = list
+        legend_contour: list[list[float | int]] = list
+        reference_id: str = ''
+        validated: bool | None = None
+        crs: str = 'pixel'
+        cdr_projection_id: str = ''
+        line_features: LineFeatureCollection | None = None
     }
 
     class Area_Extraction {
@@ -316,33 +339,10 @@ classDiagram
         polygon_features: PolygonFeatureCollection | None = None
     }
 
-    class LineLegendAndFeaturesResult {
-        id: str
-        legend_provenance: ModelProvenance | None = None
-        name: str = ''
-        abbreviation: str = ''
-        description: str = ''
-        legend_bbox: list[float | int] = list
-        legend_contour: list[list[float | int]] = list
-        reference_id: str = ''
-        validated: bool | None = None
-        crs: str = 'pixel'
-        cdr_projection_id: str = ''
-        line_features: LineFeatureCollection | None = None
-    }
-
-    class CogMetaData {
-        cog_id: str
-        system: str
-        system_version: str
-        multiple_maps: bool | None = None
-        map_metadata: list[MapMetaData] = list
-    }
-
     Area_Extraction ..> AreaType
     Area_Extraction ..> GeomType
-    LineLegendAndFeaturesResult ..> ModelProvenance
     LineLegendAndFeaturesResult ..> LineFeatureCollection
+    LineLegendAndFeaturesResult ..> ModelProvenance
     PointLegendAndFeaturesResult ..> PointFeatureCollection
     PointLegendAndFeaturesResult ..> ModelProvenance
     PolygonLegendAndFeaturesResult ..> MapUnit
@@ -350,10 +350,10 @@ classDiagram
     PolygonLegendAndFeaturesResult ..> ModelProvenance
     CogMetaData ..> MapMetaData
     FeatureResults ..> PointLegendAndFeaturesResult
+    FeatureResults ..> CogMetaData
+    FeatureResults ..> LineLegendAndFeaturesResult
     FeatureResults ..> Area_Extraction
     FeatureResults ..> PolygonLegendAndFeaturesResult
-    FeatureResults ..> LineLegendAndFeaturesResult
-    FeatureResults ..> CogMetaData
 
 
 ```
@@ -368,22 +368,30 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class PointFeature {
-        type: GeoJsonType = GeoJsonType.Feature
+    class PointLegendAndFeaturesResult {
         id: str
-        geometry: Point
-        properties: PointProperties
-    }
-
-    class PointFeatureCollection {
-        type: GeoJsonType = GeoJsonType.FeatureCollection
-        features: list[PointFeature] = list
+        legend_provenance: ModelProvenance | None = None
+        name: str
+        abbreviation: str = ''
+        description: str = ''
+        legend_bbox: list[float | int] = list
+        legend_contour: list[list[float | int]] = list
+        reference_id: str = ''
+        validated: bool | None = None
+        crs: str = 'pixel'
+        cdr_projection_id: str = ''
+        point_features: PointFeatureCollection | None = None
     }
 
     class GeoJsonType {
         <<Enumeration>>
         Feature: str = 'Feature'
         FeatureCollection: str = 'FeatureCollection'
+    }
+
+    class PointFeatureCollection {
+        type: GeoJsonType = GeoJsonType.FeatureCollection
+        features: list[PointFeature] = list
     }
 
     class PointProperties {
@@ -404,19 +412,17 @@ classDiagram
         Polygon: str = 'Polygon'
     }
 
-    class PointLegendAndFeaturesResult {
+    class ModelProvenance {
+        model: str
+        model_version: str
+        confidence: float | int | None = None
+    }
+
+    class PointFeature {
+        type: GeoJsonType = GeoJsonType.Feature
         id: str
-        legend_provenance: ModelProvenance | None = None
-        name: str
-        abbreviation: str = ''
-        description: str = ''
-        legend_bbox: list[float | int] = list
-        legend_contour: list[list[float | int]] = list
-        reference_id: str = ''
-        validated: bool | None = None
-        crs: str = 'pixel'
-        cdr_projection_id: str = ''
-        point_features: PointFeatureCollection | None = None
+        geometry: Point
+        properties: PointProperties
     }
 
     class Point {
@@ -424,18 +430,12 @@ classDiagram
         type: GeomType = GeomType.Point
     }
 
-    class ModelProvenance {
-        model: str
-        model_version: str
-        confidence: float | int | None = None
-    }
-
     Point ..> GeomType
+    PointFeature ..> GeoJsonType
     PointFeature ..> PointProperties
     PointFeature ..> Point
-    PointFeature ..> GeoJsonType
-    PointFeatureCollection ..> GeoJsonType
     PointFeatureCollection ..> PointFeature
+    PointFeatureCollection ..> GeoJsonType
     PointLegendAndFeaturesResult ..> PointFeatureCollection
     PointLegendAndFeaturesResult ..> ModelProvenance
 
@@ -452,19 +452,35 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class LineProperties {
-        model: str
-        model_version: str
-        confidence: float | int | None = None
-        dash_pattern: DashType = DashType.none
-        symbol: str = ''
-        reference_id: str = ''
-        validated: bool | None = None
+    class GeoJsonType {
+        <<Enumeration>>
+        Feature: str = 'Feature'
+        FeatureCollection: str = 'FeatureCollection'
     }
 
     class Line {
         coordinates: list[list[float | int]]
         type: GeomType = GeomType.LineString
+    }
+
+    class LineFeatureCollection {
+        type: GeoJsonType = GeoJsonType.FeatureCollection
+        features: list[LineFeature] = list
+    }
+
+    class LineFeature {
+        type: GeoJsonType = GeoJsonType.Feature
+        id: str
+        geometry: Line
+        properties: LineProperties
+    }
+
+    class DashType {
+        <<Enumeration>>
+        none: str = ''
+        solid: str = 'solid'
+        dash: str = 'dash'
+        dotted: str = 'dotted'
     }
 
     class LineLegendAndFeaturesResult {
@@ -482,27 +498,6 @@ classDiagram
         line_features: LineFeatureCollection | None = None
     }
 
-    class GeoJsonType {
-        <<Enumeration>>
-        Feature: str = 'Feature'
-        FeatureCollection: str = 'FeatureCollection'
-    }
-
-    class DashType {
-        <<Enumeration>>
-        none: str = ''
-        solid: str = 'solid'
-        dash: str = 'dash'
-        dotted: str = 'dotted'
-    }
-
-    class LineFeature {
-        type: GeoJsonType = GeoJsonType.Feature
-        id: str
-        geometry: Line
-        properties: LineProperties
-    }
-
     class GeomType {
         <<Enumeration>>
         Point: str = 'Point'
@@ -516,20 +511,25 @@ classDiagram
         confidence: float | int | None = None
     }
 
-    class LineFeatureCollection {
-        type: GeoJsonType = GeoJsonType.FeatureCollection
-        features: list[LineFeature] = list
+    class LineProperties {
+        model: str
+        model_version: str
+        confidence: float | int | None = None
+        dash_pattern: DashType = DashType.none
+        symbol: str = ''
+        reference_id: str = ''
+        validated: bool | None = None
     }
 
     Line ..> GeomType
     LineProperties ..> DashType
     LineFeature ..> LineProperties
-    LineFeature ..> Line
     LineFeature ..> GeoJsonType
-    LineFeatureCollection ..> LineFeature
+    LineFeature ..> Line
     LineFeatureCollection ..> GeoJsonType
-    LineLegendAndFeaturesResult ..> ModelProvenance
+    LineFeatureCollection ..> LineFeature
     LineLegendAndFeaturesResult ..> LineFeatureCollection
+    LineLegendAndFeaturesResult ..> ModelProvenance
 
 
 ```
@@ -544,59 +544,15 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class Polygon {
-        coordinates: list[list[list[float | int]]]
-        type: GeomType = GeomType.Polygon
-    }
-
-    class PolygonFeatureCollection {
-        type: GeoJsonType = GeoJsonType.FeatureCollection
-        features: list[PolygonFeature] = list
-    }
-
-    class PolygonProperties {
-        model: str
-        model_version: str
-        reference_id: str = ''
-        validated: bool | None = None
-        confidence: float | int | None = None
-    }
-
     class GeoJsonType {
         <<Enumeration>>
         Feature: str = 'Feature'
         FeatureCollection: str = 'FeatureCollection'
     }
 
-    class MapUnit {
-        age_text: str = ''
-        b_age: float | None = None
-        b_interval: str = ''
-        lithology: str = ''
-        name: str = ''
-        t_age: float | None = None
-        t_interval: str = ''
-        comments: str = ''
-    }
-
-    class GeomType {
-        <<Enumeration>>
-        Point: str = 'Point'
-        LineString: str = 'LineString'
-        Polygon: str = 'Polygon'
-    }
-
-    class PolygonFeature {
-        type: GeoJsonType = GeoJsonType.Feature
-        id: str
-        geometry: Polygon
-        properties: PolygonProperties
-    }
-
-    class ModelProvenance {
-        model: str
-        model_version: str
-        confidence: float | int | None = None
+    class PolygonFeatureCollection {
+        type: GeoJsonType = GeoJsonType.FeatureCollection
+        features: list[PolygonFeature] = list
     }
 
     class PolygonLegendAndFeaturesResult {
@@ -618,10 +574,54 @@ classDiagram
         polygon_features: PolygonFeatureCollection | None = None
     }
 
+    class PolygonProperties {
+        model: str
+        model_version: str
+        reference_id: str = ''
+        validated: bool | None = None
+        confidence: float | int | None = None
+    }
+
+    class MapUnit {
+        age_text: str = ''
+        b_age: float | None = None
+        b_interval: str = ''
+        lithology: str = ''
+        name: str = ''
+        t_age: float | None = None
+        t_interval: str = ''
+        comments: str = ''
+    }
+
+    class GeomType {
+        <<Enumeration>>
+        Point: str = 'Point'
+        LineString: str = 'LineString'
+        Polygon: str = 'Polygon'
+    }
+
+    class ModelProvenance {
+        model: str
+        model_version: str
+        confidence: float | int | None = None
+    }
+
+    class PolygonFeature {
+        type: GeoJsonType = GeoJsonType.Feature
+        id: str
+        geometry: Polygon
+        properties: PolygonProperties
+    }
+
+    class Polygon {
+        coordinates: list[list[list[float | int]]]
+        type: GeomType = GeomType.Polygon
+    }
+
     Polygon ..> GeomType
-    PolygonFeature ..> Polygon
-    PolygonFeature ..> GeoJsonType
     PolygonFeature ..> PolygonProperties
+    PolygonFeature ..> GeoJsonType
+    PolygonFeature ..> Polygon
     PolygonFeatureCollection ..> PolygonFeature
     PolygonFeatureCollection ..> GeoJsonType
     PolygonLegendAndFeaturesResult ..> MapUnit
@@ -641,6 +641,14 @@ classDiagram
 ```mermaid
 classDiagram
 
+    class CogMetaData {
+        cog_id: str
+        system: str
+        system_version: str
+        multiple_maps: bool | None = None
+        map_metadata: list[MapMetaData] = list
+    }
+
     class MapMetaData {
         title: str = ''
         year: int | None = None
@@ -657,20 +665,6 @@ classDiagram
         model_version: str
     }
 
-    class MapShapeTypes {
-        <<Enumeration>>
-        rectangular: str = 'rectangular'
-        non_rectangular: str = 'non_rectangular'
-    }
-
-    class CogMetaData {
-        cog_id: str
-        system: str
-        system_version: str
-        multiple_maps: bool | None = None
-        map_metadata: list[MapMetaData] = list
-    }
-
     class MapColorSchemeTypes {
         <<Enumeration>>
         full_color: str = 'full_color'
@@ -678,8 +672,14 @@ classDiagram
         grayscale: str = 'grayscale'
     }
 
-    MapMetaData ..> MapShapeTypes
+    class MapShapeTypes {
+        <<Enumeration>>
+        rectangular: str = 'rectangular'
+        non_rectangular: str = 'non_rectangular'
+    }
+
     MapMetaData ..> MapColorSchemeTypes
+    MapMetaData ..> MapShapeTypes
     CogMetaData ..> MapMetaData
 
 
@@ -719,6 +719,20 @@ classDiagram
         system_version: str
     }
 
+    class DocumentExtraction {
+        id: str | None = None
+        document_id: str = None
+        extraction_type: str
+        extraction_label: str
+        score: float | None = None
+        bbox: tuple[float, float, float, float] | None = None
+        page_num: int | None = None
+        external_link: str | None = None
+        data: dict[] | None = None
+        system: str
+        system_version: str
+    }
+
     class DocumentProvenance {
         external_system_name: str
         external_system_id: str = ''
@@ -734,24 +748,10 @@ classDiagram
         system_version: str
     }
 
-    class DocumentExtraction {
-        id: str | None = None
-        document_id: str = None
-        extraction_type: str
-        extraction_label: str
-        score: float | None = None
-        bbox: tuple[float, float, float, float] | None = None
-        page_num: int | None = None
-        external_link: str | None = None
-        data: dict[] | None = None
-        system: str
-        system_version: str
-    }
-
-    UploadDocument ..> DocumentMetaData
     UploadDocument ..> DocumentProvenance
-    Document ..> DocumentMetaData
+    UploadDocument ..> DocumentMetaData
     Document ..> DocumentProvenance
+    Document ..> DocumentMetaData
 
 
 ```
@@ -766,50 +766,11 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class MappableCriteria {
-        criteria: str
-        theoretical: str = ''
-        potential_dataset: list[EvidenceLayer] = list
-        supporting_references: list[DocumentReference]
-    }
-
-    class EvidenceLayer {
-        name: str = ''
-        relevance_score: float
-    }
-
-    class RecordReference {
-        record_id: str = ''
-        source: str = ''
-        uri: str = ''
-    }
-
-    class GeoLocationInfo {
-        crs: str
-        geom: str
-    }
-
-    class DepositType {
-        id: str | None = None
-        name: str
-        environment: str
-        group: str
-    }
-
-    class MineralInventoryCategory {
-        category: str
+    class DepositTypeCandidate {
+        observed_name: str = ''
+        deposit_type_id: str | None = None
         confidence: float | int | None = None
         source: str
-    }
-
-    class MineralSystem {
-        deposit_type: list[str] = list
-        source: list[MappableCriteria] = list
-        pathway: list[MappableCriteria] = list
-        trap: list[MappableCriteria] = list
-        preservation: list[MappableCriteria] = list
-        energy: list[MappableCriteria] = list
-        outflow: list[MappableCriteria] = list
     }
 
     class MineralInventory {
@@ -833,6 +794,26 @@ classDiagram
         zone: str = ''
     }
 
+    class Confidence {
+        confidence: float | int | None = None
+        source: str
+    }
+
+    class DocumentReference {
+        cdr_id: str
+        page: int | None = None
+        x_min: float | None = None
+        x_max: float | None = None
+        y_min: float | None = None
+        y_max: float | None = None
+    }
+
+    class MineralInventoryCategory {
+        category: str
+        confidence: float | int | None = None
+        source: str
+    }
+
     class DedupSiteRecord {
         id: str | None = None
         mineral_site_id: str
@@ -841,38 +822,6 @@ classDiagram
         province: str = ''
         site_rank: str = ''
         site_type: str = ''
-    }
-
-    class GeologyInfo {
-        age: str = ''
-        unit_name: str = ''
-        description: str = ''
-        lithology: list[str] = list
-        process: list[str] = list
-        environment: list[str] = list
-        comments: str = ''
-    }
-
-    class MineralSite {
-        id: str
-        source_id: str = ''
-        record_id: str = ''
-        name: str = ''
-        site_rank: str = ''
-        site_type: str = ''
-        country: list[str] = list
-        province: list[str] = list
-        location: GeoLocationInfo | None = None
-        mineral_inventory: list[MineralInventory] = list
-        deposit_type_candidate: list[DepositTypeCandidate] = list
-        validated: bool = False
-        system: str
-        system_version: str
-    }
-
-    class Confidence {
-        confidence: float | int | None = None
-        source: str
     }
 
     class DedupSite {
@@ -895,34 +844,85 @@ classDiagram
         data_snapshot_date: str
     }
 
-    class DocumentReference {
-        cdr_id: str
-        page: int | None = None
-        x_min: float | None = None
-        x_max: float | None = None
-        y_min: float | None = None
-        y_max: float | None = None
+    class EvidenceLayer {
+        name: str = ''
+        relevance_score: float
     }
 
-    class DepositTypeCandidate {
-        observed_name: str = ''
-        deposit_type_id: str | None = None
-        confidence: float | int | None = None
-        source: str
+    class MineralSystem {
+        deposit_type: list[str] = list
+        source: list[MappableCriteria] = list
+        pathway: list[MappableCriteria] = list
+        trap: list[MappableCriteria] = list
+        preservation: list[MappableCriteria] = list
+        energy: list[MappableCriteria] = list
+        outflow: list[MappableCriteria] = list
+    }
+
+    class GeologyInfo {
+        age: str = ''
+        unit_name: str = ''
+        description: str = ''
+        lithology: list[str] = list
+        process: list[str] = list
+        environment: list[str] = list
+        comments: str = ''
+    }
+
+    class GeoLocationInfo {
+        crs: str
+        geom: str
+    }
+
+    class MineralSite {
+        id: str
+        source_id: str = ''
+        record_id: str = ''
+        name: str = ''
+        site_rank: str = ''
+        site_type: str = ''
+        country: list[str] = list
+        province: list[str] = list
+        location: GeoLocationInfo | None = None
+        mineral_inventory: list[MineralInventory] = list
+        deposit_type_candidate: list[DepositTypeCandidate] = list
+        validated: bool = False
+        system: str
+        system_version: str
+    }
+
+    class DepositType {
+        id: str | None = None
+        name: str
+        environment: str
+        group: str
+    }
+
+    class MappableCriteria {
+        criteria: str
+        theoretical: str = ''
+        potential_dataset: list[EvidenceLayer] = list
+        supporting_references: list[DocumentReference]
+    }
+
+    class RecordReference {
+        record_id: str = ''
+        source: str = ''
+        uri: str = ''
     }
 
     MappableCriteria ..> EvidenceLayer
     MappableCriteria ..> DocumentReference
     MineralSystem ..> MappableCriteria
     MineralInventory ..> MineralInventoryCategory
-    MineralInventory ..> Confidence
     MineralInventory ..> RecordReference
+    MineralInventory ..> Confidence
     MineralInventory ..> DocumentReference
-    MineralSite ..> MineralInventory
     MineralSite ..> GeoLocationInfo
+    MineralSite ..> MineralInventory
     MineralSite ..> DepositTypeCandidate
-    DedupSite ..> DedupSiteRecord
     DedupSite ..> DepositTypeCandidate
+    DedupSite ..> DedupSiteRecord
 
 
 ```
@@ -936,12 +936,6 @@ classDiagram
 
 ```mermaid
 classDiagram
-
-    class MapResults {
-        cog_id: str
-        georef_results: list[GeoreferenceResults] = list
-        extraction_results: list[FeatureResults] = list
-    }
 
     class FeatureResults {
         system: str
@@ -962,13 +956,19 @@ classDiagram
         system_version: str
     }
 
+    class MapResults {
+        cog_id: str
+        georef_results: list[GeoreferenceResults] = list
+        extraction_results: list[FeatureResults] = list
+    }
+
     FeatureResults ..> PointLegendAndFeaturesResult
+    FeatureResults ..> CogMetaData
+    FeatureResults ..> LineLegendAndFeaturesResult
     FeatureResults ..> Area_Extraction
     FeatureResults ..> PolygonLegendAndFeaturesResult
-    FeatureResults ..> LineLegendAndFeaturesResult
-    FeatureResults ..> CogMetaData
-    GeoreferenceResults ..> GroundControlPoint
     GeoreferenceResults ..> GeoreferenceResult
+    GeoreferenceResults ..> GroundControlPoint
     MapResults ..> FeatureResults
     MapResults ..> GeoreferenceResults
 
@@ -985,18 +985,18 @@ classDiagram
 ```mermaid
 classDiagram
 
+    class MapProvenance {
+        system_name: str
+        id: str = None
+        url: str = None
+    }
+
     class Map {
         id: str
         provenance: list[MapProvenance] = list
         is_open: bool
         system: str
         system_version: str
-    }
-
-    class MapProvenance {
-        system_name: str
-        id: str = None
-        url: str = None
     }
 
     Map ..> MapProvenance
@@ -1014,118 +1014,6 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class ImputeMethod {
-        <<Enumeration>>
-        MEAN: str = 'mean'
-        MEDIAN: str = 'median'
-    }
-
-    class Polygon {
-        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
-        type: Literal['Polygon']
-        coordinates: list[list[Position2D | Position3D]]
-    }
-
-    class ProspectivityOutputLayer {
-        system: str
-        system_version: str
-        model: str = ''
-        model_version: str = ''
-        model_run_id: str
-        output_type: str
-        cma_id: str
-        title: str
-    }
-
-    class LineString {
-        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
-        type: Literal['LineString']
-        coordinates: list[Position2D | Position3D]
-    }
-
-    class CreateProcessDataLayers {
-        cma_id: str
-        system: str
-        system_version: str
-        evidence_layers: list[DefineProcessDataLayer] = list
-        vector_layers: list[DefineVectorProcessDataLayer] = list
-    }
-
-    class DataSource {
-        DOI: str | None
-        authors: list[str] | None
-        publication_date: str | None
-        category: LayerCategory | str | None
-        subcategory: str | None
-        description: str | None
-        derivative_ops: str | None
-        type: LayerDataType
-        resolution: tuple | None
-        format: DataFormat
-        download_url: str | None
-    }
-
-    class ScalingType {
-        <<Enumeration>>
-        MINMAX: str = 'minmax'
-        MAXABS: str = 'maxabs'
-        STANDARD: str = 'standard'
-    }
-
-    class SaveProcessedDataLayer {
-        cma_id: str
-        title: str
-        label_raster: bool = False
-        raw_data_info: list[DataTypeId] = list
-        extra_geometries: list[] = list
-        system: str
-        system_version: str
-        transform_methods: list[TransformMethod | Impute | ScalingType] = list
-        event_id: str = ''
-    }
-
-    class LayerCategory {
-        <<Enumeration>>
-        GEOPHYSICS: str = 'geophysics'
-        GEOLOGY: str = 'geology'
-        GEOCHEMISTRY: str = 'geochemistry'
-    }
-
-    class LayerDataType {
-        <<Enumeration>>
-        CONTINUOUS: str = 'continuous'
-        BINARY: str = 'binary'
-        CATEGORICAL: str = 'categorical'
-    }
-
-    class TransformMethod {
-        <<Enumeration>>
-        LOG: str = 'log'
-        ABS: str = 'abs'
-        SQRT: str = 'sqrt'
-    }
-
-    class DataFormat {
-        <<Enumeration>>
-        TIF: str = 'tif'
-        SHP: str = 'shp'
-    }
-
-    class CreateDataSource {
-        DOI: str = ''
-        authors: list[str] = list
-        publication_date: str = ''
-        category: LayerCategory
-        subcategory: str = ''
-        description: str = ''
-        derivative_ops: str = ''
-        type: LayerDataType
-        resolution: list[float | int] = list
-        format: DataFormat
-        reference_url: str = ''
-        evidence_layer_raster_prefix: str = ''
-    }
-
     class NeuralNetUserOptions {
         likely_negative_range: tuple[float, float] | None = (0.1, 1.0)
         fraction_train_split: float | None = 0.8
@@ -1134,6 +1022,16 @@ classDiagram
         learning_rate: float | None = 0.001
         weight_decay: float | None = 0.01
         smoothing: float | None = 0.3
+    }
+
+    class RawDataType {
+        <<Enumeration>>
+        MINERAL_SITE: str = 'mineral_site'
+        POINT: str = 'point'
+        LINE: str = 'line'
+        POLYGON: str = 'polygon'
+        TIF: str = 'tif'
+        VECTOR: str = 'vector'
     }
 
     class SOMTrainConfig {
@@ -1153,36 +1051,20 @@ classDiagram
         neighborhood_decay: NeighborhoodDecay | None = 'linear'
         initial_learning_rate: float | None
         final_learning_rate: float | None
+        kmeans: bool | None = True
+        kmeans_min: float | None = 1
+        kmeans_max: float | None = 10
     }
 
-    class RawDataType {
+    class ImputeMethod {
         <<Enumeration>>
-        MINERAL_SITE: str = 'mineral_site'
-        POINT: str = 'point'
-        LINE: str = 'line'
-        POLYGON: str = 'polygon'
-        TIF: str = 'tif'
-        VECTOR: str = 'vector'
+        MEAN: str = 'mean'
+        MEDIAN: str = 'median'
     }
 
-    class CreateProspectModelMetaData {
-        cma_id: str
-        system: str
-        system_version: str
-        author: str = ''
-        date: str = ''
-        organization: str = ''
-        model_type: str
-        train_config: SOMTrainConfig | NeuralNetUserOptions | RFUserOptions | fastBNNUserOptions
-        evidence_layers: list[str]
-    }
-
-    class DefineVectorProcessDataLayer {
-        label_raster: bool = False
-        title: str
-        evidence_features: list[DataTypeId] = list
-        extra_geometries: list[Point | LineString | Polygon] = list
-        transform_methods: list[TransformMethod | Impute | ScalingType] = list
+    class DataTypeId {
+        raw_data_type: RawDataType
+        id: str
     }
 
     class Impute {
@@ -1190,37 +1072,12 @@ classDiagram
         window_size: list[int] = [3, 3]
     }
 
-    class Point {
-        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
-        type: Literal['Point']
-        coordinates: Position2D | Position3D
-    }
-
-    class CreateCriticalMineralAssessment {
-        crs: str
-        extent: MultiPolygon
-        resolution: list[float | int]
-        mineral: str
-        description: str
-        creation_date: datetime = now
-    }
-
-    class DefineProcessDataLayer {
-        data_source_id: str
-        title: str
-        transform_methods: list[TransformMethod | Impute | ScalingType] = list
-        label_raster: bool = False
-    }
-
-    class RFUserOptions {
-        n_estimators: int | None = 100
-        n_unlabeled: int | None = 40000
-    }
-
-    class MultiPolygon {
-        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
-        type: Literal['MultiPolygon']
-        coordinates: list[list[list[Position2D | Position3D]]]
+    class CreateProcessDataLayers {
+        cma_id: str
+        system: str
+        system_version: str
+        evidence_layers: list[DefineProcessDataLayer] = list
+        vector_layers: list[DefineVectorProcessDataLayer] = list
     }
 
     class fastBNNUserOptions {
@@ -1236,9 +1093,155 @@ classDiagram
         network_arch_head_units: tuple[int, ...] | None = None
     }
 
-    class DataTypeId {
-        raw_data_type: RawDataType
-        id: str
+    class DefineProcessDataLayer {
+        data_source_id: str
+        title: str
+        transform_methods: list[TransformMethod | Impute | ScalingType] = list
+        label_raster: bool = False
+    }
+
+    class SaveProcessedDataLayer {
+        cma_id: str
+        title: str
+        label_raster: bool = False
+        raw_data_info: list[DataTypeId] = list
+        extra_geometries: list[] = list
+        system: str
+        system_version: str
+        transform_methods: list[TransformMethod | Impute | ScalingType] = list
+        event_id: str = ''
+    }
+
+    class RFUserOptions {
+        n_estimators: int | None = 100
+        n_unlabeled: int | None = 40000
+    }
+
+    class ScalingType {
+        <<Enumeration>>
+        MINMAX: str = 'minmax'
+        MAXABS: str = 'maxabs'
+        STANDARD: str = 'standard'
+    }
+
+    class CreateDataSource {
+        DOI: str = ''
+        authors: list[str] = list
+        publication_date: str = ''
+        category: LayerCategory
+        subcategory: str = ''
+        description: str = ''
+        derivative_ops: str = ''
+        type: LayerDataType
+        resolution: list[float | int] = list
+        format: DataFormat
+        reference_url: str = ''
+        evidence_layer_raster_prefix: str = ''
+    }
+
+    class CreateCriticalMineralAssessment {
+        crs: str
+        extent: MultiPolygon
+        resolution: list[float | int]
+        mineral: str
+        description: str
+        creation_date: datetime = now
+    }
+
+    class CreateProspectModelMetaData {
+        cma_id: str
+        system: str
+        system_version: str
+        author: str = ''
+        date: str = ''
+        organization: str = ''
+        model_type: str
+        train_config: SOMTrainConfig | NeuralNetUserOptions | RFUserOptions | fastBNNUserOptions
+        evidence_layers: list[str]
+    }
+
+    class DataFormat {
+        <<Enumeration>>
+        TIF: str = 'tif'
+        SHP: str = 'shp'
+    }
+
+    class ProspectivityOutputLayer {
+        system: str
+        system_version: str
+        model: str = ''
+        model_version: str = ''
+        model_run_id: str
+        output_type: str
+        cma_id: str
+        title: str
+    }
+
+    class LineString {
+        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
+        type: Literal['LineString']
+        coordinates: list[Position2D | Position3D]
+    }
+
+    class DefineVectorProcessDataLayer {
+        label_raster: bool = False
+        title: str
+        evidence_features: list[DataTypeId] = list
+        extra_geometries: list[Point | LineString | Polygon] = list
+        transform_methods: list[TransformMethod | Impute | ScalingType] = list
+    }
+
+    class DataSource {
+        DOI: str | None
+        authors: list[str] | None
+        publication_date: str | None
+        category: LayerCategory | str | None
+        subcategory: str | None
+        description: str | None
+        derivative_ops: str | None
+        type: LayerDataType
+        resolution: tuple | None
+        format: DataFormat
+        download_url: str | None
+    }
+
+    class LayerCategory {
+        <<Enumeration>>
+        GEOPHYSICS: str = 'geophysics'
+        GEOLOGY: str = 'geology'
+        GEOCHEMISTRY: str = 'geochemistry'
+    }
+
+    class TransformMethod {
+        <<Enumeration>>
+        LOG: str = 'log'
+        ABS: str = 'abs'
+        SQRT: str = 'sqrt'
+    }
+
+    class MultiPolygon {
+        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
+        type: Literal['MultiPolygon']
+        coordinates: list[list[list[Position2D | Position3D]]]
+    }
+
+    class Point {
+        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
+        type: Literal['Point']
+        coordinates: Position2D | Position3D
+    }
+
+    class Polygon {
+        bbox: tuple[float, float, float, float] | tuple[float, float, float, float, float, float] | None = None
+        type: Literal['Polygon']
+        coordinates: list[list[Position2D | Position3D]]
+    }
+
+    class LayerDataType {
+        <<Enumeration>>
+        CONTINUOUS: str = 'continuous'
+        BINARY: str = 'binary'
+        CATEGORICAL: str = 'categorical'
     }
 
     LineString ..> Position2D
@@ -1249,12 +1252,12 @@ classDiagram
     Point ..> Position3D
     Polygon ..> Position2D
     Polygon ..> Position3D
-    SOMTrainConfig ..> NeighborhoodDecay
-    SOMTrainConfig ..> LearningRateDecay
+    SOMTrainConfig ..> SOMGrid
     SOMTrainConfig ..> SOMType
+    SOMTrainConfig ..> LearningRateDecay
+    SOMTrainConfig ..> NeighborhoodDecay
     SOMTrainConfig ..> NeighborhoodFunction
     SOMTrainConfig ..> SOMInitialization
-    SOMTrainConfig ..> SOMGrid
     fastBNNUserOptions ..> NetworkArchitectureSequence
     Impute ..> ImputeMethod
     CreateDataSource ..> DataFormat
@@ -1262,30 +1265,30 @@ classDiagram
     CreateDataSource ..> LayerDataType
     CreateCriticalMineralAssessment ..> MultiPolygon
     CreateCriticalMineralAssessment ..> datetime
-    DefineProcessDataLayer ..> TransformMethod
-    DefineProcessDataLayer ..> Impute
     DefineProcessDataLayer ..> ScalingType
+    DefineProcessDataLayer ..> Impute
+    DefineProcessDataLayer ..> TransformMethod
     DataTypeId ..> RawDataType
-    SaveProcessedDataLayer ..> TransformMethod
-    SaveProcessedDataLayer ..> Impute
     SaveProcessedDataLayer ..> ScalingType
+    SaveProcessedDataLayer ..> Impute
+    SaveProcessedDataLayer ..> TransformMethod
     SaveProcessedDataLayer ..> DataTypeId
+    DefineVectorProcessDataLayer ..> ScalingType
+    DefineVectorProcessDataLayer ..> Impute
     DefineVectorProcessDataLayer ..> Polygon
+    DefineVectorProcessDataLayer ..> TransformMethod
     DefineVectorProcessDataLayer ..> Point
     DefineVectorProcessDataLayer ..> LineString
-    DefineVectorProcessDataLayer ..> TransformMethod
-    DefineVectorProcessDataLayer ..> Impute
-    DefineVectorProcessDataLayer ..> ScalingType
     DefineVectorProcessDataLayer ..> DataTypeId
-    CreateProspectModelMetaData ..> fastBNNUserOptions
     CreateProspectModelMetaData ..> NeuralNetUserOptions
-    CreateProspectModelMetaData ..> RFUserOptions
+    CreateProspectModelMetaData ..> fastBNNUserOptions
     CreateProspectModelMetaData ..> SOMTrainConfig
+    CreateProspectModelMetaData ..> RFUserOptions
     CreateProcessDataLayers ..> DefineVectorProcessDataLayer
     CreateProcessDataLayers ..> DefineProcessDataLayer
     DataSource ..> DataFormat
-    DataSource ..> tuple
     DataSource ..> LayerCategory
+    DataSource ..> tuple
     DataSource ..> LayerDataType
 
 
@@ -1301,16 +1304,14 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class NeighborhoodDecay {
-        <<Enumeration>>
-        LINEAR: str = 'linear'
-        EXPONENTIAL: str = 'exponential'
-    }
-
-    class LearningRateDecay {
-        <<Enumeration>>
-        LINEAR: str = 'linear'
-        EXPONENTIAL: str = 'exponential'
+    class NeuralNetUserOptions {
+        likely_negative_range: tuple[float, float] | None = (0.1, 1.0)
+        fraction_train_split: float | None = 0.8
+        upsample_multiplier: float | None = 20.0
+        dropout_tuple: tuple[float, float, float] | None = (0.0, 0.25, 0.25)
+        learning_rate: float | None = 0.001
+        weight_decay: float | None = 0.01
+        smoothing: float | None = 0.3
     }
 
     class SOMType {
@@ -1336,12 +1337,39 @@ classDiagram
         neighborhood_decay: NeighborhoodDecay | None = 'linear'
         initial_learning_rate: float | None
         final_learning_rate: float | None
+        kmeans: bool | None = True
+        kmeans_min: float | None = 1
+        kmeans_max: float | None = 10
     }
 
-    class SOMInitialization {
+    class LearningRateDecay {
         <<Enumeration>>
-        RANDOM: str = 'random'
-        PCA: str = 'pca'
+        LINEAR: str = 'linear'
+        EXPONENTIAL: str = 'exponential'
+    }
+
+    class NetworkArchitectureSequence {
+        <<Enumeration>>
+        DESCENDING: str = 'descending'
+        CONSTANT: str = 'constant'
+    }
+
+    class NeighborhoodDecay {
+        <<Enumeration>>
+        LINEAR: str = 'linear'
+        EXPONENTIAL: str = 'exponential'
+    }
+
+    class NeighborhoodFunction {
+        <<Enumeration>>
+        GAUSSIAN: str = 'gaussian'
+        BUBBLE: str = 'bubble'
+    }
+
+    class SOMGrid {
+        <<Enumeration>>
+        HEXAGONAL: str = 'hexagonal'
+        RECTANGULAR: str = 'rectangular'
     }
 
     class fastBNNUserOptions {
@@ -1357,10 +1385,10 @@ classDiagram
         network_arch_head_units: tuple[int, ...] | None = None
     }
 
-    class NetworkArchitectureSequence {
+    class SOMInitialization {
         <<Enumeration>>
-        DESCENDING: str = 'descending'
-        CONSTANT: str = 'constant'
+        RANDOM: str = 'random'
+        PCA: str = 'pca'
     }
 
     class RFUserOptions {
@@ -1368,34 +1396,12 @@ classDiagram
         n_unlabeled: int | None = 40000
     }
 
-    class NeighborhoodFunction {
-        <<Enumeration>>
-        GAUSSIAN: str = 'gaussian'
-        BUBBLE: str = 'bubble'
-    }
-
-    class NeuralNetUserOptions {
-        likely_negative_range: tuple[float, float] | None = (0.1, 1.0)
-        fraction_train_split: float | None = 0.8
-        upsample_multiplier: float | None = 20.0
-        dropout_tuple: tuple[float, float, float] | None = (0.0, 0.25, 0.25)
-        learning_rate: float | None = 0.001
-        weight_decay: float | None = 0.01
-        smoothing: float | None = 0.3
-    }
-
-    class SOMGrid {
-        <<Enumeration>>
-        HEXAGONAL: str = 'hexagonal'
-        RECTANGULAR: str = 'rectangular'
-    }
-
-    SOMTrainConfig ..> NeighborhoodDecay
-    SOMTrainConfig ..> LearningRateDecay
+    SOMTrainConfig ..> SOMGrid
     SOMTrainConfig ..> SOMType
+    SOMTrainConfig ..> LearningRateDecay
+    SOMTrainConfig ..> NeighborhoodDecay
     SOMTrainConfig ..> NeighborhoodFunction
     SOMTrainConfig ..> SOMInitialization
-    SOMTrainConfig ..> SOMGrid
     fastBNNUserOptions ..> NetworkArchitectureSequence
 
 

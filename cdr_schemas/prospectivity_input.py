@@ -9,6 +9,7 @@ from cdr_schemas.prospectivity_models import (
     NeuralNetUserOptions,
     RFUserOptions,
     SOMTrainConfig,
+    fastBNNUserOptions,
 )
 
 
@@ -180,7 +181,9 @@ class CreateProspectModelMetaData(BaseModel):
     date: str = ""
     organization: str = ""
     model_type: str
-    train_config: Union[SOMTrainConfig, NeuralNetUserOptions, RFUserOptions]
+    train_config: Union[
+        SOMTrainConfig, NeuralNetUserOptions, RFUserOptions, fastBNNUserOptions
+    ]
     evidence_layers: List[str] = Field(
         description="List of ids of processed data layers"
     )

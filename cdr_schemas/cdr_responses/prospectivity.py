@@ -14,6 +14,7 @@ from cdr_schemas.prospectivity_models import (
     NeuralNetUserOptions,
     RFUserOptions,
     SOMTrainConfig,
+    fastBNNUserOptions,
 )
 
 
@@ -74,7 +75,9 @@ class ProspectModelMetaData(BaseModel):
     model_run_id: str = Field(description="CDR id of the model run")
     cma: CriticalMineralAssessment = Field(description="CMA info")
     model_type: str
-    train_config: Union[SOMTrainConfig, NeuralNetUserOptions, RFUserOptions]
+    train_config: Union[
+        SOMTrainConfig, NeuralNetUserOptions, RFUserOptions, fastBNNUserOptions
+    ]
     evidence_layers: List[ProcessedDataLayer] = Field(
         description="Processed data layer info."
     )

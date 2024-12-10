@@ -103,10 +103,10 @@ class SOMTrainConfig(BaseModel):
     kmeans: Optional[bool] = Field(
         default=True, description="Whether to apply KMeans after SOM run"
     )
-    kmeans_min: Optional[float] = Field(
+    kmeans_min: Optional[int] = Field(
         default=1, description="Minimum number of clusters for KMeans"
     )
-    kmeans_max: Optional[float] = Field(
+    kmeans_max: Optional[int] = Field(
         default=10, description="Maximum number of clusters for KMeans"
     )
 

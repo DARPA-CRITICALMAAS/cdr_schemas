@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
@@ -123,23 +123,18 @@ class RFUserOptions(BaseModel):
     )
 
 
-class NetworkArchitectureSequence(str, Enum):
-    DESCENDING = "descending"
-    CONSTANT = "constant"
-
-
 class fastBNNUserOptions(BaseModel):
-    train_test_split: Optional[float] = Field(
+    train_size: Optional[float] = Field(
         default=1.0,
-        description="Fraction of data to use for training. Value of 1 refers to all data used for training.",
+        description="Fraction of data to use for training/testing. Value of 1 refers to all data used for training and disables separate testing.",
     )
     init_negatives_multiplier: Optional[int] = Field(
         default=20,
-        description="Multiplier for initializing negative samples based on the number of positive labels. Higher values mean more negative samples are used.",
+        description="Higher value means more negative values are sampled from the unknowns. Reduce if the result contains large flat areas with low values. Recommended: 5 - 20.",
     )
     upsample_positives_multiplier: Optional[float] = Field(
         default=None,
-        description="Multiplier for upsampling positive samples. Value of 0.25 oversamples positives to 25% the number of negatives.",
+        description="Oversample positive labels to a fraction of negatives. Value of 0.25 oversamples positives to 25% the number of negatives. Higher value may lead to overfitting. Recommended: 0 - 0.25.",
     )
     learning_rate: Optional[float] = Field(
         default=1e-3,
@@ -147,25 +142,21 @@ class fastBNNUserOptions(BaseModel):
     )
     training_epochs: Optional[int] = Field(
         default=100,
-        description="Number of epochs to train the neural network.",
+        description="Number of iterations to train the neural network. Higher value may lead to overfitting. Recommended: 75 - 125.",
     )
     network_arch_depth: Optional[int] = Field(
         default=2,
-        description="Depth of the neural network. Higher depth means more layers used tu build the network.",
+        description="Number of layers. Higher value increases complexity and may lead to overfitting. Recommended: 2 - 3.",
     )
     network_arch_width: Optional[int] = Field(
         default=1,
-        description="Minimum width of a layer. Higher width means more neurons used within each layer. Calculated on the base of 2 (i.e., 4 results in a minimum of 16 neurons).",
+        description="Number of neurons. Higher value enhances feature learning capacity but may also lead to overfitting. Recommended: 1 - 3.",
     )
-    network_arch_sequence: Optional[NetworkArchitectureSequence] = Field(
-        default=NetworkArchitectureSequence.DESCENDING,
-        description="Sequence of the neural network architecture. Descending means the width decreases with each layer, constant means the width remains constant.",
-    )
-    network_arch_core_units: Optional[Tuple[int, ...]] = Field(
+    network_arch_core_units: Optional[List[int]] = Field(
         default=None,
-        description="Custom architecture for the core layers of the neural network. If not provided, width, depth and sequence will be used.",
+        description="Custom architecture for the core layers of the neural network. If provided, overwrites depth and width parameters.",
     )
-    network_arch_head_units: Optional[Tuple[int, ...]] = Field(
+    network_arch_head_units: Optional[List[int]] = Field(
         default=None,
-        description="Custom architecture for the head layers the neural network. If not provided, width, depth and sequence will be used.",
+        description="Custom architecture for the head layers the neural network. If provided, overwrites depth and width parameters.",
     )

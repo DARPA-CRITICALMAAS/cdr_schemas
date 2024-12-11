@@ -133,8 +133,8 @@ class fastBNNUserOptions(BaseModel):
         description="Higher value means more negative values are sampled from the unknowns. Reduce if the result contains large flat areas with low values. Recommended: 5 - 20.",
     )
     upsample_positives_multiplier: Optional[float] = Field(
-        default=None,
-        description="Oversample positive labels to a fraction of negatives. Value of 0.25 oversamples positives to 25% the number of negatives. Higher value may lead to overfitting. Recommended: 0 - 0.25.",
+        default=0.0,
+        description="Oversample positive labels to a fraction of negatives. Value of 0.25 oversamples positives to 25% the number of negatives. Higher value may lead to overfitting. Recommended: 0.0 - 0.25.",
     )
     learning_rate: Optional[float] = Field(
         default=1e-3,

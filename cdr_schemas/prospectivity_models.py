@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
@@ -100,6 +100,15 @@ class SOMTrainConfig(BaseModel):
     )
     initial_learning_rate: Optional[float]
     final_learning_rate: Optional[float]
+    kmeans: Optional[bool] = Field(
+        default=True, description="Whether to apply KMeans after SOM run"
+    )
+    kmeans_min: Optional[int] = Field(
+        default=1, description="Minimum number of clusters for KMeans"
+    )
+    kmeans_max: Optional[int] = Field(
+        default=10, description="Maximum number of clusters for KMeans"
+    )
 
 
 class RFUserOptions(BaseModel):
@@ -111,4 +120,43 @@ class RFUserOptions(BaseModel):
     n_unlabeled: Optional[int] = Field(
         default=40_000,
         description="Number of unlabeled points to use to train the model.",
+    )
+
+
+class fastBNNUserOptions(BaseModel):
+    train_size: Optional[float] = Field(
+        default=1.0,
+        description="Fraction of data to use for training/testing. Value of 1 refers to all data used for training and disables separate testing.",
+    )
+    init_negatives_multiplier: Optional[int] = Field(
+        default=20,
+        description="Higher value means more negative values are sampled from the unknowns. Reduce if the result contains large flat areas with low values. Recommended: 5 - 20.",
+    )
+    upsample_positives_multiplier: Optional[float] = Field(
+        default=0.0,
+        description="Oversample positive labels to a fraction of negatives. Value of 0.25 oversamples positives to 25% the number of negatives. Higher value may lead to overfitting. Recommended: 0.0 - 0.25.",
+    )
+    learning_rate: Optional[float] = Field(
+        default=1e-3,
+        description="Learning rate for the neural network. Step size during loss calculation towards the minimum loss.",
+    )
+    training_epochs: Optional[int] = Field(
+        default=100,
+        description="Number of iterations to train the neural network. Higher value may lead to overfitting. Recommended: 75 - 125.",
+    )
+    network_arch_depth: Optional[int] = Field(
+        default=2,
+        description="Number of layers. Higher value increases complexity and may lead to overfitting. Recommended: 2 - 3.",
+    )
+    network_arch_width: Optional[int] = Field(
+        default=1,
+        description="Number of neurons. Higher value enhances feature learning capacity but may also lead to overfitting. Recommended: 1 - 3.",
+    )
+    network_arch_core_units: Optional[List[int]] = Field(
+        default=None,
+        description="Custom architecture for the core layers of the neural network. If provided, overwrites depth and width parameters.",
+    )
+    network_arch_head_units: Optional[List[int]] = Field(
+        default=None,
+        description="Custom architecture for the head layers the neural network. If provided, overwrites depth and width parameters.",
     )

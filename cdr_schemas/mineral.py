@@ -222,9 +222,15 @@ class MineralSite(BaseModel):
     )
 
 
+class Reference(BaseModel):
+    document_uri: str = Field(description="URL of the document")
+    comment: str = Field(description="Comment")
+
+
 class DedupSiteRecord(BaseModel):
     mineral_site_id: str = Field(description="original mineral site id")
     score: float = Field(description="score of the site")
+    reference: List[Reference] = Field(description="Provenance of the site")
 
 
 class DedupSiteLocation(BaseModel):

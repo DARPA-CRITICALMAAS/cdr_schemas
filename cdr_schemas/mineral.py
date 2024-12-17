@@ -223,47 +223,51 @@ class MineralSite(BaseModel):
 
 
 class DedupSiteRecord(BaseModel):
-    id: Optional[str] = Field(default=None, description="dedup site record record id")
-    mineral_site_id: str = Field(description="Mineral Site Id")
-    name: str = Field(default="", description="Mineral Site Name")
-    country: str = Field(default="")
-    province: str = Field(default="")
-    site_rank: str = Field(default="")
-    site_type: str = Field(default="")
+    mineral_site_id: str = Field(description="original mineral site id")
+    score: float = Field(description="score of the site")
+
+
+class DedupSiteLocation(BaseModel):
+    latitude: Optional[float] = Field(
+        default=None, description="Latitude (decimal, EPSG:4326)"
+    )
+    longitude: Optional[float] = Field(
+        default=None, description="Longitude (decimal, EPSG:4326)"
+    )
+    country: List[str] = Field(
+        default_factory=list, description="The country that the site is located in"
+    )
+    state_or_province: List[str] = Field(
+        default_factory=list,
+        description="The state or province that the site is located in",
+    )
+
+
+class SiteGradeTonnage(BaseModel):
+    commodity_id: str = Field(description="Commodity ID")
+    contained_metal: Optional[float] = Field(
+        default=None, description="Total contained metal"
+    )
+    tonnage: Optional[float] = Field(default=None, description="Total tonnage")
+    grade: Optional[float] = Field(default=None, description="Total grade")
+    tonnage_unit_id: Optional[str] = Field(default=None, description="Tonnage unit ID")
+    grade_unit_id: Optional[str] = Field(default=None, description="Grade unit ID")
 
 
 class DedupSite(BaseModel):
-    id: Optional[str] = Field(default=None, description="dedup site id")
+    id: Optional[str] = Field(default=None, description="dedup mineral site id")
     sites: List[DedupSiteRecord] = Field(
         default_factory=list, description="Mineral Sites"
     )
-
-    commodity: str = Field(..., description="Commodity Name")
-    contained_metal: Optional[float] = Field(default=None)
-    contained_metal_units: str = Field(default="")
-    tonnage: Optional[float] = Field(default=None)
-    tonnage_units: str = Field(default="")
-    grade: Optional[float] = Field(default=None)
-    grade_units: str = Field(default="")
-
-    crs: str = Field(
-        default="", description="The Coordinate Reference System (CRS) of the location"
+    name: str = Field(description="Dedup site name")
+    type: str = Field(description="Dedup site type")
+    rank: str = Field(description="Dedup site rank")
+    location: DedupSiteLocation = Field(description="Dedup site location")
+    deposit_types: List[DepositTypeCandidate] = Field(
+        default_factory=list, description="Deposit Types"
     )
-    centroid: Optional[str] = Field(
-        default="",
-        description="Type: Point (center) of the geolocation of the site, merged if there is a collection",
-    )
-
-    geom: Optional[str] = Field(
-        default="",
-        description="Type: Polygon or Point, value indicates the geolocation of the site",
-    )
-
-    deposit_type_candidate: List[DepositTypeCandidate] = Field(
-        default_factory=list,
-        description="""
-            A list of deposit types candidates
-        """,
+    grade_tonnage: List[SiteGradeTonnage] = Field(
+        default_factory=list, description="Grade Tonnage"
     )
 
     system: str = Field(..., description="The name of the system used.")

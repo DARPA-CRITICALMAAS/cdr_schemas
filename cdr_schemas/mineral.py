@@ -270,3 +270,63 @@ class DedupSite(BaseModel):
     system_version: str = Field(..., description="The version of the system used.")
     data_snapshot: str = Field(..., description="version of data")
     data_snapshot_date: str = Field(..., description="date of data")
+
+
+class ReferenceV2(BaseModel):
+    document_uri: str = Field(description="URL of the document")
+    comment: str = Field(description="Comment")
+
+
+class DedupSiteRecordV2(BaseModel):
+    mineral_site_id: str = Field(description="original mineral site id")
+    score: float = Field(description="score of the site")
+    reference: List[ReferenceV2] = Field(description="Provenance of the site")
+
+
+class DedupSiteLocation(BaseModel):
+    latitude: Optional[float] = Field(
+        default=None, description="Latitude (decimal, EPSG:4326)"
+    )
+    longitude: Optional[float] = Field(
+        default=None, description="Longitude (decimal, EPSG:4326)"
+    )
+    country: List[str] = Field(
+        default_factory=list, description="The country that the site is located in"
+    )
+    state_or_province: List[str] = Field(
+        default_factory=list,
+        description="The state or province that the site is located in",
+    )
+
+
+class SiteGradeTonnage(BaseModel):
+    commodity_id: str = Field(description="Commodity ID")
+    contained_metal: Optional[float] = Field(
+        default=None, description="Total contained metal"
+    )
+    tonnage: Optional[float] = Field(default=None, description="Total tonnage")
+    grade: Optional[float] = Field(default=None, description="Total grade")
+    tonnage_unit_id: Optional[str] = Field(default=None, description="Tonnage unit ID")
+    grade_unit_id: Optional[str] = Field(default=None, description="Grade unit ID")
+
+
+class DedupSiteV2(BaseModel):
+    id: Optional[str] = Field(default=None, description="dedup mineral site id")
+    sites: List[DedupSiteRecordV2] = Field(
+        default_factory=list, description="Mineral Sites"
+    )
+    name: str = Field(description="Dedup site name")
+    type: str = Field(description="Dedup site type")
+    rank: str = Field(description="Dedup site rank")
+    location: DedupSiteLocation = Field(description="Dedup site location")
+    deposit_types: List[DepositTypeCandidate] = Field(
+        default_factory=list, description="Deposit Types"
+    )
+    grade_tonnage: List[SiteGradeTonnage] = Field(
+        default_factory=list, description="Grade Tonnage"
+    )
+
+    system: str = Field(..., description="The name of the system used.")
+    system_version: str = Field(..., description="The version of the system used.")
+    data_snapshot: str = Field(..., description="version of data")
+    data_snapshot_date: str = Field(..., description="date of data")

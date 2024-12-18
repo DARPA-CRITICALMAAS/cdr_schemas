@@ -222,15 +222,65 @@ class MineralSite(BaseModel):
     )
 
 
-class Reference(BaseModel):
+class DedupSiteRecord(BaseModel):
+    id: Optional[str] = Field(default=None, description="dedup site record record id")
+    mineral_site_id: str = Field(description="Mineral Site Id")
+    name: str = Field(default="", description="Mineral Site Name")
+    country: str = Field(default="")
+    province: str = Field(default="")
+    site_rank: str = Field(default="")
+    site_type: str = Field(default="")
+
+
+class DedupSite(BaseModel):
+    id: Optional[str] = Field(default=None, description="dedup site id")
+    sites: List[DedupSiteRecord] = Field(
+        default_factory=list, description="Mineral Sites"
+    )
+
+    commodity: str = Field(..., description="Commodity Name")
+    contained_metal: Optional[float] = Field(default=None)
+    contained_metal_units: str = Field(default="")
+    tonnage: Optional[float] = Field(default=None)
+    tonnage_units: str = Field(default="")
+    grade: Optional[float] = Field(default=None)
+    grade_units: str = Field(default="")
+
+    crs: str = Field(
+        default="", description="The Coordinate Reference System (CRS) of the location"
+    )
+    centroid: Optional[str] = Field(
+        default="",
+        description="Type: Point (center) of the geolocation of the site, merged if there is a collection",
+    )
+
+    geom: Optional[str] = Field(
+        default="",
+        description="Type: Polygon or Point, value indicates the geolocation of the site",
+    )
+
+    deposit_type_candidate: List[DepositTypeCandidate] = Field(
+        default_factory=list,
+        description="""
+            A list of deposit types candidates
+        """,
+    )
+
+    system: str = Field(..., description="The name of the system used.")
+    system_version: str = Field(..., description="The version of the system used.")
+    data_snapshot: str = Field(..., description="version of data")
+    data_snapshot_date: str = Field(..., description="date of data")
+
+
+class ReferenceV2(BaseModel):
     document_uri: str = Field(description="URL of the document")
     comment: str = Field(description="Comment")
 
 
-class DedupSiteRecord(BaseModel):
+class DedupSiteRecordV2(BaseModel):
     mineral_site_id: str = Field(description="original mineral site id")
     score: float = Field(description="score of the site")
-    reference: List[Reference] = Field(description="Provenance of the site")
+    reference: List[ReferenceV2] = Field(description="Provenance of the site")
 
 
 class DedupSiteLocation(BaseModel):
@@ -260,9 +310,9 @@ class SiteGradeTonnage(BaseModel):
     grade_unit_id: Optional[str] = Field(default=None, description="Grade unit ID")
 
 
-class DedupSite(BaseModel):
+class DedupSiteV2(BaseModel):
     id: Optional[str] = Field(default=None, description="dedup mineral site id")
-    sites: List[DedupSiteRecord] = Field(
+    sites: List[DedupSiteRecordV2] = Field(
         default_factory=list, description="Mineral Sites"
     )
     name: str = Field(description="Dedup site name")

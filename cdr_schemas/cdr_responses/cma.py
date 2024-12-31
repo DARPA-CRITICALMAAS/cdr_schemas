@@ -16,6 +16,7 @@ class CMA(BaseModel):
     mineral: str
     download_url: str
     extent: Optional[MultiPolygon]
+    extent_4326: Optional[MultiPolygon]
     resolution: List[int]
     description: Optional[str] = ""
     creation_date: Optional[datetime]

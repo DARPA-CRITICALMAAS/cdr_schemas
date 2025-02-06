@@ -8,34 +8,63 @@ class NeuralNetUserOptions(BaseModel):
     # data/model inputs processing args
     likely_negative_range: Optional[Tuple[float, float]] = Field(
         default=(0.1, 1.0),
-        description="The range of values to consider as likely negatives.",
+        description="Defines the range of values that are most likely to represent negative (non-prospective) cases. A value of 0 indicates known deposit locations, while 1 represents the farthest pixels from deposits in embedding space.",
     )
     fraction_train_split: Optional[float] = Field(
-        default=0.8, description="The fraction of the data to use for training."
+        default=0.8,
+        description="The percentage of the dataset allocated for training the model (e.g., 80% training, remaining 20% for validation and testing split evenly).",
     )
     upsample_multiplier: Optional[float] = Field(
         default=20.0,
-        description="The multiplier for upsampling positives in the training data split.",
+        description="Specifies how much to increase the number of positive samples in the training dataset to balance class distribution.",
+    )
+    random_seed: Optional[int] = Field(
+        default=777,
+        description="A fixed seed value for the random number generator to ensure consistent and reproducible results across different runs. It affects train/validation/test data splitting and negative sampling.",
     )
 
     # model args
+    number_encoder_layers: Optional[int] = Field(
+        default=6,
+        description="The number of self-attention layers in the encoder. Increasing this value allows the model to capture more complex hierarchical representations.",
+    )
+    number_encoder_heads: Optional[int] = Field(
+        default=8,
+        description="The number of attention heads in each encoder layer. More heads enable the model to attend to different parts of the input sequence simultaneously, improving feature extraction.",
+    )
+    encoder_embedding_dim: Optional[int] = Field(
+        default=256,
+        description="The dimensionality of token embeddings in the encoder. A higher embedding dimension allows the model to represent more detailed feature interactions but increases computational cost.",
+    )
+    number_decoder_layers: Optional[int] = Field(
+        default=2,
+        description="The number of self-attention layers in the decoder. A deeper decoder can better refine outputs but may increase inference time.",
+    )
+    number_decoder_heads: Optional[int] = Field(
+        default=4,
+        description="The number of attention heads in each decoder layer. More heads allow the decoder to process multiple information streams in parallel, enhancing representation learning.",
+    )
+    decoder_embedding_dim: Optional[int] = Field(
+        default=128,
+        description="The dimensionality of token embeddings in the decoder. Lower values reduce memory usage and computation cost, while higher values improve expressiveness.",
+    )
     dropout_tuple: Optional[Tuple[float, float, float]] = Field(
         default=(0.0, 0.25, 0.25),
-        description="Dropout influences variance of network outputs. Low dropout results in deterministic prospectivity map. High dropout results in probabilistic prospectivity map.",
+        description="A tuple representing dropout rates for each layer in the classifier. Lower values make predictions more deterministic, while higher values introduce uncertainty for probabilistic outputs.",
     )
 
     # model training args
     learning_rate: Optional[float] = Field(
         default=1e-3,
-        description="Model learning rate. In machine learning referring to the step size at each iteration while moving toward a minimum of a loss function.",
+        description="Controls how quickly the model updates its weights during training. A higher value speeds up learning but may cause instability, while a lower value ensures more gradual learning.",
     )
     weight_decay: Optional[float] = Field(
         default=1e-2,
-        description="Model weight decay. A regularization technique that prevents the model weights from growing too large by adding a penalty term to the loss function.",
+        description="A technique to prevent overfitting by adding a small penalty to large weight values, encouraging simpler models.",
     )
     smoothing: Optional[float] = Field(
         default=0.3,
-        description="Controls certainty of data labels. Low smoothing results in large gradients between low vs high prospectivity areas. High smoothing results in incremental gradients between low vs high prospectivity areas.",
+        description="Adjusts how sharply the model differentiates between high and low prospectivity areas. Lower values create stronger contrasts, while higher values result in more gradual transitions.",
     )
 
 

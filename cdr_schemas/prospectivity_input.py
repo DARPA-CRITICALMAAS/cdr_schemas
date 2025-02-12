@@ -44,6 +44,19 @@ class TransformMethod(str, Enum):
     SQRT = "sqrt"
 
 
+class WormsProcessingMethod(str, Enum):
+    PROXIMITY = "proximity"
+    DENSITY = "density"
+
+
+class WormsProcessing(BaseModel):
+    process_method: WormsProcessingMethod
+    sigma: float = Field(
+        default=0.0,
+        description="Standard deviation of the Gaussian kernel used for density estimation",
+    )
+
+
 class ImputeMethod(str, Enum):
     MEAN = "mean"
     MEDIAN = "median"
@@ -98,7 +111,7 @@ class CreateCriticalMineralAssessment(BaseModel):
     creation_date: datetime = Field(default_factory=datetime.now)
 
 
-TranformMethods = List[Union[TransformMethod, Impute, ScalingType]]
+TranformMethods = List[Union[TransformMethod, Impute, ScalingType, WormsProcessing]]
 
 
 # MTRI UI TO CDR:
